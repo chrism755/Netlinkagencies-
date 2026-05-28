@@ -244,6 +244,9 @@ select.form-control option{background:var(--bg3);}
     <div class="divider">OR</div>
     <div class="auth-link">Don't have an account? <a onclick="showPage('page-register')">Register</a></div>
   </div>
+  <div style="text-align:center;margin-top:20px;">
+    <a onclick="showPage('page-admin-login')" style="font-size:11px;color:var(--text2);opacity:0.4;cursor:pointer;text-decoration:none;">Admin Access</a>
+  </div>
 </div>
 </div>
 
@@ -489,13 +492,37 @@ window._adminPosts = [];
 function showLoader(msg='LOADING...'){
   document.getElementById('loader-text').textContent=msg;
   document.getElementById('loader').classList.add('show');
+  clearTimeout(window._loaderTimer);
+  window._loaderTimer=setTimeout(hideLoader,2000);
 }
-function hideLoader(){document.getElementById('loader').classList.remove('show');}
+function hideLoader(){
+  clearTimeout(window._loaderTimer);
+  document.getElementById('loader').classList.remove('show');
+}
+
+// ── URL HASH ROUTING ──
+const _hashMap={
+  'page-register':'register','page-login':'login','page-forgot':'forgot',
+  'page-activation':'activation','page-dashboard':'dashboard',
+  'page-admin-login':'admin','page-admin':'admin-panel'
+};
+const _routeMap={};
+Object.keys(_hashMap).forEach(k=>{_routeMap[_hashMap[k]]=k;});
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if(_hashMap[id]) history.pushState({p:id},'','#'+_hashMap[id]);
 }
-window.showPage = showPage;
+window.showPage=showPage;
+
+window.addEventListener('popstate',function(){
+  const h=window.location.hash.replace('#','');
+  if(h&&_routeMap[h]){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(_routeMap[h]).classList.add('active');
+  }
+});
 
 function setBtn(id,disabled,text){
   const b=document.getElementById(id);
@@ -521,6 +548,14 @@ function checkReferral(){
   }
 }
 checkReferral();
+// ── INITIAL HASH ROUTE ──
+(function(){
+  const h=window.location.hash.replace('#','');
+  if(h&&_routeMap[h]){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(_routeMap[h]).classList.add('active');
+  }
+})();
 
 // ── AUTH STATE ──
 onAuthStateChanged(auth, async(user)=>{
@@ -706,7 +741,7 @@ function sectionTitle(s){
 function renderSection(sec){
   const u=window._userData||{username:'User',balance:0,totalEarnings:0,withdrawn:0,pending:0,weeklyBonus:0,karibu:0,referralCode:'user',phone:''};
   const host='https://netlinkagencies.linkpc.net';
-  const refLink=`${host}?ref=${u.referralCode}`;
+  const refLink=`${host}?ref=${u.referralCode}#register`;
 
   if(sec==='home') return `
     <div style="margin-bottom:16px;">
@@ -1190,8 +1225,8 @@ window.sendAI=function(){
   },900);
 };
 
-// ── ADMIN ROUTE ──
-if(window.location.pathname==='/admin'){showPage('page-admin-login');}
+// ── ADMIN ROUTE (hash-based) ──
+// Access admin via: netlinkagencies.linkpc.net/#admin
 </script>
 </body>
 </html>
