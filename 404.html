@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --primary:#0057FF;--primary-dark:#0041CC;--accent:#00D4FF;--gold:#FFD700;
+  --green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--purple:#7C3AED;
+  --bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--card2:#162540;
+  --border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sidebar-w:260px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;flex-direction:column;}
+.auth-page{background:var(--bg);position:relative;overflow:hidden;}
+.auth-bg{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.auth-bg::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,87,255,.15),transparent 70%);border-radius:50%;}
+.auth-bg::after{content:'';position:absolute;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(0,212,255,.1),transparent 70%);border-radius:50%;}
+.auth-wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;padding:30px 16px 60px;}
+.auth-header{text-align:center;margin-bottom:28px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;justify-content:center;margin-bottom:14px;}
+.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 24px rgba(0,87,255,.5);}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:16px;color:var(--white);line-height:1.1;}
+.logo-sub{font-size:9px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}
+.auth-header h1{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--white);margin-bottom:6px;}
+.auth-header p{color:var(--text2);font-size:13px;}
+.auth-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase;}
+.form-control{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
+.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,87,255,.15);}
+.form-control::placeholder{color:var(--text2);opacity:.6;}
+select.form-control option{background:var(--bg3);}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:.2s;letter-spacing:.3px;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);box-shadow:0 4px 20px rgba(0,87,255,.4);}
+.btn-primary:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,87,255,.5);}
+.auth-link{text-align:center;margin-top:18px;font-size:13px;color:var(--text2);}
+.auth-link a{color:var(--accent);font-weight:700;cursor:pointer;}
+.divider{text-align:center;color:var(--text2);font-size:11px;margin:14px 0;position:relative;}
+.divider::before,.divider::after{content:'';position:absolute;top:50%;width:38%;height:1px;background:var(--border);}
+.divider::before{left:0;}.divider::after{right:0;}
+.section-title{font-family:'Orbitron',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.alert{border-radius:10px;padding:13px 16px;font-size:13px;font-weight:600;margin:12px 0;}
+.alert-green{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;}
+.alert-red{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;}
+.alert-yellow{background:rgba(255,179,0,.12);border:1.5px solid var(--yellow);color:#FFD740;}
+.alert-blue{background:rgba(0,87,255,.12);border:1.5px solid var(--primary);color:var(--accent);}
+.loader-overlay{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.loader-overlay.show{display:flex;}
+.loader-ring{width:56px;height:56px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:18px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loader-text{font-family:'Orbitron',monospace;color:var(--accent);font-size:12px;letter-spacing:2px;animation:pulse2 1.5s ease-in-out infinite;}
+@keyframes pulse2{0%,100%{opacity:.4;}50%{opacity:1;}}
+/* ACTIVATION */
+.activation-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:16px;width:100%;max-width:460px;}
+.amount-display{font-family:'Orbitron',monospace;font-size:40px;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,.3);text-align:center;}
+.amount-label{color:var(--text2);font-size:12px;text-align:center;margin-top:4px;}
+.pay-tabs{display:flex;gap:10px;margin:18px 0;}
+.pay-tab{flex:1;padding:11px;border:2px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;transition:.2s;font-weight:700;font-size:13px;}
+.pay-tab.active{border-color:var(--primary);background:rgba(0,87,255,.1);color:var(--accent);}
+.pay-instructions{background:var(--bg3);border-radius:12px;padding:16px;font-size:13px;line-height:1.9;color:var(--text);}
+.pay-instructions strong{color:var(--accent);}
+.step-num{display:inline-flex;width:20px;height:20px;background:var(--primary);border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:800;margin-right:7px;}
+.wa-btn{background:#25D366;color:var(--white);border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;justify-content:center;}
+/* DASHBOARD */
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;}
+.sidebar.open{transform:translateX(0);}
+.sidebar-header{padding:18px 16px;border-bottom:1px solid var(--border);}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav::-webkit-scrollbar{width:3px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:.15s;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;}
+.nav-item:hover{background:rgba(0,87,255,.08);color:var(--text);border-left-color:var(--primary);}
+.nav-item.active{background:rgba(0,87,255,.12);color:var(--accent);border-left-color:var(--primary);}
+.nav-icon{font-size:16px;width:22px;text-align:center;}
+.nav-section{padding:14px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}
+.nav-sub{padding-left:46px;font-size:12px;}
+.nav-arrow{margin-left:auto;font-size:10px;transition:.2s;}
+.nav-children{display:none;background:rgba(0,0,0,.2);}
+.nav-children.open{display:block;}
+.main-content{flex:1;min-height:100vh;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px;}
+.topbar-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
+.user-avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.content-area{padding:18px 14px;max-width:780px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
+/* STATS */
+.greeting-text{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--white);margin-bottom:16px;}
+.badge-verified{display:inline-flex;align-items:center;gap:4px;background:rgba(0,87,255,.2);border:1px solid var(--primary);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--accent);margin-left:7px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;text-align:center;}
+.stat-card.left{border-top:3px solid var(--red);}
+.stat-card.right{border-top:3px solid var(--green);}
+.stat-amount{font-family:'Orbitron',monospace;font-size:19px;font-weight:900;color:var(--white);}
+.stat-label{font-size:10px;color:var(--text2);margin-top:4px;font-weight:700;}
+.row-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.row-label{font-size:12px;font-weight:700;color:var(--text2);}
+.row-value{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--gold);}
+.ref-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px;}
+.ref-link-box{background:var(--bg3);border-radius:9px;padding:11px 13px;font-size:11px;color:var(--accent);word-break:break-all;margin:9px 0;font-family:monospace;}
+.ref-actions{display:flex;gap:7px;flex-wrap:wrap;}
+.ref-btn{flex:1;min-width:70px;padding:8px 6px;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;}
+.ref-btn.copy{background:var(--primary);color:var(--white);}
+.ref-btn.wa{background:#25D366;color:var(--white);}
+.ref-btn.fb{background:#1877F2;color:var(--white);}
+.ref-btn.tg{background:#2CA5E0;color:var(--white);}
+.levels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.level-card{background:var(--bg3);border-radius:9px;padding:11px;text-align:center;}
+.level-num{font-size:10px;color:var(--text2);font-weight:700;}
+.level-amount{font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);font-weight:900;}
+/* TASK/QUIZ/VIDEO */
+.task-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.task-card h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:6px;}
+.task-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+.task-reward{display:inline-flex;align-items:center;gap:5px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:800;color:var(--gold);margin-top:8px;}
+.video-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.video-info h4{font-size:13px;font-weight:800;color:var(--white);}
+.video-info p{font-size:11px;color:var(--text2);margin-top:2px;}
+.watch-btn{background:var(--primary);color:var(--white);border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+.quiz-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
+.quiz-q{font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px;}
+.quiz-options{display:grid;gap:7px;}
+.quiz-opt{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s;}
+.quiz-opt:hover{border-color:var(--primary);color:var(--accent);}
+.quiz-opt.correct{border-color:var(--green);background:rgba(0,200,83,.1);color:#69F0AE;}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(255,59,59,.1);color:#FF8A80;}
+/* CASHOUT */
+.cashout-note{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);border-radius:12px;padding:14px;font-size:13px;color:var(--accent);line-height:1.7;margin-bottom:18px;}
+.cashout-note strong{color:var(--white);}
+.amount-input-group{position:relative;}
+.amount-prefix{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:800;font-size:13px;}
+.amount-input{padding-left:46px!important;}
+.fee-note{font-size:11px;color:var(--yellow);margin-top:5px;}
+/* ADMIN */
+.admin-stat{border-radius:14px;padding:16px;margin-bottom:10px;}
+.admin-stat-green{background:rgba(0,200,83,.08);border:1.5px solid var(--green);}
+.admin-stat-purple{background:rgba(124,58,237,.08);border:1.5px solid var(--purple);}
+.admin-stat-red{background:rgba(255,59,59,.08);border:1.5px solid var(--red);}
+.admin-stat-yellow{background:rgba(255,179,0,.08);border:1.5px solid var(--yellow);}
+.admin-stat-blue{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);}
+.admin-stat-rainbow{background:linear-gradient(135deg,rgba(255,0,0,.06),rgba(0,87,255,.06),rgba(0,200,83,.06));border:1.5px solid rgba(255,215,0,.3);}
+.admin-stat-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:5px;}
+.admin-stat-value{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--white);}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px;}
+.admin-table th{background:var(--bg3);padding:9px 12px;text-align:left;color:var(--text2);font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:1px;}
+.admin-table td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--text);}
+.action-btn{padding:4px 10px;border:none;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;margin:2px;}
+.approve-btn{background:var(--green);color:var(--white);}
+.reject-btn{background:var(--red);color:var(--white);}
+.info-btn{background:var(--primary);color:var(--white);}
+.status-badge{padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
+.status-active{background:rgba(0,200,83,.15);color:var(--green);}
+.status-inactive{background:rgba(255,59,59,.15);color:var(--red);}
+/* PROFILE */
+.profile-avatar{width:76px;height:76px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;}
+.profile-info-row{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:9px;}
+.profile-info-label{font-size:11px;color:var(--text2);font-weight:700;}
+.profile-info-value{font-size:13px;color:var(--white);font-weight:700;}
+.timetable{width:100%;border-collapse:collapse;}
+.timetable th{background:var(--primary);color:var(--white);padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}
+.timetable td{padding:11px 12px;border-bottom:1px solid var(--border);font-size:12px;}
+.timetable tr:nth-child(even) td{background:rgba(0,87,255,.04);}
+.day-badge{background:var(--card2);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--accent);}
+.community-post{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.post-time{font-size:10px;color:var(--text2);margin-bottom:7px;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media(max-width:380px){.stats-grid{grid-template-columns:1fr;}.levels-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader">
+  <div style="text-align:center;">
+    <div class="loader-ring"></div>
+    <div class="loader-text" id="loader-text">LOADING...</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     REGISTER PAGE
+═══════════════════════════════════════ -->
+<div class="page auth-page active" id="page-register">
+<div class="auth-bg"></div>
+<div class="auth-wrap">
+  <div class="auth-header">
+    <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+    <h1>Create Account</h1>
+    <p>Join the network and start earning</p>
+  </div>
+  <div class="auth-card">
+    <div class="section-title">📋 Registration Form</div>
+    <div class="form-group"><label>Username</label><input class="form-control" id="reg-username" type="text" placeholder="Choose a username"/></div>
+    <div class="form-group"><label>Email Address</label><input class="form-control" id="reg-email" type="email" placeholder="Enter valid email"/></div>
+    <div class="form-group"><label>Phone Number</label><input class="form-control" id="reg-phone" type="tel" placeholder="+254 7XX XXX XXX"/></div>
+    <div class="form-group"><label>WhatsApp Number</label><input class="form-control" id="reg-whatsapp" type="tel" placeholder="+254 7XX XXX XXX"/></div>
+    <div class="form-group">
+      <label>Country</label>
+      <select class="form-control" id="reg-country">
+        <option value="">-- Select Country --</option>
+        <option>Kenya</option><option>Uganda</option><option>Tanzania</option>
+        <option>Rwanda</option><option>Nigeria</option><option>Ghana</option>
+        <option>South Africa</option><option>United States</option><option>United Kingdom</option><option>Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Password</label><input class="form-control" id="reg-password" type="password" placeholder="Min 6 characters"/></div>
+    <div class="form-group"><label>Confirm Password</label><input class="form-control" id="reg-confirm" type="password" placeholder="Repeat password"/></div>
+    <div id="reg-ref-info" style="display:none;background:rgba(0,212,255,.08);border:1px solid var(--accent);border-radius:8px;padding:10px;font-size:12px;color:var(--accent);margin-bottom:12px;">🔗 Referred by: <strong id="reg-ref-by"></strong></div>
+    <div class="alert alert-red" id="reg-error" style="display:none;"></div>
+    <button class="btn btn-primary" id="reg-btn" onclick="doRegister()">🚀 Create Account</button>
+    <div class="auth-link">Already have an account? <a onclick="showPage('page-login')">Log In</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LOGIN PAGE
+═══════════════════════════════════════ -->
+<div class="page auth-page" id="page-login">
+<div class="auth-bg"></div>
+<div class="auth-wrap">
+  <div class="auth-header">
+    <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+    <h1>Welcome Back</h1>
+    <p>Sign in to your NETLINK account</p>
+  </div>
+  <div class="auth-card">
+    <div class="section-title">🔐 Login</div>
+    <div class="form-group"><label>Email Address</label><input class="form-control" id="login-email" type="email" placeholder="Your email"/></div>
+    <div class="form-group"><label>Password</label><input class="form-control" id="login-password" type="password" placeholder="Your password"/></div>
+    <div class="alert alert-red" id="login-error" style="display:none;"></div>
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">🔓 Log In</button>
+    <div class="auth-link" style="margin-top:10px;"><a onclick="showPage('page-forgot')">Forgot Password?</a></div>
+    <div class="divider">OR</div>
+    <div class="auth-link">Don't have an account? <a onclick="showPage('page-register')">Register</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FORGOT PASSWORD
+═══════════════════════════════════════ -->
+<div class="page auth-page" id="page-forgot">
+<div class="auth-bg"></div>
+<div class="auth-wrap">
+  <div class="auth-header">
+    <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+    <h1>Reset Password</h1>
+    <p>We'll send reset instructions to your email</p>
+  </div>
+  <div class="auth-card">
+    <div class="section-title">🔑 Forgot Password</div>
+    <div class="form-group"><label>Email Address</label><input class="form-control" id="forgot-email" type="email" placeholder="Your registered email"/></div>
+    <div class="alert alert-green" id="forgot-ok" style="display:none;">✅ Reset email sent! Check your inbox.</div>
+    <div class="alert alert-red" id="forgot-error" style="display:none;"></div>
+    <button class="btn btn-primary" id="forgot-btn" onclick="doForgot()">📧 Send Reset Link</button>
+    <div class="auth-link" style="margin-top:14px;"><a onclick="showPage('page-login')">← Back to Login</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ACTIVATION PAGE
+═══════════════════════════════════════ -->
+<div class="page auth-page" id="page-activation">
+<div class="auth-bg"></div>
+<div class="auth-wrap" style="padding-top:20px;">
+  <div class="auth-header">
+    <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+    <h1>Activate Account</h1>
+    <p>Pay activation fee to unlock your dashboard</p>
+  </div>
+  <div class="activation-card">
+    <div class="amount-display">KES 150</div>
+    <div class="amount-label">One-time Activation Fee</div>
+    <div class="pay-tabs">
+      <div class="pay-tab active" onclick="switchPayTab('mpesa',this)">📱 M-PESA</div>
+      <div class="pay-tab" onclick="switchPayTab('paypal',this)">💳 PAYPAL</div>
+    </div>
+    <div id="mpesa-inst" class="pay-instructions">
+      <p style="font-weight:800;color:var(--accent);margin-bottom:10px;">M-PESA Payment Steps</p>
+      <p><span class="step-num">1</span>Open <strong>M-PESA</strong> on your phone</p>
+      <p><span class="step-num">2</span>Select <strong>Send Money</strong></p>
+      <p><span class="step-num">3</span>Number: <strong>+254706494401</strong></p>
+      <p><span class="step-num">4</span>Name: <strong>MARY MPURUNGA</strong></p>
+      <p><span class="step-num">5</span>Amount: <strong>KES 150</strong></p>
+      <p><span class="step-num">6</span>Confirm with PIN</p>
+      <p><span class="step-num">7</span>Copy <strong>Transaction ID</strong> from SMS below</p>
+    </div>
+    <div id="paypal-inst" class="pay-instructions" style="display:none;">
+      <p style="font-weight:800;color:var(--accent);margin-bottom:10px;">PayPal Payment Steps</p>
+      <p><span class="step-num">1</span>Login to <strong>PayPal</strong></p>
+      <p><span class="step-num">2</span>Click <strong>Send Money</strong></p>
+      <p><span class="step-num">3</span>Email: <strong>marympurunga@gmail.com</strong></p>
+      <p><span class="step-num">4</span>Amount: <strong>≈ USD 1.15</strong> (KES 150)</p>
+      <p><span class="step-num">5</span>Note: <strong>NETLINK Activation</strong></p>
+      <p><span class="step-num">6</span>Copy <strong>Transaction ID</strong> below</p>
+    </div>
+  </div>
+  <div class="activation-card">
+    <div class="form-group">
+      <label>Transaction ID</label>
+      <input class="form-control" id="txn-id" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
+    </div>
+    <div class="alert alert-green" id="txn-success" style="display:none;"></div>
+    <div class="alert alert-red" id="txn-error" style="display:none;"></div>
+    <button class="btn btn-primary" id="txn-btn" onclick="submitTxn()">✅ Submit Transaction ID</button>
+    <div style="margin-top:12px;">
+      <button class="wa-btn" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Message Admin on WhatsApp</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     USER DASHBOARD
+═══════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+  <div class="app-layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo" style="justify-content:flex-start;">
+          <div class="logo-icon" style="width:36px;height:36px;font-size:16px;">🔗</div>
+          <div><div class="logo-text" style="font-size:12px;">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-item active" onclick="showSection('home');closeSidebar()"><span class="nav-icon">🏠</span>Home</div>
+        <div class="nav-item" onclick="showSection('tournaments');closeSidebar()"><span class="nav-icon">🏆</span>E-Tournaments</div>
+        <div class="nav-item" onclick="showSection('karibu');closeSidebar()"><span class="nav-icon">🎁</span>Karibu Bonus</div>
+        <div class="nav-item" onclick="showSection('payclients');closeSidebar()"><span class="nav-icon">💸</span>Pay for Clients</div>
+        <div class="nav-item" onclick="showSection('deposit');closeSidebar()"><span class="nav-icon">💰</span>Deposit</div>
+        <div class="nav-item" onclick="showSection('mentorship');closeSidebar()"><span class="nav-icon">🎓</span>Mentorship</div>
+        <div class="nav-item" onclick="showSection('companyadvert');closeSidebar()"><span class="nav-icon">📢</span>Company Advert</div>
+        <div class="nav-item" onclick="showSection('betting');closeSidebar()"><span class="nav-icon">⚽</span>Betting Prediction</div>
+        <div class="nav-item" onclick="showSection('cashout');closeSidebar()"><span class="nav-icon">💳</span>Cashout</div>
+        <div class="nav-item" onclick="showSection('article');closeSidebar()"><span class="nav-icon">📰</span>Article</div>
+        <div class="nav-item" onclick="showSection('viewads');closeSidebar()"><span class="nav-icon">👁️</span>View Ads</div>
+        <div class="nav-section">Videos</div>
+        <div class="nav-item" onclick="showSection('tiktok');closeSidebar()"><span class="nav-icon">🎵</span>TikTok Videos</div>
+        <div class="nav-item" onclick="showSection('instagram');closeSidebar()"><span class="nav-icon">📸</span>Instagram Videos</div>
+        <div class="nav-item" onclick="showSection('youtube');closeSidebar()"><span class="nav-icon">▶️</span>YouTube Videos</div>
+        <div class="nav-item" onclick="toggleSub('sub-withdraw',this)"><span class="nav-icon">📤</span>Withdraw Tasks<span class="nav-arrow">▾</span></div>
+        <div class="nav-children" id="sub-withdraw">
+          <div class="nav-item nav-sub" onclick="showSection('w-videos');closeSidebar()">Videos</div>
+          <div class="nav-item nav-sub" onclick="showSection('w-surveys');closeSidebar()">Surveys</div>
+          <div class="nav-item nav-sub" onclick="showSection('w-quiz');closeSidebar()">Trivia Quiz</div>
+          <div class="nav-item nav-sub" onclick="showSection('w-numgame');closeSidebar()">Number Game</div>
+        </div>
+        <div class="nav-item" onclick="toggleSub('sub-downlines',this)"><span class="nav-icon">👥</span>Downlines<span class="nav-arrow">▾</span></div>
+        <div class="nav-children" id="sub-downlines">
+          <div class="nav-item nav-sub" onclick="showSection('dl-1');closeSidebar()">Level 1</div>
+          <div class="nav-item nav-sub" onclick="showSection('dl-2');closeSidebar()">Level 2</div>
+          <div class="nav-item nav-sub" onclick="showSection('dl-3');closeSidebar()">Level 3</div>
+        </div>
+        <div class="nav-section">More</div>
+        <div class="nav-item" onclick="showSection('wadvert');closeSidebar()"><span class="nav-icon">📲</span>WhatsApp Adverts</div>
+        <div class="nav-item" onclick="showSection('forex');closeSidebar()"><span class="nav-icon">📈</span>Forex Trading</div>
+        <div class="nav-item" onclick="showSection('trivia');closeSidebar()"><span class="nav-icon">🧠</span>Trivia Quiz</div>
+        <div class="nav-item" onclick="showSection('survey');closeSidebar()"><span class="nav-icon">📋</span>Daily Survey</div>
+        <div class="nav-item" onclick="showSection('mathquiz');closeSidebar()"><span class="nav-icon">🔢</span>Math Quiz</div>
+        <div class="nav-item" onclick="showSection('numgame');closeSidebar()"><span class="nav-icon">🎲</span>Number Game</div>
+        <div class="nav-item" onclick="showSection('community');closeSidebar()"><span class="nav-icon">💬</span>Community</div>
+        <div class="nav-item" onclick="showSection('help');closeSidebar()"><span class="nav-icon">🆘</span>Get Help</div>
+        <div class="nav-item" onclick="showSection('timetable');closeSidebar()"><span class="nav-icon">🗓️</span>Time Table</div>
+        <div class="nav-item" onclick="showSection('profile');closeSidebar()"><span class="nav-icon">👤</span>Profile</div>
+        <div class="nav-item" style="color:var(--red);" onclick="doLogout()"><span class="nav-icon">🚪</span>Log Out</div>
+      </div>
+    </nav>
+    <div class="main-content">
+      <div class="topbar">
+        <button class="menu-btn" onclick="openSidebar()">☰</button>
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="user-avatar" id="top-avatar">U</div>
+          <span style="font-size:12px;font-weight:700;" id="top-username">User</span>
+        </div>
+      </div>
+      <div class="content-area" id="content-area"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN LOGIN
+═══════════════════════════════════════ -->
+<div class="page auth-page" id="page-admin-login">
+<div class="auth-bg"></div>
+<div class="auth-wrap">
+  <div class="auth-header">
+    <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">ADMIN PANEL</div></div></div>
+    <h1>Admin Access</h1>
+    <p>Authorized personnel only</p>
+  </div>
+  <div class="auth-card">
+    <div class="form-group"><label>Username</label><input class="form-control" id="admin-user" placeholder="admin"/></div>
+    <div class="form-group"><label>Password</label><input class="form-control" id="admin-pass" type="password" placeholder="••••••••"/></div>
+    <div class="alert alert-red" id="admin-login-err" style="display:none;"></div>
+    <button class="btn btn-primary" onclick="doAdminLogin()">🔐 Login to Admin Panel</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADMIN DASHBOARD
+═══════════════════════════════════════ -->
+<div class="page" id="page-admin">
+  <div class="overlay" id="admin-overlay" onclick="closeAdminSidebar()"></div>
+  <div class="app-layout">
+    <nav class="sidebar" id="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="logo" style="justify-content:flex-start;">
+          <div class="logo-icon" style="width:34px;height:34px;font-size:15px;">🔗</div>
+          <div><div class="logo-text" style="font-size:11px;">NETLINK</div><div class="logo-sub">ADMIN</div></div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-item active" onclick="showAdminSection('admin-home');closeAdminSidebar()"><span class="nav-icon">🏠</span>Home</div>
+        <div class="nav-item" onclick="showAdminSection('admin-users');closeAdminSidebar()"><span class="nav-icon">👥</span>Manage Users</div>
+        <div class="nav-item" onclick="showAdminSection('admin-activation');closeAdminSidebar()"><span class="nav-icon">✅</span>Activation</div>
+        <div class="nav-item" onclick="showAdminSection('admin-withdraw');closeAdminSidebar()"><span class="nav-icon">💸</span>Withdrawals</div>
+        <div class="nav-item" onclick="showAdminSection('admin-deposits');closeAdminSidebar()"><span class="nav-icon">💰</span>Deposits</div>
+        <div class="nav-item" onclick="showAdminSection('admin-addadmin');closeAdminSidebar()"><span class="nav-icon">🔑</span>Add Admin</div>
+        <div class="nav-item" onclick="showAdminSection('admin-ai');closeAdminSidebar()"><span class="nav-icon">🤖</span>My Agent (AI)</div>
+        <div class="nav-item" onclick="showAdminSection('admin-tg');closeAdminSidebar()"><span class="nav-icon">✈️</span>Telegram Link</div>
+        <div class="nav-item" onclick="showAdminSection('admin-wa');closeAdminSidebar()"><span class="nav-icon">💬</span>WhatsApp Group</div>
+        <div class="nav-item" onclick="showAdminSection('admin-post');closeAdminSidebar()"><span class="nav-icon">📝</span>Post Community</div>
+        <div class="nav-item" onclick="showAdminSection('admin-settings');closeAdminSidebar()"><span class="nav-icon">⚙️</span>Settings</div>
+        <div class="nav-item" style="color:var(--red);" onclick="doLogout()"><span class="nav-icon">🚪</span>Log Out</div>
+      </div>
+    </nav>
+    <div class="main-content">
+      <div class="topbar">
+        <button class="menu-btn" onclick="openAdminSidebar()">☰</button>
+        <div class="topbar-title" id="admin-topbar-title">Admin Dashboard</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="user-avatar">A</div>
+          <span style="font-size:12px;font-weight:700;">Admin</span>
+        </div>
+      </div>
+      <div class="content-area" id="admin-content-area"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FIREBASE + APP LOGIC
+═══════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         sendPasswordResetEmail, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection,
+         addDoc, getDocs, query, where, orderBy, deleteDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ── FIREBASE CONFIG ──
+const firebaseConfig = {
+  apiKey: "AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
+  authDomain: "netlink-agencies-6399e.firebaseapp.com",
+  projectId: "netlink-agencies-6399e",
+  storageBucket: "netlink-agencies-6399e.firebasestorage.app",
+  messagingSenderId: "546397751362",
+  appId: "1:546397751362:web:c74e057b2b0ceb6c0745db",
+  measurementId: "G-C6WE8JFTJ0"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── GLOBALS ──
+window._auth = auth; window._db = db;
+window._currentUser = null; window._userData = null;
+window._adminPosts = [];
+
+// ── HELPERS ──
+function showLoader(msg='LOADING...'){
+  document.getElementById('loader-text').textContent=msg;
+  document.getElementById('loader').classList.add('show');
+}
+function hideLoader(){document.getElementById('loader').classList.remove('show');}
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+window.showPage = showPage;
+
+function setBtn(id,disabled,text){
+  const b=document.getElementById(id);
+  if(b){b.disabled=disabled;if(text)b.textContent=text;}
+}
+function showAlert(id,msg){
+  const el=document.getElementById(id);
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+function hideAlert(id){
+  const el=document.getElementById(id);
+  if(el)el.style.display='none';
+}
+
+// ── CHECK REFERRAL IN URL ──
+function checkReferral(){
+  const url=new URL(window.location.href);
+  const ref=url.searchParams.get('ref')||url.pathname.split('/ref/')[1];
+  if(ref){
+    document.getElementById('reg-ref-info').style.display='block';
+    document.getElementById('reg-ref-by').textContent=ref;
+    window._referredBy=ref;
+  }
+}
+checkReferral();
+
+// ── AUTH STATE ──
+onAuthStateChanged(auth, async(user)=>{
+  if(user){
+    window._currentUser=user;
+    const snap=await getDoc(doc(db,'users',user.uid));
+    if(snap.exists()){
+      window._userData=snap.data();
+      if(window._userData.activated){
+        loadDashboard();
+        showPage('page-dashboard');
+      } else {
+        showPage('page-activation');
+      }
+    }
+  }
+});
+
+// ── REGISTER ──
+window.doRegister = async function(){
+  const username=document.getElementById('reg-username').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const whatsapp=document.getElementById('reg-whatsapp').value.trim();
+  const country=document.getElementById('reg-country').value;
+  const password=document.getElementById('reg-password').value;
+  const confirm=document.getElementById('reg-confirm').value;
+  hideAlert('reg-error');
+  if(!username||!email||!phone||!whatsapp||!country||!password||!confirm){
+    showAlert('reg-error','⚠️ Please fill in all fields.');return;
+  }
+  if(!email.includes('@')){showAlert('reg-error','⚠️ Enter a valid email.');return;}
+  if(password!==confirm){showAlert('reg-error','⚠️ Passwords do not match.');return;}
+  if(password.length<6){showAlert('reg-error','⚠️ Password must be at least 6 characters.');return;}
+  setBtn('reg-btn',true,'Creating account...');
+  showLoader('CREATING ACCOUNT...');
+  try{
+    const cred=await createUserWithEmailAndPassword(auth,email,password);
+    const uid=cred.user.uid;
+    const refCode=username.toLowerCase().replace(/\s+/g,'');
+    await setDoc(doc(db,'users',uid),{
+      uid,username,email,phone,whatsapp,country,
+      activated:false,referralCode:refCode,
+      referredBy:window._referredBy||'',
+      balance:0,totalEarnings:0,withdrawn:0,pending:0,
+      weeklyBonus:0,karibu:0,createdAt:serverTimestamp()
+    });
+    window._currentUser=cred.user;
+    window._userData={username,email,phone,whatsapp,country,activated:false,referralCode:refCode,balance:0,totalEarnings:0,withdrawn:0,pending:0,weeklyBonus:0,karibu:0};
+    hideLoader();
+    showPage('page-activation');
+  }catch(e){
+    hideLoader();setBtn('reg-btn',false,'🚀 Create Account');
+    showAlert('reg-error','❌ '+e.message);
+  }
+};
+
+// ── LOGIN ──
+window.doLogin = async function(){
+  const email=document.getElementById('login-email').value.trim();
+  const password=document.getElementById('login-password').value;
+  hideAlert('login-error');
+  if(!email||!password){showAlert('login-error','⚠️ Enter email and password.');return;}
+  setBtn('login-btn',true,'Logging in...');
+  showLoader('SIGNING IN...');
+  try{
+    const cred=await signInWithEmailAndPassword(auth,email,password);
+    const snap=await getDoc(doc(db,'users',cred.user.uid));
+    if(snap.exists()){
+      window._userData=snap.data();
+      window._currentUser=cred.user;
+      hideLoader();
+      if(window._userData.activated){loadDashboard();showPage('page-dashboard');}
+      else{showPage('page-activation');}
+    }
+  }catch(e){
+    hideLoader();setBtn('login-btn',false,'🔓 Log In');
+    showAlert('login-error','❌ Invalid email or password.');
+  }
+};
+
+// ── FORGOT PASSWORD ──
+window.doForgot = async function(){
+  const email=document.getElementById('forgot-email').value.trim();
+  hideAlert('forgot-error');hideAlert('forgot-ok');
+  if(!email||!email.includes('@')){showAlert('forgot-error','⚠️ Enter a valid email.');return;}
+  setBtn('forgot-btn',true,'Sending...');
+  try{
+    await sendPasswordResetEmail(auth,email);
+    document.getElementById('forgot-ok').style.display='block';
+    setBtn('forgot-btn',false,'📧 Send Reset Link');
+  }catch(e){
+    showAlert('forgot-error','❌ Email not found.');
+    setBtn('forgot-btn',false,'📧 Send Reset Link');
+  }
+};
+
+// ── LOGOUT ──
+window.doLogout = async function(){
+  await signOut(auth);
+  window._currentUser=null;window._userData=null;
+  showPage('page-login');
+};
+
+// ── PAY TAB ──
+window.switchPayTab = function(tab,el){
+  document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mpesa-inst').style.display=tab==='mpesa'?'block':'none';
+  document.getElementById('paypal-inst').style.display=tab==='paypal'?'block':'none';
+};
+
+// ── SUBMIT TRANSACTION ──
+window.submitTxn = async function(){
+  const txn=document.getElementById('txn-id').value.trim().toUpperCase();
+  hideAlert('txn-error');hideAlert('txn-success');
+  if(!txn){showAlert('txn-error','⚠️ Please enter your Transaction ID.');return;}
+  if(!window._currentUser){showAlert('txn-error','⚠️ Not logged in.');return;}
+  setBtn('txn-btn',true,'Submitting...');
+  try{
+    await addDoc(collection(db,'pendingActivations'),{
+      uid:window._currentUser.uid,
+      username:window._userData?.username||'',
+      email:window._currentUser.email,
+      txnId:txn,
+      status:'pending',
+      createdAt:serverTimestamp()
+    });
+    const el=document.getElementById('txn-success');
+    el.innerHTML=`✅ Dear <strong>${window._userData?.username||'User'}</strong>, we have received your payment request.<br>
+    Wait <strong>2–5 minutes</strong> to get your account activated.<br><br>
+    Not activated within 2–5 minutes?<br>
+    <button class="wa-btn" style="margin-top:8px;" onclick="window.open('https://wa.me/254706494401','_blank')">💬 WhatsApp Admin</button>`;
+    el.style.display='block';
+    setBtn('txn-btn',true,'✅ Submitted');
+  }catch(e){
+    hideLoader();setBtn('txn-btn',false,'✅ Submit Transaction ID');
+    showAlert('txn-error','❌ '+e.message);
+  }
+};
+
+// ── LOAD DASHBOARD ──
+function loadDashboard(){
+  const u=window._userData||{};
+  document.getElementById('top-username').textContent=u.username||'User';
+  document.getElementById('top-avatar').textContent=(u.username||'U').charAt(0).toUpperCase();
+  showSection('home');
+}
+
+function getGreeting(){
+  const h=new Date().getHours();
+  if(h<12)return'Good morning 🌞';
+  if(h<17)return'Good afternoon ☀️';
+  return'Good evening 🌙';
+}
+
+window.showSection = function(sec){
+  document.getElementById('topbar-title').textContent=sectionTitle(sec);
+  document.getElementById('content-area').innerHTML=renderSection(sec);
+};
+window.openSidebar=()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');};
+window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');};
+window.openAdminSidebar=()=>{document.getElementById('admin-sidebar').classList.add('open');document.getElementById('admin-overlay').classList.add('show');};
+window.closeAdminSidebar=()=>{document.getElementById('admin-sidebar').classList.remove('open');document.getElementById('admin-overlay').classList.remove('show');};
+window.toggleSub=function(id,el){
+  const c=document.getElementById(id);c.classList.toggle('open');
+  el.querySelector('.nav-arrow').textContent=c.classList.contains('open')?'▴':'▾';
+};
+
+function sectionTitle(s){
+  const t={home:'Dashboard',tournaments:'E-Tournaments',karibu:'Karibu Bonus',payclients:'Pay for Clients',
+    deposit:'Deposit',mentorship:'Mentorship',companyadvert:'Company Advert',betting:'Betting Prediction',
+    cashout:'Cashout',article:'Article',viewads:'View Ads',tiktok:'TikTok Videos',
+    instagram:'Instagram Videos',youtube:'YouTube Videos','w-videos':'Withdraw Videos',
+    'w-surveys':'Withdraw Surveys','w-quiz':'Withdraw Quiz','w-numgame':'Withdraw Number Game',
+    'dl-1':'Level 1 Downlines','dl-2':'Level 2 Downlines','dl-3':'Level 3 Downlines',
+    wadvert:'WhatsApp Adverts',forex:'Forex Trading',trivia:'Trivia Quiz',survey:'Daily Survey',
+    mathquiz:'Math Quiz',numgame:'Number Game',community:'Community',help:'Get Help',
+    timetable:'Time Table',profile:'Profile'};
+  return t[s]||s;
+}
+
+function renderSection(sec){
+  const u=window._userData||{username:'User',balance:0,totalEarnings:0,withdrawn:0,pending:0,weeklyBonus:0,karibu:0,referralCode:'user',phone:''};
+  const host='https://netlinkagencies.linkpc.net';
+  const refLink=`${host}?ref=${u.referralCode}`;
+
+  if(sec==='home') return `
+    <div style="margin-bottom:16px;">
+      <div class="greeting-text">${getGreeting()}, ${u.username}!<span class="badge-verified">✔ Verified</span></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card left"><div class="stat-label">💸 Expenses</div><div class="stat-amount">KES 150</div><div class="stat-label" style="margin-top:5px;">Activation Fee</div></div>
+      <div class="stat-card right"><div class="stat-label">💰 Total Earnings</div><div class="stat-amount" style="color:var(--green);">KES ${u.totalEarnings||0}</div><div class="stat-label" style="margin-top:5px;">All Tasks</div></div>
+    </div>
+    <div class="row-card"><div class="row-label">💼 Account Balance</div><div class="row-value">KES ${u.balance||0}</div></div>
+    <div class="row-card"><div class="row-label">📤 Withdrawn Amount</div><div class="row-value">KES ${u.withdrawn||0}</div></div>
+    <div class="row-card"><div class="row-label">⏳ Pending Amount</div><div class="row-value" style="color:var(--yellow);">KES ${u.pending||0}</div></div>
+    <div class="row-card"><div class="row-label">🎁 Weekly Bonus (50 referrals)</div><div class="row-value" style="color:var(--accent);">KES ${u.weeklyBonus||0}</div></div>
+    <div class="row-card"><div class="row-label">🎁 Karibu Bonus (20 referrals)</div><div class="row-value" style="color:var(--accent);">KES ${u.karibu||0}</div></div>
+    <div class="ref-section">
+      <div class="section-title">🔗 Your Referral Link</div>
+      <div class="ref-link-box" id="reflink">${refLink}</div>
+      <div class="ref-actions">
+        <button class="ref-btn copy" onclick="copyRef()">📋 Copy</button>
+        <button class="ref-btn wa" onclick="window.open('https://wa.me/?text=Join NETLINK AGENCIES and earn! ${encodeURIComponent(refLink)}','_blank')">WhatsApp</button>
+        <button class="ref-btn fb" onclick="window.open('https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(refLink)}','_blank')">Facebook</button>
+        <button class="ref-btn tg" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(refLink)}','_blank')">Telegram</button>
+      </div>
+      <div class="levels-grid">
+        <div class="level-card"><div class="level-num">Level 1</div><div class="level-amount">KSH 80</div></div>
+        <div class="level-card"><div class="level-num">Level 2</div><div class="level-amount">KSH 20</div></div>
+        <div class="level-card"><div class="level-num">Level 3</div><div class="level-amount">KSH 10</div></div>
+      </div>
+    </div>`;
+
+  if(sec==='cashout') return `
+    <div class="cashout-note">
+      <strong>Note!</strong> Minimum withdrawal is <strong>KES 150</strong> from your account balance.<br>
+      Disbursed to: <strong>${u.phone||'+254XXXXXXXXX'}</strong><br>
+      Wrong number? <button class="wa-btn" style="display:inline-flex;padding:6px 14px;font-size:12px;margin-top:8px;" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Verify Me</button>
+      <br><span style="font-size:11px;margin-top:8px;display:block;">Happy networking with NETLINK AGENCIES 🎉</span>
+    </div>
+    <div class="task-card"><h3>Transaction Fees</h3>
+      <p style="font-size:12px;color:var(--text2);line-height:2.2;">KES 150–350 → Fee: KES 15<br>KES 350–700 → Fee: KES 30<br>KES 700–1,500 → Fee: KES 50<br>KES 1,500–3,000 → Fee: KES 70<br>KES 3,000–10,000 → Fee: KES 150</p>
+    </div>
+    <div class="task-card">
+      <h3>Withdraw via M-PESA</h3>
+      <div class="form-group" style="margin-top:12px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;">Amount (KES)</label>
+        <div class="amount-input-group"><span class="amount-prefix">KES</span><input class="form-control amount-input" id="w-amount" type="number" placeholder="Enter amount" oninput="calcFee()"/></div>
+        <div class="fee-note" id="fee-note"></div>
+      </div>
+      <div class="alert alert-green" id="w-ok" style="display:none;"></div>
+      <button class="btn btn-primary" onclick="doWithdraw('mpesa')">📱 Submit M-PESA Request</button>
+    </div>
+    <div class="task-card" style="margin-top:12px;">
+      <h3>Withdraw via PayPal</h3>
+      <div class="form-group" style="margin-top:12px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;">PayPal Email</label>
+        <input class="form-control" id="pp-email" type="email" placeholder="your@paypal.com"/>
+      </div>
+      <div class="form-group">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;">Amount (KES)</label>
+        <div class="amount-input-group"><span class="amount-prefix">KES</span><input class="form-control amount-input" id="w-amount-pp" type="number" placeholder="Enter amount" oninput="calcUSD()"/></div>
+        <div class="fee-note" id="usd-note"></div>
+      </div>
+      <div class="alert alert-green" id="w-ok-pp" style="display:none;"></div>
+      <button class="btn btn-primary" onclick="doWithdraw('paypal')">💳 Submit PayPal Request</button>
+    </div>`;
+
+  if(sec==='deposit') return `
+    <div class="task-card">
+      <h3>💰 Make a Deposit</h3>
+      <div class="form-group" style="margin-top:12px;">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;">Amount (KES)</label>
+        <div class="amount-input-group"><span class="amount-prefix">KES</span><input class="form-control amount-input" id="dep-amount" type="number" placeholder="Enter amount"/></div>
+      </div>
+      <div class="form-group">
+        <label style="font-size:11px;color:var(--text2);font-weight:700;">Transaction ID</label>
+        <input class="form-control" id="dep-txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;font-family:monospace;"/>
+      </div>
+      <div class="alert alert-green" id="dep-ok" style="display:none;"></div>
+      <div class="alert alert-red" id="dep-err" style="display:none;"></div>
+      <button class="btn btn-primary" onclick="doDeposit()">💰 Submit Deposit</button>
+      <div style="margin-top:14px;background:var(--bg3);border-radius:10px;padding:13px;font-size:13px;">
+        <p style="color:var(--accent);font-weight:800;margin-bottom:8px;">Payment Details</p>
+        <p>📱 M-PESA: <strong>+254706494401</strong> (MARY MPURUNGA)</p>
+        <p style="margin-top:5px;">💳 PayPal: <strong>marympurunga@gmail.com</strong></p>
+      </div>
+    </div>`;
+
+  if(sec==='tiktok') return videoSection('TikTok',3,15,'🎵');
+  if(sec==='instagram') return videoSection('Instagram',3,20,'📸');
+  if(sec==='youtube') return videoSection('YouTube',3,25,'▶️');
+  if(sec==='trivia') return quizSection('Trivia Quiz',6,5);
+  if(sec==='mathquiz') return mathSection();
+  if(sec==='survey') return surveySection();
+  if(sec==='numgame') return numGameSection();
+
+  if(sec==='profile') return `
+    <div style="text-align:center;padding:20px 0 16px;">
+      <div class="profile-avatar">${(u.username||'U').charAt(0).toUpperCase()}</div>
+      <div style="font-family:'Orbitron',monospace;font-size:17px;font-weight:900;color:var(--white);">${u.username}<span class="badge-verified">✔ Verified</span></div>
+    </div>
+    <div class="profile-info-row"><div class="profile-info-label">Email</div><div class="profile-info-value">${u.email||'—'}</div></div>
+    <div class="profile-info-row"><div class="profile-info-label">Phone</div><div class="profile-info-value">${u.phone||'—'}</div></div>
+    <div class="profile-info-row"><div class="profile-info-label">WhatsApp</div><div class="profile-info-value">${u.whatsapp||'—'}</div></div>
+    <div class="profile-info-row"><div class="profile-info-label">Country</div><div class="profile-info-value">${u.country||'—'}</div></div>
+    <div class="profile-info-row"><div class="profile-info-label">Referral Code</div><div class="profile-info-value" style="color:var(--accent);">${u.referralCode||'—'}</div></div>
+    <div class="profile-info-row"><div class="profile-info-label">Status</div><div class="profile-info-value"><span class="status-badge status-active">✅ Active</span></div></div>`;
+
+  if(sec==='community') return `
+    <div style="margin-bottom:16px;"><h2 style="font-family:'Orbitron',monospace;font-size:15px;color:var(--white);">💬 Community</h2></div>
+    ${window._adminPosts.length===0?'<div class="task-card"><p style="color:var(--text2);text-align:center;font-size:13px;">No posts yet. Check back soon!</p></div>':
+      window._adminPosts.map(p=>`<div class="community-post"><div class="post-time">📅 ${p.time||''}</div><p style="font-size:14px;">${p.content}</p></div>`).join('')}`;
+
+  if(sec==='help') return `
+    <div class="task-card" style="text-align:center;">
+      <h3 style="margin-bottom:16px;">💬 WhatsApp Support</h3>
+      <button class="wa-btn" onclick="window.open('https://wa.me/254706494401','_blank')">💬 +254 706 494 401</button>
+    </div>
+    <div class="task-card" style="text-align:center;margin-top:12px;">
+      <h3 style="margin-bottom:16px;">✈️ Telegram</h3>
+      <button style="background:#2CA5E0;color:#fff;border:none;border-radius:10px;padding:13px 24px;font-size:14px;font-weight:700;cursor:pointer;width:100%;" onclick="window.open('https://t.me/Mentorfai','_blank')">t.me/Mentorfai</button>
+    </div>`;
+
+  if(sec==='karibu') return `
+    <div class="task-card">
+      <h3>🎁 Karibu Bonus — KES 100</h3>
+      <p style="margin-top:8px;line-height:1.7;">Invite your first 20 people using your referral link. Once all 20 register, your KES 100 Karibu Bonus is credited automatically.</p>
+      <div class="task-reward">🎁 Reward: KES 100</div>
+    </div>`;
+
+  if(sec==='timetable') return `
+    <div style="overflow-x:auto;"><table class="timetable">
+      <tr><th>Day</th><th>Task</th><th>Reward</th></tr>
+      <tr><td><span class="day-badge">Monday</span></td><td>TikTok Videos ×3</td><td>KES 45</td></tr>
+      <tr><td><span class="day-badge">Tuesday</span></td><td>Trivia Quiz ×6</td><td>KES 30</td></tr>
+      <tr><td><span class="day-badge">Wednesday</span></td><td>Instagram Videos ×3</td><td>KES 60</td></tr>
+      <tr><td><span class="day-badge">Thursday</span></td><td>Math Quiz ×6</td><td>KES 60</td></tr>
+      <tr><td><span class="day-badge">Friday</span></td><td>YouTube Videos ×3</td><td>KES 75</td></tr>
+      <tr><td><span class="day-badge">Saturday</span></td><td>Daily Survey</td><td>KES 30</td></tr>
+      <tr><td><span class="day-badge">Sunday</span></td><td>Number Game + Ads</td><td>KES 25+</td></tr>
+    </table></div>`;
+
+  if(sec==='wadvert') return `
+    <div class="task-card">
+      <h3>📲 WhatsApp Adverts</h3>
+      <p style="margin-top:6px;color:var(--text2);font-size:13px;">1 picture per week · KES 1 per viewer</p>
+      <div style="background:var(--bg3);border-radius:10px;height:180px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:13px;margin:14px 0;">📸 Weekly advert image will appear here</div>
+      <div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">Number of Views</label><input class="form-control" id="adv-views" type="number" placeholder="Enter your WhatsApp views"/></div>
+      <div class="alert alert-green" id="adv-ok" style="display:none;"></div>
+      <button class="btn btn-primary" onclick="submitAdvert()">📤 Submit Views</button>
+    </div>`;
+
+  if(sec==='forex') return `<div class="task-card"><h3>📈 Forex Trading</h3><p style="color:var(--text2);font-size:13px;margin-top:8px;line-height:1.7;">Daily signals and mentorship available on Telegram.</p><button class="wa-btn" style="margin-top:12px;background:#2CA5E0;" onclick="window.open('https://t.me/Mentorfai','_blank')">✈️ Get Signals on Telegram</button></div>`;
+  if(sec==='betting') return `<div class="task-card"><h3>⚽ Betting Prediction</h3><p style="color:var(--text2);font-size:13px;margin-top:8px;">Daily football predictions on Telegram. Bet responsibly.</p><button class="wa-btn" style="margin-top:12px;background:#2CA5E0;" onclick="window.open('https://t.me/Mentorfai','_blank')">✈️ Telegram Predictions</button></div>`;
+  if(sec==='mentorship') return `<div class="task-card"><h3>🎓 Mentorship</h3><p style="color:var(--text2);font-size:13px;margin-top:8px;line-height:1.7;">Get expert mentorship. Contact admin to enroll.</p><button class="wa-btn" style="margin-top:12px;" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Contact Mentor</button></div>`;
+  if(sec==='companyadvert') return `<div class="task-card"><h3>📢 Company Advertisement</h3><p style="color:var(--text2);font-size:13px;margin-top:8px;">Advertise your business to our network.</p><button class="wa-btn" style="margin-top:12px;" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Contact Admin</button></div>`;
+  if(sec==='payclients') return `<div class="task-card"><h3>💸 Pay for Clients</h3><div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Client Name</label><input class="form-control" placeholder="Enter client name"/></div><div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">Amount (KES)</label><input class="form-control" type="number" placeholder="Enter amount"/></div><button class="btn btn-primary">💸 Process Payment</button></div>`;
+  if(sec==='tournaments') return `<div class="task-card"><h3>🏆 E-Tournaments</h3><p style="color:var(--text2);font-size:13px;margin-top:8px;line-height:1.7;">Upcoming tournaments will be posted here. Join community to get notified.</p></div>`;
+  if(sec==='article') return `<div class="task-card"><h3>📰 Articles</h3><p style="color:var(--text2);text-align:center;font-size:13px;margin-top:8px;">No articles published yet.</p></div>`;
+  if(sec==='viewads') return `<div class="task-card"><h3>👁️ View Ads</h3><p style="color:var(--text2);text-align:center;font-size:13px;margin-top:8px;">No ads available right now.</p></div>`;
+  if(sec.startsWith('w-')||sec.startsWith('dl-')) return `<div class="task-card"><p style="color:var(--text2);text-align:center;font-size:13px;">No data yet. Complete tasks to earn!</p></div>`;
+
+  return `<div class="task-card"><p style="color:var(--text2);">Coming soon.</p></div>`;
+}
+
+function videoSection(p,n,r,icon){
+  let h=`<div style="margin-bottom:14px;"><h2 style="font-family:'Orbitron',monospace;font-size:14px;color:var(--white);">${icon} ${p} Videos</h2><p style="font-size:12px;color:var(--text2);">${n} videos per day · KES ${r} per video</p></div>`;
+  for(let i=1;i<=n;i++) h+=`<div class="video-card"><div class="video-info"><h4>${p} Video ${i}</h4><p>Watch full video · KES ${r}</p></div><button class="watch-btn" onclick="watchVideo(this,${r})">▶ Watch</button></div>`;
+  return h;
+}
+window.watchVideo=function(btn,r){btn.textContent='⏳...';btn.disabled=true;setTimeout(()=>{btn.textContent=`✅ +KES ${r}`;btn.style.background='var(--green)';},3000);};
+
+function quizSection(title,n,reward){
+  const qs=[
+    {q:'Capital of Kenya?',opts:['Nairobi','Mombasa','Kisumu','Nakuru'],a:0},
+    {q:'Ocean bordering Kenya to the east?',opts:['Atlantic','Pacific','Indian','Arctic'],a:2},
+    {q:'Currency of Kenya?',opts:['Dollar','Shilling','Euro','Pound'],a:1},
+    {q:'How many counties does Kenya have?',opts:['42','47','52','38'],a:1},
+    {q:'Highest mountain in Kenya?',opts:['Kilimanjaro','Elgon','Kenya','Longonot'],a:2},
+    {q:"Kenya's first president?",opts:['Moi','Kibaki','Kenyatta','Ruto'],a:2},
+  ];
+  let h=`<div style="margin-bottom:14px;"><h2 style="font-family:'Orbitron',monospace;font-size:14px;color:var(--white);">🧠 ${title}</h2><p style="font-size:12px;color:var(--text2);">${n} questions · KES ${reward} per correct answer</p></div>`;
+  qs.forEach((q,i)=>{
+    h+=`<div class="quiz-card"><div class="quiz-q">${i+1}. ${q.q}</div><div class="quiz-options">${q.opts.map((o,j)=>`<div class="quiz-opt" onclick="answerQ(this,${j},${q.a})">${o}</div>`).join('')}</div></div>`;
+  });
+  return h;
+}
+window.answerQ=function(el,c,a){
+  el.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add('correct');});
+  if(c!==a)el.classList.add('wrong');
+};
+function mathSection(){
+  const qs=[{q:'15 × 8',opts:['110','120','130','115'],a:1},{q:'256 ÷ 4',opts:['62','64','66','68'],a:1},{q:'√144',opts:['11','12','13','14'],a:1},{q:'3² + 4²',opts:['23','24','25','26'],a:2},{q:'100 − 37',opts:['61','62','63','64'],a:2},{q:'7 × 9',opts:['56','61','63','64'],a:2}];
+  let h=`<div style="margin-bottom:14px;"><h2 style="font-family:'Orbitron',monospace;font-size:14px;color:var(--white);">🔢 Math Quiz</h2><p style="font-size:12px;color:var(--text2);">6 questions · KES 10 per correct answer</p></div>`;
+  qs.forEach((q,i)=>{h+=`<div class="quiz-card"><div class="quiz-q">${i+1}. ${q.q} = ?</div><div class="quiz-options">${q.opts.map((o,j)=>`<div class="quiz-opt" onclick="answerQ(this,${j},${q.a})">${o}</div>`).join('')}</div></div>`;});
+  return h;
+}
+function surveySection(){return `<div class="quiz-card"><div class="quiz-q">How satisfied are you with NETLINK services?</div><div class="quiz-options"><div class="quiz-opt" onclick="answerQ(this,0,0)">Very Satisfied</div><div class="quiz-opt" onclick="answerQ(this,1,0)">Satisfied</div><div class="quiz-opt" onclick="answerQ(this,2,0)">Neutral</div><div class="quiz-opt" onclick="answerQ(this,3,0)">Not Satisfied</div></div></div>`;}
+function numGameSection(){return `<div class="task-card"><h3>🎲 Number Game — Guess 1–10</h3><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:16px 0;">${Array.from({length:10},(_,i)=>`<button style="background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:13px;font-size:17px;font-weight:900;color:var(--white);cursor:pointer;" onclick="playNum(this,${i+1})">${i+1}</button>`).join('')}</div><div class="alert alert-green" id="ng-result" style="display:none;"></div></div>`;}
+window.playNum=function(btn,n){
+  document.querySelectorAll('#content-area button[onclick^="playNum"]').forEach(b=>b.disabled=true);
+  const w=Math.ceil(Math.random()*10),r=document.getElementById('ng-result');
+  if(n===w){r.className='alert alert-green';r.textContent=`🎉 Correct! The number was ${w}. You win KES 20!`;}
+  else{r.className='alert alert-red';r.textContent=`❌ Wrong! The number was ${w}. Better luck!`;}
+  r.style.display='block';
+};
+
+window.copyRef=function(){
+  const t=document.getElementById('reflink')?.textContent;
+  if(t)navigator.clipboard.writeText(t).then(()=>alert('Referral link copied!'));
+};
+window.calcFee=function(){
+  const a=parseInt(document.getElementById('w-amount')?.value)||0;
+  const n=document.getElementById('fee-note');if(!n)return;
+  let f=0;if(a>=150&&a<=350)f=15;else if(a>350&&a<=700)f=30;else if(a>700&&a<=1500)f=50;else if(a>1500&&a<=3000)f=70;else if(a>3000)f=150;
+  n.textContent=a>=150?`Fee: KES ${f} | You receive: KES ${a-f}`:'';
+};
+window.calcUSD=function(){
+  const a=parseInt(document.getElementById('w-amount-pp')?.value)||0;
+  const n=document.getElementById('usd-note');if(!n)return;
+  n.textContent=a>0?`≈ USD ${(a/130).toFixed(2)} after conversion`:'';
+};
+window.submitAdvert=function(){
+  const v=parseInt(document.getElementById('adv-views')?.value)||0;
+  const ok=document.getElementById('adv-ok');if(!ok)return;
+  if(!v){alert('Enter views.');return;}
+  ok.textContent=`✅ ${v} views submitted. KES ${v} will be credited to total earnings.`;ok.style.display='block';
+};
+
+// ── WITHDRAW (saves to Firestore) ──
+window.doWithdraw = async function(method){
+  const amtId=method==='mpesa'?'w-amount':'w-amount-pp';
+  const okId=method==='mpesa'?'w-ok':'w-ok-pp';
+  const amt=parseInt(document.getElementById(amtId)?.value)||0;
+  const ok=document.getElementById(okId);
+  if(amt<150){alert('Minimum withdrawal is KES 150.');return;}
+  if(!window._currentUser)return;
+  try{
+    await addDoc(collection(db,'pendingWithdrawals'),{
+      uid:window._currentUser.uid,username:window._userData?.username||'',
+      amount:amt,method,phone:window._userData?.phone||'',
+      paypalEmail:method==='paypal'?(document.getElementById('pp-email')?.value||''):'',
+      status:'pending',createdAt:serverTimestamp()
+    });
+    if(ok){ok.innerHTML=`✅ Your withdraw request of <strong>KES ${amt}</strong> submitted successfully. Wait verification and timely disbursement.`;ok.style.display='block';}
+  }catch(e){alert('Error: '+e.message);}
+};
+
+// ── DEPOSIT (saves to Firestore) ──
+window.doDeposit = async function(){
+  const amt=parseInt(document.getElementById('dep-amount')?.value)||0;
+  const txn=document.getElementById('dep-txn')?.value.trim().toUpperCase();
+  if(!amt||!txn){alert('Fill in all fields.');return;}
+  if(!window._currentUser)return;
+  try{
+    await addDoc(collection(db,'pendingDeposits'),{
+      uid:window._currentUser.uid,username:window._userData?.username||'',
+      amount:amt,txnId:txn,status:'pending',createdAt:serverTimestamp()
+    });
+    const ok=document.getElementById('dep-ok');
+    if(ok){ok.textContent=`✅ Deposit of KES ${amt} (${txn}) submitted. Awaiting admin approval.`;ok.style.display='block';}
+  }catch(e){
+    const er=document.getElementById('dep-err');
+    if(er){er.textContent='❌ '+e.message;er.style.display='block';}
+  }
+};
+
+// ══════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════
+window.doAdminLogin=function(){
+  const u=document.getElementById('admin-user').value.trim();
+  const p=document.getElementById('admin-pass').value;
+  if(u==='admin'&&p==='Netlink2026'){
+    showPage('page-admin');showAdminSection('admin-home');
+  } else {
+    showAlert('admin-login-err','⚠️ Invalid credentials.');
+  }
+};
+
+window.showAdminSection = async function(sec){
+  document.getElementById('admin-topbar-title').textContent=sec.replace('admin-','').replace(/-/g,' ').toUpperCase();
+  document.getElementById('admin-content-area').innerHTML='<div style="text-align:center;padding:40px;color:var(--text2);">Loading...</div>';
+  document.getElementById('admin-content-area').innerHTML=await renderAdmin(sec);
+};
+
+async function renderAdmin(sec){
+  if(sec==='admin-home'){
+    const usersSnap=await getDocs(collection(db,'users'));
+    const allUsers=usersSnap.docs.map(d=>d.data());
+    const active=allUsers.filter(u=>u.activated).length;
+    const inactive=allUsers.filter(u=>!u.activated).length;
+    const actSnap=await getDocs(query(collection(db,'pendingActivations'),where('status','==','pending')));
+    const wSnap=await getDocs(query(collection(db,'pendingWithdrawals'),where('status','==','pending')));
+    const dSnap=await getDocs(query(collection(db,'pendingDeposits'),where('status','==','pending')));
+    return `
+      <div class="admin-stat admin-stat-green"><div class="admin-stat-label" style="color:#69F0AE;">Total Users</div><div class="admin-stat-value">${allUsers.length}</div></div>
+      <div class="admin-stat admin-stat-purple"><div class="admin-stat-label" style="color:#C084FC;">Active Users</div><div class="admin-stat-value">${active}</div></div>
+      <div class="admin-stat admin-stat-red"><div class="admin-stat-label" style="color:#FF8A80;">Inactive Users</div><div class="admin-stat-value">${inactive}</div></div>
+      <div class="admin-stat admin-stat-yellow"><div class="admin-stat-label" style="color:#FFD740;">Pending Activations</div><div class="admin-stat-value">${actSnap.size}</div></div>
+      <div class="admin-stat admin-stat-blue"><div class="admin-stat-label" style="color:var(--accent);">Pending Withdrawals</div><div class="admin-stat-value">${wSnap.size}</div></div>
+      <div class="admin-stat admin-stat-blue"><div class="admin-stat-label" style="color:var(--accent);">Pending Deposits</div><div class="admin-stat-value">${dSnap.size}</div></div>
+      <div class="admin-stat admin-stat-rainbow"><div class="admin-stat-label" style="color:var(--gold);">Total Paid Out</div><div class="admin-stat-value" style="color:var(--gold);">KES 0</div></div>`;
+  }
+
+  if(sec==='admin-users'){
+    const snap=await getDocs(collection(db,'users'));
+    const rows=snap.docs.map(d=>{const u=d.data();return `<tr>
+      <td>${u.username||''}</td><td style="font-size:11px;">${u.email||''}</td><td>${u.country||''}</td>
+      <td><span class="status-badge ${u.activated?'status-active':'status-inactive'}">${u.activated?'✅ Active':'❌ Inactive'}</span></td>
+      <td>
+        <button class="action-btn approve-btn" onclick="adminActivateUser('${d.id}',true)">Activate</button>
+        <button class="action-btn reject-btn" onclick="adminActivateUser('${d.id}',false)">Deactivate</button>
+        <button class="action-btn info-btn" onclick="adminViewUser('${d.id}')">Info</button>
+      </td></tr>`;}).join('');
+    return `<div style="overflow-x:auto;"><table class="admin-table"><tr><th>Username</th><th>Email</th><th>Country</th><th>Status</th><th>Actions</th></tr>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text2);">No users yet</td></tr>'}</table></div>`;
+  }
+
+  if(sec==='admin-activation'){
+    const snap=await getDocs(query(collection(db,'pendingActivations'),where('status','==','pending')));
+    const rows=snap.docs.map(d=>{const t=d.data();return `<tr>
+      <td>${t.username||''}</td><td style="font-family:monospace;font-size:11px;">${t.txnId||''}</td><td>${t.email||''}</td>
+      <td><span class="status-badge" style="background:rgba(255,179,0,.15);color:var(--yellow);">Pending</span></td>
+      <td>
+        <button class="action-btn approve-btn" onclick="adminApproveActivation('${d.id}','${t.uid}')">Approve</button>
+        <button class="action-btn reject-btn" onclick="adminRejectActivation('${d.id}')">Reject</button>
+      </td></tr>`;}).join('');
+    return `<div style="overflow-x:auto;"><table class="admin-table"><tr><th>Username</th><th>Txn ID</th><th>Email</th><th>Status</th><th>Actions</th></tr>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text2);">No pending activations</td></tr>'}</table></div>`;
+  }
+
+  if(sec==='admin-withdraw'){
+    const snap=await getDocs(query(collection(db,'pendingWithdrawals'),where('status','==','pending')));
+    const rows=snap.docs.map(d=>{const w=d.data();return `<tr>
+      <td>${w.username||''}</td><td>KES ${w.amount}</td><td>${w.method}</td><td>${w.phone||''}</td>
+      <td>
+        <button class="action-btn approve-btn" onclick="adminApproveWithdraw('${d.id}')">Approve</button>
+        <button class="action-btn reject-btn" onclick="adminRejectWithdraw('${d.id}')">Reject</button>
+      </td></tr>`;}).join('');
+    return `<div style="overflow-x:auto;"><table class="admin-table"><tr><th>User</th><th>Amount</th><th>Method</th><th>Phone</th><th>Actions</th></tr>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text2);">No pending withdrawals</td></tr>'}</table></div>`;
+  }
+
+  if(sec==='admin-deposits'){
+    const snap=await getDocs(query(collection(db,'pendingDeposits'),where('status','==','pending')));
+    const rows=snap.docs.map(d=>{const dep=d.data();return `<tr>
+      <td>${dep.username||''}</td><td>KES ${dep.amount}</td><td style="font-family:monospace;font-size:11px;">${dep.txnId||''}</td>
+      <td>
+        <button class="action-btn approve-btn" onclick="adminApproveDeposit('${d.id}','${dep.uid}',${dep.amount})">Approve</button>
+        <button class="action-btn reject-btn" onclick="adminRejectDeposit('${d.id}')">Reject</button>
+      </td></tr>`;}).join('');
+    return `<div style="overflow-x:auto;"><table class="admin-table"><tr><th>User</th><th>Amount</th><th>Txn ID</th><th>Actions</th></tr>${rows||'<tr><td colspan="4" style="text-align:center;color:var(--text2);">No pending deposits</td></tr>'}</table></div>`;
+  }
+
+  if(sec==='admin-post'){
+    const snap=await getDocs(collection(db,'communityPosts'));
+    const posts=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt?.seconds-a.createdAt?.seconds);
+    window._adminPosts=posts.map(p=>({content:p.content,time:p.createdAt?new Date(p.createdAt.seconds*1000).toLocaleString():''}));
+    return `
+      <div class="task-card">
+        <h3>📝 Post to Community</h3>
+        <div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Post Content</label><textarea class="form-control" id="post-content" rows="4" placeholder="Write your post..." style="resize:vertical;"></textarea></div>
+        <button class="btn btn-primary" onclick="adminPublishPost()">📢 Publish</button>
+      </div>
+      ${posts.map(p=>`<div class="community-post">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+          <div class="post-time">📅 ${p.createdAt?new Date(p.createdAt.seconds*1000).toLocaleString():''}</div>
+          <button class="action-btn reject-btn" onclick="adminDeletePost('${p.id}')">🗑 Delete</button>
+        </div>
+        <p style="font-size:13px;">${p.content}</p>
+      </div>`).join('')}`;
+  }
+
+  if(sec==='admin-ai') return `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+      <div id="ai-msgs" style="padding:16px;min-height:280px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+        <div style="background:var(--bg3);border-radius:9px;padding:12px;font-size:13px;line-height:1.7;"><strong style="color:var(--accent);">🤖 Agent:</strong> Hello! I'm your NETLINK AI Agent. I can help you manage your platform, answer questions, and guide you. What do you need?</div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding:12px;display:flex;gap:10px;">
+        <input class="form-control" id="ai-inp" placeholder="Ask your AI agent..." style="flex:1;" onkeypress="if(event.key==='Enter')sendAI()"/>
+        <button class="btn btn-primary" style="width:auto;padding:11px 18px;" onclick="sendAI()">Send</button>
+      </div>
+    </div>`;
+
+  if(sec==='admin-settings') return `
+    <div class="task-card">
+      <h3>⚙️ Activation Settings</h3>
+      <div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Activation Amount (KES)</label><input class="form-control" value="150" type="number"/></div>
+      <div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">M-PESA Number</label><input class="form-control" value="+254706494401"/></div>
+      <div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">M-PESA Name</label><input class="form-control" value="MARY MPURUNGA"/></div>
+      <div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">PayPal Email</label><input class="form-control" value="marympurunga@gmail.com"/></div>
+      <button class="btn btn-primary" onclick="alert('Settings saved!')">💾 Save Settings</button>
+    </div>`;
+
+  if(sec==='admin-tg') return `<div class="task-card"><h3>✈️ Telegram Channel</h3><div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Link</label><input class="form-control" value="https://t.me/Mentorfai"/></div><button class="btn btn-primary" onclick="alert('Saved!')">💾 Save</button></div>`;
+  if(sec==='admin-wa') return `<div class="task-card"><h3>💬 WhatsApp Group</h3><div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Group Link</label><input class="form-control" placeholder="https://chat.whatsapp.com/..."/></div><button class="btn btn-primary" onclick="alert('Saved!')">💾 Save</button></div>`;
+  if(sec==='admin-addadmin') return `<div class="task-card"><h3>🔑 Add Admin Account</h3><div class="form-group" style="margin-top:12px;"><label style="font-size:11px;color:var(--text2);font-weight:700;">Username</label><input class="form-control" placeholder="New admin username"/></div><div class="form-group"><label style="font-size:11px;color:var(--text2);font-weight:700;">Password</label><input class="form-control" type="password" placeholder="Password"/></div><button class="btn btn-primary" onclick="alert('Admin account created!')">➕ Create</button></div>`;
+
+  return '<div class="task-card"><p style="color:var(--text2);">Coming soon.</p></div>';
+}
+
+// ── ADMIN ACTIONS ──
+window.adminActivateUser = async function(docId, activate){
+  await updateDoc(doc(db,'users',docId),{activated:activate});
+  alert(activate?'✅ User activated!':'User deactivated.');
+  showAdminSection('admin-users');
+};
+
+window.adminViewUser = async function(docId){
+  const snap=await getDoc(doc(db,'users',docId));
+  if(snap.exists()){
+    const u=snap.data();
+    const newPw=prompt(`User: ${u.username}\nEmail: ${u.email}\nPhone: ${u.phone}\nWhatsApp: ${u.whatsapp}\nCountry: ${u.country}\nBalance: KES ${u.balance||0}\n\nTo reset password, type new password below (leave blank to cancel):`);
+    if(newPw){alert('Password reset request noted. (Requires Firebase Admin SDK for full implementation)');}
+  }
+};
+
+window.adminApproveActivation = async function(docId, uid){
+  await updateDoc(doc(db,'pendingActivations',docId),{status:'approved'});
+  await updateDoc(doc(db,'users',uid),{activated:true});
+  alert('✅ Activation approved! User can now access dashboard.');
+  showAdminSection('admin-activation');
+};
+
+window.adminRejectActivation = async function(docId){
+  await updateDoc(doc(db,'pendingActivations',docId),{status:'rejected'});
+  alert('❌ Activation rejected.');
+  showAdminSection('admin-activation');
+};
+
+window.adminApproveWithdraw = async function(docId){
+  await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
+  alert('✅ Withdrawal approved!');
+  showAdminSection('admin-withdraw');
+};
+window.adminRejectWithdraw = async function(docId){
+  await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected'});
+  alert('Withdrawal rejected.');
+  showAdminSection('admin-withdraw');
+};
+
+window.adminApproveDeposit = async function(docId, uid, amount){
+  await updateDoc(doc(db,'pendingDeposits',docId),{status:'approved'});
+  const uSnap=await getDoc(doc(db,'users',uid));
+  if(uSnap.exists()){
+    const cur=uSnap.data().balance||0;
+    await updateDoc(doc(db,'users',uid),{balance:cur+amount});
+  }
+  alert(`✅ Deposit of KES ${amount} approved and credited!`);
+  showAdminSection('admin-deposits');
+};
+window.adminRejectDeposit = async function(docId){
+  await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected'});
+  alert('Deposit rejected.');
+  showAdminSection('admin-deposits');
+};
+
+window.adminPublishPost = async function(){
+  const c=document.getElementById('post-content')?.value.trim();
+  if(!c){alert('Enter content.');return;}
+  await addDoc(collection(db,'communityPosts'),{content:c,createdAt:serverTimestamp()});
+  alert('✅ Post published!');
+  showAdminSection('admin-post');
+};
+
+window.adminDeletePost = async function(docId){
+  if(!confirm('Delete this post?'))return;
+  await deleteDoc(doc(db,'communityPosts',docId));
+  showAdminSection('admin-post');
+};
+
+// ── AI AGENT ──
+const aiReply=['To change activation fee, go to Settings.','Reset user passwords via Manage Users → Info.','Referral system: Level 1=KES 80, Level 2=KES 20, Level 3=KES 10.','Post to Community section to share updates with users.','Add admin accounts from the Add Admin section.','Update M-PESA and PayPal details in Settings.','Approve or reject activations in the Activation section.'];
+let aiI=0;
+window.sendAI=function(){
+  const inp=document.getElementById('ai-inp');
+  const msgs=document.getElementById('ai-msgs');
+  const msg=inp?.value.trim();
+  if(!msg||!msgs)return;
+  msgs.innerHTML+=`<div style="background:rgba(0,87,255,.12);border-radius:9px;padding:11px 13px;font-size:13px;"><strong style="color:var(--white);">You:</strong> ${msg}</div>`;
+  inp.value='';
+  setTimeout(()=>{
+    msgs.innerHTML+=`<div style="background:var(--bg3);border-radius:9px;padding:11px 13px;font-size:13px;line-height:1.6;"><strong style="color:var(--accent);">🤖 Agent:</strong> ${aiReply[aiI%aiReply.length]}</div>`;
+    aiI++;msgs.scrollTop=msgs.scrollHeight;
+  },900);
+};
+
+// ── ADMIN ROUTE ──
+if(window.location.pathname==='/admin'){showPage('page-admin-login');}
+</script>
+</body>
+</html>
