@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Dashboard — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--purple:#7C3AED;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar.open{transform:translateX(0);}
+.sb-head{padding:16px;border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:var(--white);line-height:1.1;}
+.logo-sub{font-size:8px;color:var(--accent);letter-spacing:2px;font-family:'Orbitron',monospace;}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
+.ni-icon{font-size:15px;width:20px;text-align:center;}
+.main{flex:1;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
+.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.content{padding:16px 14px;max-width:780px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
+.stat{border-radius:14px;padding:16px;margin-bottom:10px;}
+.sg{background:rgba(0,200,83,.08);border:1.5px solid var(--green);}
+.sp{background:rgba(124,58,237,.08);border:1.5px solid var(--purple);}
+.sr{background:rgba(255,59,59,.08);border:1.5px solid var(--red);}
+.sy{background:rgba(255,179,0,.08);border:1.5px solid var(--yellow);}
+.sb{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);}
+.sm{background:linear-gradient(135deg,rgba(255,0,0,.06),rgba(0,87,255,.06),rgba(0,200,83,.06));border:1.5px solid rgba(255,215,0,.3);}
+.stat-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:5px;}
+.stat-value{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--white);}
+.loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
+.loader.show{display:flex;}
+.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="loader" id="loader"><div class="ring"></div></div>
+<div class="overlay" id="ov" onclick="closeSB()"></div>
+<div class="layout">
+  <nav class="sidebar" id="sb">
+    <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">ADMIN</div></div></div></div>
+    <div class="sb-nav">
+      <a class="ni active" href="/admin/panel.html"><span class="ni-icon">🏠</span>Dashboard</a>
+      <a class="ni" href="/admin/users.html"><span class="ni-icon">👥</span>Manage Users</a>
+      <a class="ni" href="/admin/activation.html"><span class="ni-icon">✅</span>Activation</a>
+      <a class="ni" href="/admin/withdraw.html"><span class="ni-icon">💸</span>Withdrawals</a>
+      <a class="ni" href="/admin/deposits.html"><span class="ni-icon">💰</span>Deposits</a>
+      <a class="ni" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
+      <a class="ni" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
+      <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="openSB()">☰</button>
+      <div class="tb-title">Admin Dashboard</div>
+      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Admin</span></div>
+    </div>
+    <div class="content" id="content"><div style="text-align:center;padding:40px;color:var(--text2);">Loading stats...</div></div>
+  </div>
+</div>
+<script type="module">
+if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const db=getFirestore(app);
+document.getElementById('loader').classList.add('show');
+async function load(){
+  const usersSnap=await getDocs(collection(db,'users'));
+  const all=usersSnap.docs.map(d=>d.data());
+  const active=all.filter(u=>u.activated).length;
+  const inactive=all.filter(u=>!u.activated).length;
+  const actSnap=await getDocs(query(collection(db,'pendingActivations'),where('status','==','pending')));
+  const wSnap=await getDocs(query(collection(db,'pendingWithdrawals'),where('status','==','pending')));
+  const dSnap=await getDocs(query(collection(db,'pendingDeposits'),where('status','==','pending')));
+  const approvedW=await getDocs(query(collection(db,'pendingWithdrawals'),where('status','==','approved')));
+  let totalPaid=0;approvedW.docs.forEach(d=>totalPaid+=d.data().amount||0);
+  document.getElementById('loader').classList.remove('show');
+  document.getElementById('content').innerHTML=`
+    <div class="stat sg"><div class="stat-label" style="color:#69F0AE;">Total Users</div><div class="stat-value">${all.length}</div></div>
+    <div class="stat sp"><div class="stat-label" style="color:#C084FC;">Active Users</div><div class="stat-value">${active}</div></div>
+    <div class="stat sr"><div class="stat-label" style="color:#FF8A80;">Inactive Users</div><div class="stat-value">${inactive}</div></div>
+    <div class="stat sy"><div class="stat-label" style="color:#FFD740;">Pending Activations</div><div class="stat-value">${actSnap.size}</div></div>
+    <div class="stat sb"><div class="stat-label" style="color:var(--accent);">Pending Withdrawals</div><div class="stat-value">${wSnap.size}</div></div>
+    <div class="stat sb"><div class="stat-label" style="color:var(--accent);">Pending Deposits</div><div class="stat-value">${dSnap.size}</div></div>
+    <div class="stat sm"><div class="stat-label" style="color:var(--gold);">Total Paid Out</div><div class="stat-value" style="color:var(--gold);">KES ${totalPaid}</div></div>`;
+}
+load();
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
+</script>
+</body>
+</html>
