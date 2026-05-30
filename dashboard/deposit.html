@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Deposit — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar.open{transform:translateX(0);}
+.sb-head{padding:18px 16px;border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--white);line-height:1.1;}
+.logo-sub{font-size:8px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
+.ni-icon{font-size:15px;width:20px;text-align:center;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}
+.arr{margin-left:auto;font-size:10px;}
+.sub-nav{display:none;background:rgba(0,0,0,.2);}
+.sub-nav.open{display:block;}
+.sub-ni{padding-left:44px;font-size:12px;}
+.main{flex:1;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
+.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
+.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.content{padding:16px 14px;max-width:760px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
+.note{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);border-radius:12px;padding:14px;font-size:13px;color:var(--accent);line-height:1.7;margin-bottom:16px;}
+.note strong{color:#fff;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.card h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:12px;}
+.fg{margin-bottom:12px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
+input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
+input:focus,select:focus{border-color:var(--primary);}
+select option{background:var(--bg3);}
+.amt-w{position:relative;}
+.amt-p{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:800;}
+.amt-i{padding-left:44px!important;}
+.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;}
+.btn:disabled{opacity:.5;}
+.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.wa-btn{width:100%;padding:11px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-top:8px;}
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
+.step-num{width:28px;height:28px;min-width:28px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;}
+.step-text{font-size:13px;color:var(--text2);line-height:1.6;}
+.step-text strong{color:var(--white);}
+.paybill-box{background:var(--bg3);border:1.5px solid var(--gold);border-radius:10px;padding:14px;text-align:center;margin:12px 0;}
+.paybill-num{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--gold);letter-spacing:3px;}
+.paybill-label{font-size:10px;color:var(--text2);font-weight:700;text-transform:uppercase;margin-top:4px;}
+.tabs{display:flex;gap:8px;margin-bottom:16px;}
+.tab{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;text-align:center;color:var(--text2);background:var(--bg3);transition:.2s;}
+.tab.active{border-color:var(--primary);color:var(--accent);background:rgba(0,87,255,.1);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+</style>
+</head>
+<body>
+<div class="overlay" id="ov" onclick="closeSB()"></div>
+<div class="layout">
+  <nav class="sidebar" id="sb">
+    <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+    <div class="sb-nav">
+      <a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
+      <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
+      <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+      <a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
+      <a class="ni active" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
+      <a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
+      <a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
+      <a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
+      <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
+      <a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
+      <a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
+      <div class="ns">Videos</div>
+      <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
+      <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
+      <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
+      <div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
+      <div class="sub-nav" id="sw">
+        <a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
+      </div>
+      <div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
+      <div class="sub-nav" id="sd">
+        <a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
+        <a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
+        <a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
+      </div>
+      <div class="ns">More</div>
+      <a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
+      <a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
+      <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+      <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
+      <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
+      <a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
+      <a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
+      <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
+      <a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
+      <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
+      <a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="openSB()">☰</button>
+      <div class="tb-title">Deposit</div>
+      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;" id="un">User</span></div>
+    </div>
+    <div class="content">
+
+      <div class="note">
+        <strong>💡 How Deposits Work</strong><br>
+        Send money via M-PESA or PayPal, then fill in the form below to confirm your deposit. Your balance will be updated after verification by our team.
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('mpesa')">📱 M-PESA</div>
+        <div class="tab" onclick="switchTab('paypal')">💳 PayPal</div>
+      </div>
+
+      <!-- M-PESA Tab -->
+      <div class="tab-content active" id="tab-mpesa">
+        <div class="card">
+          <h3>📱 M-PESA Deposit Steps</h3>
+          <div class="step"><div class="step-num">1</div><div class="step-text">Go to <strong>M-PESA</strong> on your phone and select <strong>Lipa na M-PESA</strong>.</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">Select <strong>Pay Bill</strong> and enter the business number below.</div></div>
+          <div class="paybill-box">
+            <div class="paybill-label">Paybill Number</div>
+            <div class="paybill-num">522533</div>
+            <div class="paybill-label" style="margin-top:10px;">Account Number</div>
+            <div class="paybill-num" style="font-size:18px;" id="mpesa-acc">Loading...</div>
+          </div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">Enter the <strong>account number shown above</strong> (your username), enter amount, then your M-PESA PIN.</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text">Fill in the confirmation form below and submit.</div></div>
+        </div>
+        <div class="card">
+          <h3>✅ Confirm M-PESA Deposit</h3>
+          <div class="fg"><label>M-PESA Transaction Code</label><input id="mpesa-code" type="text" placeholder="e.g. QGH7X2KLMN" style="text-transform:uppercase;"/></div>
+          <div class="fg"><label>Amount Sent (KES)</label>
+            <div class="amt-w"><span class="amt-p">KES</span><input class="amt-i" id="mpesa-amt" type="number" placeholder="Enter amount"/></div>
+          </div>
+          <div class="ok" id="mpesa-ok"></div>
+          <div class="err" id="mpesa-err"></div>
+          <button class="btn" id="mpesa-btn" onclick="submitDeposit('mpesa')">📨 Submit M-PESA Deposit</button>
+        </div>
+      </div>
+
+      <!-- PayPal Tab -->
+      <div class="tab-content" id="tab-paypal">
+        <div class="card">
+          <h3>💳 PayPal Deposit Steps</h3>
+          <div class="step"><div class="step-num">1</div><div class="step-text">Log into your <strong>PayPal</strong> account.</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">Send payment to: <strong style="color:var(--accent);">netlinkagencies@paypal.com</strong></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text">In the note/reference field, write your <strong>NETLINK username</strong>.</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text">Fill in the confirmation form below and submit.</div></div>
+        </div>
+        <div class="card">
+          <h3>✅ Confirm PayPal Deposit</h3>
+          <div class="fg"><label>PayPal Transaction ID</label><input id="pp-txn" type="text" placeholder="e.g. 7GH82930KA"/></div>
+          <div class="fg"><label>Amount Sent (USD)</label>
+            <div class="amt-w"><span class="amt-p">$</span><input class="amt-i" id="pp-amt" type="number" placeholder="Enter USD amount" step="0.01" oninput="convertUSD()"/></div>
+          </div>
+          <div style="font-size:11px;color:var(--yellow);margin-top:-8px;margin-bottom:10px;" id="usd-kes"></div>
+          <div class="ok" id="pp-ok"></div>
+          <div class="err" id="pp-err"></div>
+          <button class="btn" id="pp-btn" onclick="submitDeposit('paypal')">📨 Submit PayPal Deposit</button>
+        </div>
+      </div>
+
+      <!-- WhatsApp support -->
+      <div class="card" style="text-align:center;">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">Need help with your deposit?</div>
+        <button class="wa-btn" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Contact Support on WhatsApp</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const auth=getAuth(app),db=getFirestore(app);
+let U=null,UD=null;
+onAuthStateChanged(auth,async u=>{
+  if(!u){window.location.href='/login.html';return;}
+  U=u;
+  const snap=await getDoc(doc(db,'users',u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.href='/activation.html';return;}
+  UD=snap.data();
+  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  document.getElementById('un').textContent=UD.username;
+  document.getElementById('mpesa-acc').textContent=UD.username||'—';
+});
+
+window.switchTab=function(t){
+  document.querySelectorAll('.tab').forEach((el,i)=>{el.classList.toggle('active',i===(t==='mpesa'?0:1));});
+  document.getElementById('tab-mpesa').classList.toggle('active',t==='mpesa');
+  document.getElementById('tab-paypal').classList.toggle('active',t==='paypal');
+};
+
+window.convertUSD=function(){
+  const v=parseFloat(document.getElementById('pp-amt').value)||0;
+  document.getElementById('usd-kes').textContent=v>0?`≈ KES ${(v*130).toFixed(0)} after conversion`:'';
+};
+
+window.submitDeposit=async function(method){
+  const okEl=document.getElementById(method==='mpesa'?'mpesa-ok':'pp-ok');
+  const errEl=document.getElementById(method==='mpesa'?'mpesa-err':'pp-err');
+  const btnEl=document.getElementById(method==='mpesa'?'mpesa-btn':'pp-btn');
+  okEl.style.display='none';errEl.style.display='none';
+
+  let txn='',amt=0;
+  if(method==='mpesa'){
+    txn=document.getElementById('mpesa-code').value.trim().toUpperCase();
+    amt=parseInt(document.getElementById('mpesa-amt').value)||0;
+    if(!txn){errEl.textContent='⚠️ Enter your M-PESA transaction code.';errEl.style.display='block';return;}
+  } else {
+    txn=document.getElementById('pp-txn').value.trim();
+    amt=parseFloat(document.getElementById('pp-amt').value)||0;
+    if(!txn){errEl.textContent='⚠️ Enter your PayPal transaction ID.';errEl.style.display='block';return;}
+  }
+  if(amt<=0){errEl.textContent='⚠️ Enter a valid amount.';errEl.style.display='block';return;}
+  btnEl.disabled=true;
+  try{
+    await addDoc(collection(db,'deposits'),{
+      uid:U.uid,username:UD.username,method,transactionCode:txn,amount:amt,
+      currency:method==='mpesa'?'KES':'USD',status:'pending',createdAt:serverTimestamp()
+    });
+    okEl.innerHTML=`✅ Deposit of <strong>${method==='mpesa'?'KES':'USD'} ${amt}</strong> submitted! Your balance will be updated after verification.`;
+    okEl.style.display='block';
+    if(method==='mpesa')document.getElementById('mpesa-code').value='';
+    else document.getElementById('pp-txn').value='';
+  }catch(e){
+    errEl.textContent='❌ '+e.message;errEl.style.display='block';
+    btnEl.disabled=false;
+  }
+};
+
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.href='/login.html';};
+</script>
+</body>
+</html>
