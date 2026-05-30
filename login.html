@@ -94,7 +94,7 @@ window.doLogin = async function(){
       // Save to localStorage for fast access
       localStorage.setItem('nlUser', JSON.stringify({...data, uid:cred.user.uid}));
       // Redirect based on activation status
-      window.location.href = data.activated ? 'https://netlinkagencies.linkpc.net/dashboard.html' : 'https://netlinkagencies.linkpc.net/activate.html';
+      window.location.href = data.activated ? 'https://netlinkagencies.linkpc.net/home.html' : 'https://netlinkagencies.linkpc.net/activate.html';
     } else {
       window.location.href = 'https://netlinkagencies.linkpc.net/activate.html';
     }
@@ -107,4 +107,4 @@ window.doLogin = async function(){
 };
 </script>
 </body>
-</html>
+                                                         </html>
