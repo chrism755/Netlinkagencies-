@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Deposit — NETLINK AGENCIES</title>
+<title>Mentorship — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 :root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:260px;}
@@ -130,11 +130,11 @@ input:focus,textarea:focus{border-color:var(--primary);}
   <div class="main">
     <div class="topbar">
       <button class="menu-btn" onclick="openSB()">☰</button>
-      <div class="tb-title">Deposit</div>
+      <div class="tb-title">Mentorship</div>
       <div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;" id="un">User</span></div>
     </div>
     <div class="content">
-<div class="card"><h3>💰 Make a Deposit</h3><p>Send money and enter your transaction ID below. Admin will approve and credit your account.</p><div style="background:var(--bg3);border-radius:10px;padding:14px;margin:12px 0;font-size:13px;"><p style="color:var(--accent);font-weight:800;margin-bottom:8px;">Payment Details</p><p>📱 M-PESA: <strong>+254706494401</strong> (MARY MPURUNGA)</p><p style="margin-top:5px;">💳 PayPal: <strong>marympurunga@gmail.com</strong></p></div></div><div class="card"><div class="fg"><label>Amount (KES)</label><div class="amt-w"><span class="amt-p">KES</span><input class="amt-i" id="dep-amount" type="number" placeholder="Enter amount"/></div></div><div class="fg"><label>Transaction ID</label><input id="dep-txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;font-family:monospace;letter-spacing:1px;"/></div><div class="ok" id="dep-ok"></div><div class="err" id="dep-err"></div><button class="btn" id="dep-btn" onclick="doDeposit()">💰 Submit Deposit</button></div><script>async function pageInit(db,U,UD,collection,getDocs,addDoc,serverTimestamp){window.doDeposit=async function(){const amt=parseInt(document.getElementById("dep-amount").value)||0;const txn=document.getElementById("dep-txn").value.trim().toUpperCase();if(!amt||!txn){alert("Fill all fields.");return;}document.getElementById("dep-btn").disabled=true;try{await addDoc(collection(db,"pendingDeposits"),{uid:U.uid,username:UD.username,amount:amt,txnId:txn,status:"pending",createdAt:serverTimestamp()});const ok=document.getElementById("dep-ok");ok.textContent="✅ Deposit of KES "+amt+" ("+txn+") submitted! Awaiting admin approval.";ok.style.display="block";}catch(e){document.getElementById("dep-err").textContent="❌ "+e.message;document.getElementById("dep-err").style.display="block";document.getElementById("dep-btn").disabled=false;}};}<\/script>
+<div class="card"><h3>🎓 NETLINK Mentorship Program</h3><p>Get expert mentorship in networking, digital marketing, and online business. Learn how to grow your downlines and maximize your earnings!</p><button class="wa-btn" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Contact Mentor on WhatsApp</button><button class="tg-btn" onclick="window.open('https://t.me/Mentorfai','_blank')">✈️ Join Telegram Channel</button></div><div class="card"><h3>📚 What You Learn</h3><p>• How to grow your referral network<br>• Digital marketing strategies<br>• How to earn from all tasks<br>• Financial management tips<br>• Online business skills</p></div>
     </div>
   </div>
 </div>

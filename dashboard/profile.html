@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>profile — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;}*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}.layout{display:flex;min-height:100vh;}.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}.sidebar.open{transform:translateX(0);}.sb-head{padding:18px 16px;border-bottom:1px solid var(--border);}.logo{display:flex;align-items:center;gap:10px;}.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--white);line-height:1.1;}.logo-sub{font-size:8px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}.ni-icon{font-size:15px;width:20px;text-align:center;}.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}.arr{margin-left:auto;font-size:10px;}.sub-nav{display:none;background:rgba(0,0,0,.2);}.sub-nav.open{display:block;}.sub-ni{padding-left:44px!important;font-size:12px;}.main{flex:1;}.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}.content{padding:16px 14px;max-width:760px;margin:0 auto;}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}.overlay.show{display:block;}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}.card h3{font-size:15px;font-weight:800;color:var(--white);margin-bottom:10px;}.card p{font-size:13px;color:var(--text2);line-height:1.7;}.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-top:8px;}.tg-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#2CA5E0;color:#fff;margin-top:8px;}.tt{width:100%;border-collapse:collapse;}.tt th{background:var(--primary);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;}.tt tr:nth-child(even) td{background:rgba(0,87,255,.04);}.day{background:var(--card);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--accent);}.pav{width:72px;height:72px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;margin:0 auto 12px;}.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}.pl{font-size:11px;color:var(--text2);font-weight:700;}.pv{font-size:13px;color:#fff;font-weight:700;}.badge{display:inline-flex;align-items:center;background:rgba(0,87,255,.2);border:1px solid var(--primary);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--accent);margin-left:7px;}</style></head>
+<body>
+<div class="overlay" id="ov" onclick="closeSB()"></div>
+<div class="layout">
+<nav class="sidebar" id="sb"><div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+<div class="sb-nav">
+<a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
+<a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
+<a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+<a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
+<a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
+<a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
+<a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
+<a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
+<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
+<div class="sub-nav" id="sd"><a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a><a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a><a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a></div>
+<div class="ns">More</div>
+<a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+<a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
+<a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
+<a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
+<a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
+<a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
+<a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
+<a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
+<a class="ni" style="color:#FF3B3B;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+</div></nav>
+<div class="main">
+<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title" id="pg-title">profile</div><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;" id="un">User</span></div></div>
+<div class="content" id="pg-content"><div style="text-align:center;padding:40px;color:var(--text2);">Loading...</div></div>
+</div></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const auth=getAuth(app),db=getFirestore(app);
+const PAGE="profile";
+onAuthStateChanged(auth,async u=>{
+  if(!u){window.location.replace('/login.html');return;}
+  const snap=await getDoc(doc(db,'users',u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
+  const UD=snap.data();
+  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  document.getElementById('un').textContent=UD.username;
+  if(PAGE==='community'){
+    document.getElementById('pg-title').textContent='Community';
+    const ps=await getDocs(collection(db,'communityPosts'));
+    const posts=ps.docs.map(d=>({...d.data()})).sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+    document.getElementById('pg-content').innerHTML=posts.length===0?'<div class="card"><p style="text-align:center;color:var(--text2);">No posts yet. Check back soon!</p></div>':posts.map(p=>'<div class="card"><div style="font-size:10px;color:var(--text2);margin-bottom:8px;">📅 '+(p.createdAt?new Date(p.createdAt.seconds*1000).toLocaleString():'')+'</div><p style="font-size:14px;line-height:1.7;">'+p.content+'</p></div>').join('');
+  } else if(PAGE==='help'){
+    document.getElementById('pg-title').textContent='Get Help';
+    document.getElementById('pg-content').innerHTML='<div class="card"><h3>🆘 Contact Support</h3><p>Our team is available 24/7!</p></div><div class="card" style="text-align:center;"><h3 style="margin-bottom:12px;">💬 WhatsApp</h3><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">+254 706 494 401</p><button class="wa-btn" onclick="window.open(\'https://wa.me/254706494401\',\'_blank\')">💬 Chat on WhatsApp</button></div><div class="card" style="text-align:center;"><h3 style="margin-bottom:12px;">✈️ Telegram</h3><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">@Mentorfai</p><button class="tg-btn" onclick="window.open(\'https://t.me/Mentorfai\',\'_blank\')">✈️ Join Telegram</button></div>';
+  } else if(PAGE==='timetable'){
+    document.getElementById('pg-title').textContent='Time Table';
+    document.getElementById('pg-content').innerHTML='<div class="card"><h3>🗓️ Weekly Task Schedule</h3><p>Follow this to maximize earnings every week!</p></div><div style="overflow-x:auto;"><table class="tt"><tr><th>Day</th><th>Task</th><th>Reward</th></tr><tr><td><span class="day">Monday</span></td><td>TikTok Videos ×3</td><td style="color:var(--gold);">KES 45</td></tr><tr><td><span class="day">Tuesday</span></td><td>Trivia Quiz ×6</td><td style="color:var(--gold);">KES 30</td></tr><tr><td><span class="day">Wednesday</span></td><td>Instagram Videos ×3</td><td style="color:var(--gold);">KES 60</td></tr><tr><td><span class="day">Thursday</span></td><td>Math Quiz ×6</td><td style="color:var(--gold);">KES 60</td></tr><tr><td><span class="day">Friday</span></td><td>YouTube Videos ×3</td><td style="color:var(--gold);">KES 75</td></tr><tr><td><span class="day">Saturday</span></td><td>Daily Survey ×3</td><td style="color:var(--gold);">KES 15</td></tr><tr><td><span class="day">Sunday</span></td><td>Number Game + Ads</td><td style="color:var(--gold);">KES 25+</td></tr></table></div><div class="card" style="margin-top:12px;"><h3>💡 Tips</h3><p>• Complete all tasks daily<br>• Share referral link every day<br>• Post WhatsApp advert weekly<br>• Check community for bonus tasks</p></div>';
+  } else if(PAGE==='profile'){
+    document.getElementById('pg-title').textContent='Profile';
+    document.getElementById('pg-content').innerHTML='<div style="text-align:center;padding:20px 0 16px;"><div class="pav">'+UD.username.charAt(0).toUpperCase()+'</div><div style="font-family:Orbitron,monospace;font-size:17px;font-weight:900;color:#fff;">'+UD.username+'<span class="badge">✔ Verified</span></div></div><div class="prow"><div class="pl">Email</div><div class="pv">'+UD.email+'</div></div><div class="prow"><div class="pl">Phone</div><div class="pv">'+UD.phone+'</div></div><div class="prow"><div class="pl">WhatsApp</div><div class="pv">'+UD.whatsapp+'</div></div><div class="prow"><div class="pl">Country</div><div class="pv">'+UD.country+'</div></div><div class="prow"><div class="pl">Referral Code</div><div class="pv" style="color:var(--accent);">'+UD.referralCode+'</div></div><div class="prow"><div class="pl">Account Balance</div><div class="pv" style="color:var(--gold);">KES '+(UD.balance||0)+'</div></div><div class="prow"><div class="pl">Total Earnings</div><div class="pv" style="color:var(--green);">KES '+(UD.totalEarnings||0)+'</div></div>';
+  }
+});
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
+</script></body></html>
