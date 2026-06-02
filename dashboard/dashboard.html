@@ -8,18 +8,13 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
 .main{flex:1;}
-
-/* TOPBAR EXACT RED */
 .topbar{background:#e74c3c;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
 .tb-left{display:flex;align-items:center;gap:12px;}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:16px;font-weight:800;color:#fff;}
 .notif-btn{position:relative;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
 .notif-badge{position:absolute;top:-4px;right:-4px;background:#FFD700;color:#000;border-radius:50%;width:22px;height:22px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;}
-
 .content{max-width:480px;margin:0 auto;padding-bottom:20px;}
-
-/* WHITE GREETING BAR */
 .greet{background:#fff;padding:14px 16px;border-bottom:1px solid #e5e5e5;}
 .greet-top{display:flex;align-items:center;justify-content:space-between;}
 .greet-text{font-size:15px;font-weight:700;color:#444;}
@@ -27,20 +22,13 @@ body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
 .greet-text .tick{color:#27ae60;margin-left:3px;}
 .greet-sub{font-size:12px;color:#888;margin-top:2px;}
 .level-box{background:#27ae60;color:#fff;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
-
-/* CARDS WRAPPER */
 .cards{padding:12px;display:flex;flex-direction:column;gap:10px;}
-
-/* THIS MAKES TOP 2 SIDE BY SIDE */
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-
 .card{border-radius:12px;padding:16px 14px;position:relative;min-height:78px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);}
 .card .lab{font-size:10px;font-weight:800;letter-spacing:0.8px;opacity:0.9;margin-bottom:5px;text-transform:uppercase;}
 .card .amt{font-size:22px;font-weight:900;margin-bottom:5px;}
 .card .pill{display:inline-block;background:rgba(0,0,0,0.22);border-radius:15px;padding:2px 7px;font-size:9px;font-weight:700;}
 .card .icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:32px;opacity:0.18;}
-
-/* EXACT COLORS FROM YOUR SCREENSHOT */
 .red{background:#e74c3c;}
 .orange{background:#f39c12;}
 .blue{background:#3498db;}
@@ -58,25 +46,16 @@ body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
     </div>
     <button class="notif-btn">🔔<span class="notif-badge" id="notifCount">5</span></button>
   </div>
-
   <div class="content" id="content">Loading...</div>
 </div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app = initializeApp({
-  apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
-  authDomain:"netlink-agencies-6399e.firebaseapp.com",
-  projectId:"netlink-agencies-6399e"
-});
+const app = initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e"});
 const auth = getAuth(app), db = getFirestore(app);
 let UD = null;
-
 const fmt = n => 'KES ' + Number(n||0).toLocaleString('en-KE');
-
 onAuthStateChanged(auth, async u => {
   if (!u) return window.location.href = '/login.html';
   const snap = await getDoc(doc(db, 'users', u.uid));
@@ -84,14 +63,12 @@ onAuthStateChanged(auth, async u => {
   UD = snap.data();
   draw();
 });
-
 function greet(){
   const h=new Date().getHours();
   if(h<12)return'🌤️ Good morning';
   if(h<17)return'☀️ Good afternoon';
   return'🌙 Good evening';
 }
-
 function draw(){
   document.getElementById('content').innerHTML = `
     <div class="greet">
@@ -103,9 +80,7 @@ function draw(){
         <div class="level-box">${UD.level||5}</div>
       </div>
     </div>
-
     <div class="cards">
-      <!-- TOP 2 SIDE BY SIDE -->
       <div class="row-2">
         <div class="card red">
           <div class="lab">EXPENSES</div>
@@ -115,41 +90,35 @@ function draw(){
         </div>
         <div class="card orange">
           <div class="lab">TOTAL EARNINGS</div>
-          <div class="amt">${fmt(UD.earnings)}</div>
+          <div class="amt">${fmt(UD.totalEarnings)}</div>
           <div class="pill">0% Increased</div>
           <div class="icon">↗</div>
         </div>
       </div>
-
-      <!-- REST FULL WIDTH -->
       <div class="card blue">
         <div class="lab">ACCOUNT BALANCE</div>
         <div class="amt">${fmt(UD.balance)}</div>
         <div class="pill">0% Higher</div>
         <div class="icon">🛒</div>
       </div>
-
       <div class="card red-orange">
         <div class="lab">WITHDRAWN AMOUNT</div>
         <div class="amt">${fmt(UD.withdrawn)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">⬆</div>
       </div>
-
       <div class="card orange">
         <div class="lab">PENDING AMOUNT</div>
         <div class="amt">${fmt(UD.pending)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">⏱</div>
       </div>
-
       <div class="card purple">
         <div class="lab">KARIBU BONUS</div>
         <div class="amt">${fmt(UD.karibuBonus)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">$</div>
       </div>
-
       <div class="card green">
         <div class="lab">WEEKLY BONUS</div>
         <div class="amt">${fmt(UD.weeklyBonus)}</div>
@@ -162,4 +131,4 @@ function draw(){
 }
 </script>
 </body>
-</html>
+                                                </html>
