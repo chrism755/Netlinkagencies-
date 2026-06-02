@@ -2,31 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Dashboard — NETLINK AGENCIES</title>
+<title>Dashboard — CASHLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{
-  --primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;
-  --yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;
-  --card2:#162540;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:260px;
-}
+:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--card2:#162540;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:260px;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:#0e0e1a;color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
-
-/* SIDEBAR */
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:18px 16px;border-bottom:1px solid var(--border);}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#FF6B00,#FF3B3B);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
 .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--white);line-height:1.1;}
-.logo-sub{font-size:8px;color:#FF9A00;letter-spacing:3px;font-family:'Orbitron',monospace;}
+.logo-sub{font-size:8px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}
 .sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
 .sb-nav::-webkit-scrollbar{width:3px;}
 .sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
-.ni:hover,.ni.active{background:rgba(255,107,0,.1);color:#FF9A00;border-left-color:#FF6B00;}
+.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
 .ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
@@ -35,90 +29,72 @@ body{font-family:'Nunito',sans-serif;background:#0e0e1a;color:var(--text);min-he
 .sub-ni{padding-left:44px;font-size:12px;}
 .main{flex:1;}
 
-/* TOPBAR - orange/red gradient */
-.topbar{
-  background:linear-gradient(90deg,#FF4500,#FF6B00,#FF9A00);
-  padding:14px 16px;
-  display:flex;align-items:center;gap:12px;
-  position:sticky;top:0;z-index:50;
-  box-shadow:0 3px 15px rgba(255,100,0,.4);
-}
+/* TOPBAR */
+.topbar{background:linear-gradient(135deg,#e74c3c,#c0392b);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.tb-left{display:flex;align-items:center;gap:12px;}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;}
-.tb-title{font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:#fff;flex:1;text-align:center;letter-spacing:.5px;}
+.tb-title{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;}
+.tb-right{display:flex;align-items:center;gap:10px;}
 .notif-btn{position:relative;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
-.notif-dot{position:absolute;top:-2px;right:-2px;width:14px;height:14px;background:#FFD700;border-radius:50%;font-size:8px;font-weight:900;color:#000;display:flex;align-items:center;justify-content:center;}
+.notif-badge{position:absolute;top:-4px;right:-4px;background:#FFD700;color:#000;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;}
 
-/* GREETING BAR */
-.greet-bar{
-  background:#1a1a2e;
-  padding:13px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid rgba(255,255,255,.05);
-}
-.greet-left{}
-.greet-text{font-size:13px;font-weight:700;color:#fff;}
-.greet-text span{color:#4CAF50;}
-.greet-sub{font-size:11px;color:#888;margin-top:2px;}
-.level-badge{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,#4CAF50,#00C853);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;font-weight:900;color:#fff;
-  box-shadow:0 3px 10px rgba(76,175,80,.4);
-  flex-shrink:0;
-}
+.content{padding:0;max-width:500px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
 
-/* CONTENT */
-.content{padding:14px 12px;max-width:500px;margin:0 auto;}
+/* GREETING BANNER */
+.greeting-bar{background:linear-gradient(135deg,#1a1a2e,#16213e);padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.greeting-top{display:flex;align-items:center;justify-content:space-between;}
+.greeting-text{font-size:14px;font-weight:700;color:#fff;}
+.greeting-text span{color:#2ecc71;}
+.checkmark{color:#2ecc71;font-size:13px;margin-left:4px;}
+.greeting-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px;}
+.level-badge{background:#e74c3c;color:#fff;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;}
 
-/* TWO-COL MINI CARDS */
-.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.mini-card{border-radius:14px;padding:14px 14px 12px;position:relative;overflow:hidden;min-height:80px;}
-.mini-card.expenses{background:linear-gradient(135deg,#E53935,#FF5252);}
-.mini-card.earnings{background:linear-gradient(135deg,#E65100,#FF9800);}
-.mc-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.75);letter-spacing:1.5px;text-transform:uppercase;}
-.mc-amount{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:#fff;margin-top:5px;}
-.mc-icon{position:absolute;bottom:8px;right:10px;font-size:22px;opacity:.35;}
-.mc-trend{position:absolute;top:10px;right:10px;font-size:14px;opacity:.6;}
+/* TOP STATS GRID */
+.top-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0;}
+.ts-card{padding:16px;display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden;}
+.ts-card.expenses{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.ts-card.earnings{background:linear-gradient(135deg,#e67e22,#d35400);}
+.ts-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:rgba(255,255,255,.75);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.ts-amount{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#fff;margin-top:2px;}
+.ts-icon{position:absolute;right:14px;bottom:10px;font-size:28px;opacity:.25;}
+.ts-trend{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);margin-top:2px;}
 
-/* FULL-WIDTH STAT CARDS */
-.stat-card{
-  border-radius:16px;
-  padding:16px 18px 14px;
-  margin-bottom:11px;
-  position:relative;overflow:hidden;
-  min-height:90px;
-}
-.stat-card.balance{background:linear-gradient(135deg,#1565C0,#1976D2,#42A5F5);}
-.stat-card.withdrawn{background:linear-gradient(135deg,#BF360C,#E64A19,#FF7043);}
-.stat-card.pending{background:linear-gradient(135deg,#E65100,#F57C00,#FFB300);}
-.stat-card.karibu{background:linear-gradient(135deg,#6A1B9A,#8E24AA,#BA68C8);}
-.stat-card.weekly{background:linear-gradient(135deg,#1B5E20,#2E7D32,#66BB6A);}
-.sc-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
-.sc-amount{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:#fff;}
-.sc-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  background:rgba(0,0,0,.25);
-  border-radius:20px;padding:3px 10px;
-  font-size:10px;font-weight:800;color:rgba(255,255,255,.85);
-  margin-top:8px;
-}
-.sc-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block;margin-right:2px;}
-.sc-icon{
-  position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  font-size:36px;opacity:.2;
-}
+/* STAT CARDS */
+.stat-cards{padding:10px 12px;display:flex;flex-direction:column;gap:10px;}
+.stat-card{border-radius:14px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden;min-height:90px;}
+.stat-card.balance{background:linear-gradient(135deg,#2980b9,#1a5276);}
+.stat-card.withdrawn{background:linear-gradient(135deg,#e74c3c,#922b21);}
+.stat-card.pending{background:linear-gradient(135deg,#e67e22,#784212);}
+.stat-card.karibu{background:linear-gradient(135deg,#8e44ad,#4a235a);}
+.stat-card.weekly{background:linear-gradient(135deg,#27ae60,#1a6b3c);}
+.stat-left{}
+.stat-label{font-size:10px;font-weight:800;letter-spacing:1.5px;color:rgba(255,255,255,.7);text-transform:uppercase;margin-bottom:6px;}
+.stat-amount{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:#fff;}
+.stat-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(0,0,0,.25);border-radius:20px;padding:3px 9px;font-size:10px;font-weight:700;color:rgba(255,255,255,.85);margin-top:7px;}
+.stat-icon{font-size:40px;opacity:.2;position:absolute;right:16px;}
 
-/* REFERRAL BOX */
-.ref-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:6px;}
-.ref-link{background:var(--bg3);border-radius:9px;padding:11px;font-size:11px;color:var(--accent);word-break:break-all;margin:9px 0;font-family:monospace;}
+/* REFERRAL */
+.ref-section{padding:0 12px 12px;}
+.ref-box{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);border-radius:14px;padding:16px;}
+.ref-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);}
+.ref-link{background:rgba(0,0,0,.35);border-radius:9px;padding:11px;font-size:11px;color:#00D4FF;word-break:break-all;margin:9px 0;font-family:monospace;}
 .ref-btns{display:flex;gap:7px;flex-wrap:wrap;}
 .rb{flex:1;min-width:65px;padding:8px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;}
 .rb.cp{background:var(--primary);color:#fff;}.rb.wa{background:#25D366;color:#fff;}.rb.fb{background:#1877F2;color:#fff;}.rb.tg{background:#2CA5E0;color:#fff;}
 .lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
-.lc{background:var(--bg3);border-radius:9px;padding:11px;text-align:center;}
-.ln{font-size:10px;color:var(--text2);font-weight:700;}.la{font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);font-weight:900;}
+.lc{background:rgba(0,0,0,.3);border-radius:9px;padding:11px;text-align:center;}
+.ln{font-size:10px;color:rgba(255,255,255,.5);font-weight:700;}.la{font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);font-weight:900;}
+
+/* FORMS */
+.fg{margin-bottom:14px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
+input,textarea{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
+input:focus,textarea:focus{border-color:var(--primary);}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;}
+.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
 
 /* TASK PAGES */
 .tc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
@@ -135,55 +111,28 @@ body{font-family:'Nunito',sans-serif;background:#0e0e1a;color:var(--text);min-he
 .qo:hover{border-color:var(--primary);color:var(--accent);}
 .qo.correct{border-color:var(--green);background:rgba(0,200,83,.1);color:#69F0AE;}
 .qo.wrong{border-color:var(--red);background:rgba(255,59,59,.1);color:#FF8A80;}
-
-/* FORMS */
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
-input,textarea{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
-input:focus,textarea:focus{border-color:var(--primary);}
-.amt-wrap{position:relative;}
-.amt-pre{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:800;font-size:13px;}
-.amt-in{padding-left:46px!important;}
-.fee{font-size:11px;color:var(--yellow);margin-top:5px;}
-.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#FF4500,#FF9A00);color:#fff;margin-top:4px;}
-.btn:disabled{opacity:.5;}
-.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
 .wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-top:8px;}
-
-/* CASHOUT NOTE */
 .co-note{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);border-radius:12px;padding:14px;font-size:13px;color:var(--accent);line-height:1.7;margin-bottom:16px;}
 .co-note strong{color:#fff;}
-
-/* PROFILE */
-.pav{width:72px;height:72px;background:linear-gradient(135deg,#FF4500,#FF9A00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;margin:0 auto 12px;}
+.pav{width:72px;height:72px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;margin:0 auto 12px;}
 .prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
 .pl{font-size:11px;color:var(--text2);font-weight:700;}.pv{font-size:13px;color:#fff;font-weight:700;}
-
-/* TIMETABLE */
 .tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(90deg,#FF4500,#FF9A00);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}
+.tt th{background:var(--primary);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}
 .tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;}
-.tt tr:nth-child(even) td{background:rgba(255,107,0,.04);}
-.day{background:var(--card2);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:#FF9A00;}
-
-/* DOWNLINES */
+.tt tr:nth-child(even) td{background:rgba(0,87,255,.04);}
+.day{background:var(--card2);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--accent);}
 .du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
 .sb-act{background:rgba(0,200,83,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .sb-ina{background:rgba(255,59,59,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
-.overlay.show{display:block;}
 .loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
 .loader.show{display:flex;}
-.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:#FF6B00;border-radius:50%;animation:spin 1s linear infinite;}
+.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-@media(max-width:380px){
-  .mini-grid{grid-template-columns:1fr;}
-  .lgrid{grid-template-columns:1fr 1fr;}
-}
+/* INNER CONTENT PADDING for non-home pages */
+.inner-pad{padding:14px 12px;}
 </style>
 </head>
 <body>
@@ -191,12 +140,7 @@ input:focus,textarea:focus{border-color:var(--primary);}
 <div class="overlay" id="overlay" onclick="closeSB()"></div>
 <div class="layout">
   <nav class="sidebar" id="sidebar">
-    <div class="sb-head">
-      <div class="logo">
-        <div class="logo-icon">🔗</div>
-        <div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
-      </div>
-    </div>
+    <div class="sb-head"><div class="logo"><div class="logo-icon">💸</div><div><div class="logo-text">CASHLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
     <div class="sb-nav">
       <a class="ni active" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
       <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
@@ -242,25 +186,17 @@ input:focus,textarea:focus{border-color:var(--primary);}
   </nav>
 
   <div class="main">
-    <!-- TOPBAR -->
+    <!-- RED TOPBAR -->
     <div class="topbar">
-      <button class="menu-btn" onclick="openSB()">☰</button>
-      <div class="tb-title">CashLink Agencies</div>
-      <button class="notif-btn">
-        🔔<span class="notif-dot" id="notifCount">0</span>
-      </button>
-    </div>
-
-    <!-- GREETING BAR -->
-    <div class="greet-bar">
-      <div class="greet-left">
-        <div class="greet-text" id="greetText">🌞 Good afternoon User, <span id="greetName">@User</span> ✔</div>
-        <div class="greet-sub">Welcome to CashLink Agencies</div>
+      <div class="tb-left">
+        <button class="menu-btn" onclick="openSB()">☰</button>
+        <div class="tb-title">CashLink Agencies</div>
       </div>
-      <div class="level-badge" id="levelBadge">5</div>
+      <div class="tb-right">
+        <button class="notif-btn">🔔<span class="notif-badge" id="notifCount">0</span></button>
+      </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="content" id="content">
       <div style="text-align:center;padding:40px;color:var(--text2);">Loading...</div>
     </div>
@@ -280,102 +216,165 @@ const app = initializeApp({
   messagingSenderId:"546397751362",
   appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"
 });
-
 const auth = getAuth(app), db = getFirestore(app);
 let U = null, UD = null;
+let rendered = false;
+
+// ── INSTANT RENDER from localStorage cache ──────────────────────
+const cached = localStorage.getItem('nlUser');
+if (cached) {
+  try {
+    UD = JSON.parse(cached);
+    rendered = true;
+    renderHome();
+  } catch(e) { localStorage.removeItem('nlUser'); }
+}
+
+// ── TIMEOUT FALLBACK: if Firebase takes too long, redirect to login ──
+const authTimeout = setTimeout(() => {
+  if (!rendered) {
+    document.getElementById('content').innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Connection Timeout</div>
+        <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">Taking too long. Check your internet connection.</div>
+        <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        <br><br>
+        <a href="/login.html" style="color:var(--accent);font-size:13px;">Back to Login</a>
+      </div>`;
+  }
+}, 8000); // 8 second timeout
 
 onAuthStateChanged(auth, async u => {
-  if (!u) { window.location.href = '/login.html'; return; }
+  clearTimeout(authTimeout);
+  if (!u) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
   U = u;
-  const snap = await getDoc(doc(db, 'users', u.uid));
-  if (!snap.exists()) { window.location.href = '/login.html'; return; }
-  UD = snap.data();
-  if (!UD.activated) { window.location.href = '/activate.html'; return; }
-
-  // Update greeting bar
-  const h = new Date().getHours();
-  const greet = h < 12 ? '🌞 Good morning' : h < 17 ? '☀️ Good afternoon' : '🌙 Good evening';
-  document.getElementById('greetText').innerHTML = `${greet} User, <span style="color:#4CAF50;">@${UD.username}</span> ✔`;
-  document.getElementById('greetName').textContent = '';
-  document.getElementById('levelBadge').textContent = UD.level || 5;
-  localStorage.setItem('nlUser', JSON.stringify({...UD, uid: u.uid}));
-  renderHome();
+  try {
+    const snap = await getDoc(doc(db, 'users', u.uid));
+    if (!snap.exists()) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
+    UD = snap.data();
+    if (!UD.activated) { window.location.href = '/activate.html'; return; }
+    localStorage.setItem('nlUser', JSON.stringify({...UD, uid: u.uid}));
+    rendered = true;
+    renderHome(); // re-render with fresh data
+  } catch(err) {
+    // If Firestore fails but we already showed cached data, stay on page
+    if (!rendered) {
+      document.getElementById('content').innerHTML = `
+        <div style="text-align:center;padding:40px;">
+          <div style="font-size:40px;margin-bottom:12px;">📡</div>
+          <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Network Error</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">${err.message}</div>
+          <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        </div>`;
+    }
+  }
 });
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return '🌤️ Good morning';
+  if (h < 17) return '☀️ Good afternoon';
+  return '🌙 Good evening';
+}
 
 function renderHome() {
   const ref = `https://netlinkagencies.linkpc.net/register.html?ref=${UD.referralCode}`;
   document.getElementById('content').innerHTML = `
-
-    <!-- Mini 2-col cards: Expenses & Total Earnings -->
-    <div class="mini-grid">
-      <div class="mini-card expenses">
-        <div class="mc-label">Expenses</div>
-        <div class="mc-amount">KES 150</div>
-        <span class="mc-icon">📉</span>
-      </div>
-      <div class="mini-card earnings">
-        <div class="mc-label">Total Earnings</div>
-        <div class="mc-amount">KES ${UD.totalEarnings || 0}</div>
-        <span class="mc-icon">📈</span>
+    <!-- GREETING -->
+    <div class="greeting-bar">
+      <div class="greeting-top">
+        <div>
+          <div class="greeting-text">${getGreeting()} User, <span>@${UD.username}</span> <span class="checkmark">✔</span></div>
+          <div class="greeting-sub">Welcome to CashLink Agencies</div>
+        </div>
+        <div class="level-badge">5</div>
       </div>
     </div>
 
-    <!-- Account Balance -->
-    <div class="stat-card balance">
-      <div class="sc-label">Account Balance</div>
-      <div class="sc-amount">KES ${UD.balance || 0}</div>
-      <div class="sc-badge">0% Higher</div>
-      <span class="sc-icon">🛒</span>
-    </div>
-
-    <!-- Withdrawn Amount -->
-    <div class="stat-card withdrawn">
-      <div class="sc-label">Withdrawn Amount</div>
-      <div class="sc-amount">KES ${UD.withdrawn || 0}</div>
-      <div class="sc-badge">0% Increased</div>
-      <span class="sc-icon">⬆️</span>
-    </div>
-
-    <!-- Pending Amount -->
-    <div class="stat-card pending">
-      <div class="sc-label">Pending Amount</div>
-      <div class="sc-amount">KES ${UD.pending || 0}</div>
-      <div class="sc-badge">0% Increased</div>
-      <span class="sc-icon">🕐</span>
-    </div>
-
-    <!-- Karibu Bonus -->
-    <div class="stat-card karibu">
-      <div class="sc-label">Karibu Bonus</div>
-      <div class="sc-amount">KES ${UD.karibu || 0}</div>
-      <div class="sc-badge">0% Increased</div>
-      <span class="sc-icon">💲</span>
-    </div>
-
-    <!-- Weekly Bonus -->
-    <div class="stat-card weekly">
-      <div class="sc-label">Weekly Bonus</div>
-      <div class="sc-amount">KES ${UD.weeklyBonus || 0}</div>
-      <div class="sc-badge">0% Increased</div>
-      <span class="sc-icon">📈</span>
-    </div>
-
-    <!-- Referral Box -->
-    <div class="ref-box" style="margin-top:14px;">
-      <div style="font-family:'Orbitron',monospace;font-size:11px;color:#FF9A00;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);">🔗 Your Referral Link</div>
-      <div class="ref-link" id="rl">${ref}</div>
-      <div class="ref-btns">
-        <button class="rb cp" onclick="copyRef()">📋 Copy</button>
-        <button class="rb wa" onclick="window.open('https://wa.me/?text=Join NETLINK AGENCIES! ${encodeURIComponent(ref)}','_blank')">WhatsApp</button>
-        <button class="rb fb" onclick="window.open('https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(ref)}','_blank')">Facebook</button>
-        <button class="rb tg" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(ref)}','_blank')">Telegram</button>
+    <!-- TOP 2 STATS -->
+    <div class="top-stats">
+      <div class="ts-card expenses">
+        <div class="ts-label">📉 Expenses</div>
+        <div class="ts-amount">KES 150</div>
+        <div class="ts-trend">Activation Fee</div>
+        <div class="ts-icon">📉</div>
       </div>
-      <div class="lgrid">
-        <div class="lc"><div class="ln">Level 1</div><div class="la">KSH 80</div></div>
-        <div class="lc"><div class="ln">Level 2</div><div class="la">KSH 20</div></div>
-        <div class="lc"><div class="ln">Level 3</div><div class="la">KSH 10</div></div>
+      <div class="ts-card earnings">
+        <div class="ts-label">📈 Total Earnings</div>
+        <div class="ts-amount">KES ${UD.totalEarnings || 0}</div>
+        <div class="ts-trend">All Tasks</div>
+        <div class="ts-icon">📈</div>
       </div>
-    </div>`;
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-cards">
+      <div class="stat-card balance">
+        <div class="stat-left">
+          <div class="stat-label">Account Balance</div>
+          <div class="stat-amount">KES ${UD.balance || 0}</div>
+          <div class="stat-pill">0% Higher</div>
+        </div>
+        <div class="stat-icon">🛒</div>
+      </div>
+
+      <div class="stat-card withdrawn">
+        <div class="stat-left">
+          <div class="stat-label">Withdrawn Amount</div>
+          <div class="stat-amount">KES ${UD.withdrawn || 0}</div>
+          <div class="stat-pill">↑ 0% Increased</div>
+        </div>
+        <div class="stat-icon">↑</div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-left">
+          <div class="stat-label">Pending Amount</div>
+          <div class="stat-amount">KES ${UD.pending || 0}</div>
+          <div class="stat-pill">⏳ 0% Increased</div>
+        </div>
+        <div class="stat-icon">🕐</div>
+      </div>
+
+      <div class="stat-card karibu">
+        <div class="stat-left">
+          <div class="stat-label">Karibu Bonus</div>
+          <div class="stat-amount">KES ${UD.karibu || 0}</div>
+          <div class="stat-pill">💲 0% Increased</div>
+        </div>
+        <div class="stat-icon">💲</div>
+      </div>
+
+      <div class="stat-card weekly">
+        <div class="stat-left">
+          <div class="stat-label">Weekly Bonus</div>
+          <div class="stat-amount">KES ${UD.weeklyBonus || 0}</div>
+          <div class="stat-pill">📈 0% Increased</div>
+        </div>
+        <div class="stat-icon">📈</div>
+      </div>
+    </div>
+
+    <!-- REFERRAL -->
+    <div class="ref-section">
+      <div class="ref-box">
+        <div class="ref-title">🔗 Your Referral Link</div>
+        <div class="ref-link" id="rl">${ref}</div>
+        <div class="ref-btns">
+          <button class="rb cp" onclick="copyRef()">📋 Copy</button>
+          <button class="rb wa" onclick="window.open('https://wa.me/?text=Join CashLink Agencies! ${encodeURIComponent(ref)}','_blank')">WhatsApp</button>
+          <button class="rb fb" onclick="window.open('https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(ref)}','_blank')">Facebook</button>
+          <button class="rb tg" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(ref)}','_blank')">Telegram</button>
+        </div>
+        <div class="lgrid">
+          <div class="lc"><div class="ln">Level 1</div><div class="la">KSH 80</div></div>
+          <div class="lc"><div class="ln">Level 2</div><div class="la">KSH 20</div></div>
+          <div class="lc"><div class="ln">Level 3</div><div class="la">KSH 10</div></div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 window.copyRef = () => {
