@@ -218,16 +218,57 @@ const app = initializeApp({
 });
 const auth = getAuth(app), db = getFirestore(app);
 let U = null, UD = null;
+let rendered = false;
+
+// ── INSTANT RENDER from localStorage cache ──────────────────────
+const cached = localStorage.getItem('nlUser');
+if (cached) {
+  try {
+    UD = JSON.parse(cached);
+    rendered = true;
+    renderHome();
+  } catch(e) { localStorage.removeItem('nlUser'); }
+}
+
+// ── TIMEOUT FALLBACK: if Firebase takes too long, redirect to login ──
+const authTimeout = setTimeout(() => {
+  if (!rendered) {
+    document.getElementById('content').innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Connection Timeout</div>
+        <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">Taking too long. Check your internet connection.</div>
+        <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        <br><br>
+        <a href="/login.html" style="color:var(--accent);font-size:13px;">Back to Login</a>
+      </div>`;
+  }
+}, 8000); // 8 second timeout
 
 onAuthStateChanged(auth, async u => {
-  if (!u) { window.location.href = '/login.html'; return; }
+  clearTimeout(authTimeout);
+  if (!u) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
   U = u;
-  const snap = await getDoc(doc(db, 'users', u.uid));
-  if (!snap.exists()) { window.location.href = '/login.html'; return; }
-  UD = snap.data();
-  if (!UD.activated) { window.location.href = '/activate.html'; return; }
-  localStorage.setItem('nlUser', JSON.stringify({...UD, uid: u.uid}));
-  renderHome();
+  try {
+    const snap = await getDoc(doc(db, 'users', u.uid));
+    if (!snap.exists()) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
+    UD = snap.data();
+    if (!UD.activated) { window.location.href = '/activate.html'; return; }
+    localStorage.setItem('nlUser', JSON.stringify({...UD, uid: u.uid}));
+    rendered = true;
+    renderHome(); // re-render with fresh data
+  } catch(err) {
+    // If Firestore fails but we already showed cached data, stay on page
+    if (!rendered) {
+      document.getElementById('content').innerHTML = `
+        <div style="text-align:center;padding:40px;">
+          <div style="font-size:40px;margin-bottom:12px;">📡</div>
+          <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Network Error</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">${err.message}</div>
+          <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        </div>`;
+    }
+  }
 });
 
 function getGreeting() {
