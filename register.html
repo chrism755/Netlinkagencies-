@@ -5,33 +5,34 @@
 <title>Register — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--primary:#0057FF;--accent:#00D4FF;--green:#00C853;--red:#FF3B3B;--bg:#050D1A;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;}
+:root{--primary:#E91E63;--accent:#FF1493;--green:#00C853;--red:#FF3B3B;--bg:#E91E63;--bg3:#F5F5F5;--card:#FFFFFF;--border:#E0E0E0;--text:#1A1A1A;--text2:#666666;--white:#FFFFFF;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E91E63,#FF1493,#E91E63);color:var(--text);min-height:100vh;}
 .bg{position:fixed;inset:0;pointer-events:none;}
-.bg::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(0,87,255,.15),transparent 70%);border-radius:50%;}
-.bg::after{content:'';position:absolute;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(0,212,255,.1),transparent 70%);border-radius:50%;}
-.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:30px 16px 60px;}
-.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px;}
-.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 24px rgba(0,87,255,.5);}
-.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:16px;color:var(--white);line-height:1.1;}
-.logo-sub{font-size:9px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}
-h1{font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--white);margin-bottom:6px;text-align:center;}
-.sub{color:var(--text2);font-size:13px;text-align:center;margin-bottom:24px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
-.stitle{font-family:'Orbitron',monospace;font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:18px;padding-bottom:8px;border-bottom:1px solid var(--border);}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:5px;letter-spacing:.5px;text-transform:uppercase;}
+.bg::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);border-radius:50%;}
+.bg::after{content:'';position:absolute;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);border-radius:50%;}
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:40px 16px 60px;}
+.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:20px;}
+.logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#00C853,#66BB6A);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 20px rgba(0,0,0,.2);}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:18px;color:var(--white);line-height:1.1;}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.9);letter-spacing:2px;font-family:'Orbitron',monospace;}
+h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--white);margin-bottom:6px;text-align:center;}
+.sub{color:rgba(255,255,255,.95);font-size:14px;text-align:center;margin-bottom:30px;}
+.card{background:var(--card);border:none;border-radius:20px;padding:32px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.stitle{display:none;}
+.fg{margin-bottom:16px;}
+label{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:.5px;text-transform:none;}
 input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
-input:focus,select:focus{border-color:var(--primary);}
-input::placeholder{color:var(--text2);opacity:.6;}
-select option{background:var(--bg3);}
-.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);box-shadow:0 4px 20px rgba(0,87,255,.4);margin-top:4px;}
+input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
+input::placeholder{color:var(--text2);opacity:.7;}
+select option{background:var(--bg3);color:var(--text);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);box-shadow:0 8px 20px rgba(233,30,99,.3);transition:.2s;margin-top:8px;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
-.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
-.link{text-align:center;margin-top:16px;font-size:13px;color:var(--text2);}
-.link a{color:var(--accent);font-weight:700;text-decoration:none;}
-.ref-box{background:rgba(0,212,255,.08);border:1px solid var(--accent);border-radius:8px;padding:10px;font-size:12px;color:var(--accent);margin-bottom:12px;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF3B3B;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
+.link{text-align:center;margin-top:18px;font-size:13px;color:var(--text2);}
+.link a{color:var(--primary);font-weight:700;text-decoration:none;}
+.ref-box{background:rgba(233,30,99,.1);border:1px solid var(--primary);border-radius:8px;padding:10px;font-size:12px;color:var(--primary);margin-bottom:12px;display:none;font-weight:600;}
 /* INLINE SPINNER - no overlay, just button spins */
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -42,14 +43,13 @@ select option{background:var(--bg3);}
 <div class="wrap">
   <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
   <h1>Create Account</h1>
-  <p class="sub">Join the network and start earning</p>
+  <p class="sub">Linking You to Financial Solutions</p>
   <div class="card">
-    <div class="stitle">📋 Registration Form</div>
     <div class="ref-box" id="ref-box">🔗 Referred by: <strong id="ref-by"></strong></div>
-    <div class="fg"><label>Username</label><input id="username" type="text" placeholder="Choose a username"/></div>
-    <div class="fg"><label>Email Address</label><input id="email" type="email" placeholder="Enter valid email"/></div>
-    <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="+254 7XX XXX XXX"/></div>
-    <div class="fg"><label>WhatsApp Number</label><input id="whatsapp" type="tel" placeholder="+254 7XX XXX XXX"/></div>
+    <div class="fg"><label>Username</label><input id="username" type="text" placeholder="Chris"/></div>
+    <div class="fg"><label>Email Address</label><input id="email" type="email" placeholder="cashlikagencies45@gmail.com"/></div>
+    <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="0706494401"/></div>
+    <div class="fg"><label>WhatsApp Number</label><input id="whatsapp" type="tel" placeholder="0706494401"/></div>
     <div class="fg"><label>Country</label>
       <select id="country">
         <option value="">-- Select Country --</option>
