@@ -6,15 +6,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
+body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;padding-bottom:70px;}
 .main{flex:1;}
+
+/* TOPBAR RED */
 .topbar{background:#e74c3c;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
 .tb-left{display:flex;align-items:center;gap:12px;}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:16px;font-weight:800;color:#fff;}
 .notif-btn{position:relative;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
 .notif-badge{position:absolute;top:-4px;right:-4px;background:#FFD700;color:#000;border-radius:50%;width:22px;height:22px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;}
+
 .content{max-width:480px;margin:0 auto;padding-bottom:20px;}
+
+/* WHITE GREETING BAR */
 .greet{background:#fff;padding:14px 16px;border-bottom:1px solid #e5e5e5;}
 .greet-top{display:flex;align-items:center;justify-content:space-between;}
 .greet-text{font-size:15px;font-weight:700;color:#444;}
@@ -22,6 +27,8 @@ body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
 .greet-text .tick{color:#27ae60;margin-left:3px;}
 .greet-sub{font-size:12px;color:#888;margin-top:2px;}
 .level-box{background:#27ae60;color:#fff;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
+
+/* CARDS */
 .cards{padding:12px;display:flex;flex-direction:column;gap:10px;}
 .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .card{border-radius:12px;padding:16px 14px;position:relative;min-height:78px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);}
@@ -35,27 +42,47 @@ body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
 .red-orange{background:#e67e22;}
 .purple{background:#8e44ad;}
 .green{background:#27ae60;}
+
+/* BOTTOM NAV - THIS REPLACES THE 3 ANDROID BUTTONS */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px 0;z-index:999;box-shadow:0 -2px 10px rgba(0,0,0,0.1);}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#888;font-size:10px;font-weight:700;flex:1;transition:0.2s;}
+.bottom-nav a.active{color:#e74c3c;}
+.bottom-nav a:active{transform:scale(0.95);}
+.bottom-nav .icon{font-size:22px;margin-bottom:2px;}
 </style>
 </head>
 <body>
 <div class="main">
   <div class="topbar">
     <div class="tb-left">
-      <button class="menu-btn">☰</button>
+      <button class="menu-btn" onclick="openMenu()">☰</button>
       <div class="tb-title">CashLink Agencies</div>
     </div>
-    <button class="notif-btn">🔔<span class="notif-badge" id="notifCount">5</span></button>
+    <button class="notif-btn" onclick="window.location.href='/notifications.html'">🔔<span class="notif-badge" id="notifCount">5</span></button>
   </div>
+
   <div class="content" id="content">Loading...</div>
 </div>
+
+<!-- BOTTOM MENU -->
+<div class="bottom-nav">
+  <a href="/dashboard.html" class="active"><div class="icon">🏠</div>Home</a>
+  <a href="/tasks.html"><div class="icon">📋</div>Tasks</a>
+  <a href="/withdraw.html"><div class="icon">💸</div>Withdraw</a>
+  <a href="/profile.html"><div class="icon">👤</div>Profile</a>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const app = initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e"});
 const auth = getAuth(app), db = getFirestore(app);
 let UD = null;
+
 const fmt = n => 'KES ' + Number(n||0).toLocaleString('en-KE');
+
 onAuthStateChanged(auth, async u => {
   if (!u) return window.location.href = '/login.html';
   const snap = await getDoc(doc(db, 'users', u.uid));
@@ -63,12 +90,14 @@ onAuthStateChanged(auth, async u => {
   UD = snap.data();
   draw();
 });
+
 function greet(){
   const h=new Date().getHours();
   if(h<12)return'🌤️ Good morning';
   if(h<17)return'☀️ Good afternoon';
   return'🌙 Good evening';
 }
+
 function draw(){
   document.getElementById('content').innerHTML = `
     <div class="greet">
@@ -80,6 +109,7 @@ function draw(){
         <div class="level-box">${UD.level||5}</div>
       </div>
     </div>
+
     <div class="cards">
       <div class="row-2">
         <div class="card red">
@@ -95,30 +125,35 @@ function draw(){
           <div class="icon">↗</div>
         </div>
       </div>
+
       <div class="card blue">
         <div class="lab">ACCOUNT BALANCE</div>
         <div class="amt">${fmt(UD.balance)}</div>
         <div class="pill">0% Higher</div>
         <div class="icon">🛒</div>
       </div>
+
       <div class="card red-orange">
         <div class="lab">WITHDRAWN AMOUNT</div>
         <div class="amt">${fmt(UD.withdrawn)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">⬆</div>
       </div>
+
       <div class="card orange">
         <div class="lab">PENDING AMOUNT</div>
         <div class="amt">${fmt(UD.pending)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">⏱</div>
       </div>
+
       <div class="card purple">
         <div class="lab">KARIBU BONUS</div>
         <div class="amt">${fmt(UD.karibuBonus)}</div>
         <div class="pill">0% Increased</div>
         <div class="icon">$</div>
       </div>
+
       <div class="card green">
         <div class="lab">WEEKLY BONUS</div>
         <div class="amt">${fmt(UD.weeklyBonus)}</div>
@@ -129,6 +164,10 @@ function draw(){
   `;
   document.getElementById('notifCount').textContent = UD.notifications||5;
 }
+
+window.openMenu = function(){
+  window.location.href = '/menu.html'; // Change this to your menu page
+}
 </script>
 </body>
-  </html>
+</html>
