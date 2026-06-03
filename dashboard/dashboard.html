@@ -3,156 +3,444 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Dashboard — CASHLINK AGENCIES</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
+:root{
+  --primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;
+  --red:#FF3B3B;--yellow:#FFB300;--bg:#f0f2f5;--bg2:#0A1628;--bg3:#0F1F3D;
+  --card:#111E35;--card2:#162540;--border:#1E3560;--text:#E8F0FF;
+  --text2:#8BA4CC;--white:#FFFFFF;--sw:260px;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:#f2f2f2;color:#333;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar.open{transform:translateX(0);}
+.sb-head{padding:18px 16px;border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--white);line-height:1.1;}
+.logo-sub{font-size:8px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
+.ni-icon{font-size:15px;width:20px;text-align:center;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}
+.arr{margin-left:auto;font-size:10px;}
+.sub-nav{display:none;background:rgba(0,0,0,.2);}
+.sub-nav.open{display:block;}
+.sub-ni{padding-left:44px;font-size:12px;}
 .main{flex:1;}
-
-/* TOPBAR RED */
-.topbar{background:#e74c3c;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
-.tb-left{display:flex;align-items:center;gap:12px;}
-.menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
-.tb-title{font-size:16px;font-weight:800;color:#fff;}
-.notif-btn{position:relative;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
-.notif-badge{position:absolute;top:-4px;right:-4px;background:#FFD700;color:#000;border-radius:50%;width:22px;height:22px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;}
-
-.content{max-width:480px;margin:0 auto;padding-bottom:20px;}
-
-/* GREETING */
-.greet{background:#fff;padding:14px 16px;border-bottom:1px solid #e5e5e5;}
-.greet-top{display:flex;align-items:center;justify-content:space-between;}
-.greet-text{font-size:15px;font-weight:700;color:#444;}
-.greet-text span{color:#27ae60;}
-.greet-text .tick{color:#27ae60;margin-left:3px;}
-.greet-sub{font-size:12px;color:#888;margin-top:2px;}
-.level-box{background:#27ae60;color:#fff;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;}
-
-/* CARDS */
-.cards{padding:12px;display:flex;flex-direction:column;gap:10px;}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.card{border-radius:12px;padding:16px 14px;position:relative;min-height:78px;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.08);}
-.card .lab{font-size:10px;font-weight:800;letter-spacing:0.8px;opacity:0.9;margin-bottom:5px;text-transform:uppercase;}
-.card .amt{font-size:22px;font-weight:900;margin-bottom:5px;}
-.card .pill{display:inline-block;background:rgba(0,0,0,0.22);border-radius:15px;padding:2px 7px;font-size:9px;font-weight:700;}
-.card .icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:32px;opacity:0.18;}
-.red{background:#e74c3c;}
-.orange{background:#f39c12;}
-.blue{background:#3498db;}
-.red-orange{background:#e67e22;}
-.purple{background:#8e44ad;}
-.green{background:#27ae60;}
-
-/* SIDEBAR MENU - NOW CLICKABLE */
-.sidebar{position:fixed;top:0;left:-280px;width:280px;height:100%;background:#0A1628;z-index:999;transition:0.3s;overflow-y:auto;border-right:1px solid #1E3560;}
-.sidebar.open{left:0;}
-.sidebar-header{padding:20px;background:#050D1A;border-bottom:1px solid #1E3560;color:#fff;font-weight:800;font-size:16px;}
-.sidebar-menu{padding:10px 0;}
-.sidebar-menu a{display:flex;align-items:center;gap:12px;padding:14px 20px;color:#8BA4CC;text-decoration:none;font-size:14px;font-weight:600;border-left:3px solid transparent;}
-.sidebar-menu a:hover,.sidebar-menu a.active{background:rgba(0,87,255,.1);color:#00D4FF;border-left-color:#0057FF;}
-.sidebar-menu .icon{font-size:18px;width:24px;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:998;display:none;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
+
+/* TOPBAR — red gradient matching screenshot */
+.topbar{
+  background:linear-gradient(90deg,#e84040,#e05a20);
+  padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.tb-left{display:flex;align-items:center;gap:12px;}
+.menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer;line-height:1;}
+.tb-title{font-size:17px;font-weight:800;color:#fff;letter-spacing:.3px;}
+.tb-right{display:flex;align-items:center;gap:10px;}
+.notif-btn{position:relative;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
+.notif-badge{
+  position:absolute;top:-5px;right:-5px;
+  background:#FFD700;color:#000;border-radius:50%;
+  width:17px;height:17px;font-size:9px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.content{padding:0;max-width:500px;margin:0 auto;}
+
+/* GREETING BAR — dark navy */
+.greeting-bar{
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  padding:14px 16px 12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.greeting-top{display:flex;align-items:center;justify-content:space-between;}
+.greeting-text{font-size:14px;font-weight:700;color:#fff;}
+.greeting-text .uname{color:#2ecc71;}
+.checkmark{color:#2ecc71;font-size:13px;margin-left:4px;}
+.greeting-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px;}
+.level-badge{
+  background:#e74c3c;color:#fff;border-radius:10px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:900;
+}
+
+/* TOP 2-COLUMN STATS */
+.top-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.ts-card{padding:16px 14px;display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden;}
+.ts-card.expenses{background:linear-gradient(135deg,#e84040,#c0392b);}
+.ts-card.earnings{background:linear-gradient(135deg,#e67e22,#d35400);}
+.ts-label{font-size:9px;font-weight:900;letter-spacing:1.5px;color:rgba(255,255,255,.85);text-transform:uppercase;}
+.ts-amount{font-size:24px;font-weight:900;color:#fff;margin-top:4px;font-family:'Nunito',sans-serif;}
+.ts-icon{position:absolute;right:12px;bottom:10px;font-size:26px;opacity:.3;}
+
+/* STAT CARDS */
+.stat-cards{padding:10px 10px;display:flex;flex-direction:column;gap:10px;}
+.stat-card{
+  border-radius:16px;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;min-height:95px;
+}
+.stat-card.balance{background:linear-gradient(135deg,#2980b9,#1a5499);}
+.stat-card.withdrawn{background:linear-gradient(135deg,#e84040,#c0392b);}
+.stat-card.pending{background:linear-gradient(135deg,#e67e22,#ca6f1e);}
+.stat-card.karibu{background:linear-gradient(135deg,#8e44ad,#6c3483);}
+.stat-card.weekly{background:linear-gradient(135deg,#27ae60,#1e8449);}
+.stat-left{display:flex;flex-direction:column;}
+.stat-label{
+  font-size:10px;font-weight:900;letter-spacing:1.5px;
+  color:rgba(255,255,255,.85);text-transform:uppercase;margin-bottom:6px;
+}
+.stat-amount{font-size:28px;font-weight:900;color:#fff;font-family:'Nunito',sans-serif;}
+.stat-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(0,0,0,.3);border-radius:20px;
+  padding:4px 11px;font-size:10px;font-weight:800;
+  color:#fff;margin-top:8px;width:fit-content;
+}
+.stat-icon{font-size:42px;opacity:.25;position:absolute;right:18px;top:50%;transform:translateY(-50%);}
+
+/* REFERRAL */
+.ref-section{padding:0 10px 14px;}
+.ref-box{background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);border-radius:14px;padding:16px;}
+.ref-title{font-family:'Orbitron',monospace;font-size:10px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);}
+.ref-link{background:rgba(0,0,0,.35);border-radius:9px;padding:11px;font-size:11px;color:#00D4FF;word-break:break-all;margin:9px 0;font-family:monospace;}
+.ref-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.rb{flex:1;min-width:65px;padding:8px 4px;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;}
+.rb.cp{background:var(--primary);color:#fff;}
+.rb.wa{background:#25D366;color:#fff;}
+.rb.fb{background:#1877F2;color:#fff;}
+.rb.tg{background:#2CA5E0;color:#fff;}
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.lc{background:rgba(0,0,0,.3);border-radius:9px;padding:11px;text-align:center;}
+.ln{font-size:10px;color:rgba(255,255,255,.5);font-weight:700;}
+.la{font-family:'Orbitron',monospace;font-size:14px;color:var(--gold);font-weight:900;}
+
+/* FORMS */
+.fg{margin-bottom:14px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
+input,textarea{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
+input:focus,textarea:focus{border-color:var(--primary);}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;}
+.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+
+/* TASK PAGES */
+.tc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.tc h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:6px;}
+.tc p{font-size:13px;color:var(--text2);line-height:1.6;}
+.reward{display:inline-flex;align-items:center;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:800;color:var(--gold);margin-top:8px;}
+.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.vi h4{font-size:13px;font-weight:800;color:var(--white);}
+.vi p{font-size:11px;color:var(--text2);margin-top:2px;}
+.wb{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:10px;}
+.qq{font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px;}
+.qopts{display:grid;gap:7px;}
+.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s;}
+.qo:hover{border-color:var(--primary);color:var(--accent);}
+.qo.correct{border-color:var(--green);background:rgba(0,200,83,.1);color:#69F0AE;}
+.qo.wrong{border-color:var(--red);background:rgba(255,59,59,.1);color:#FF8A80;}
+.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-top:8px;}
+.co-note{background:rgba(0,87,255,.08);border:1.5px solid var(--primary);border-radius:12px;padding:14px;font-size:13px;color:var(--accent);line-height:1.7;margin-bottom:16px;}
+.co-note strong{color:#fff;}
+.pav{width:72px;height:72px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;margin:0 auto 12px;}
+.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
+.pl{font-size:11px;color:var(--text2);font-weight:700;}
+.pv{font-size:13px;color:#fff;font-weight:700;}
+.tt{width:100%;border-collapse:collapse;}
+.tt th{background:var(--primary);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}
+.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;}
+.tt tr:nth-child(even) td{background:rgba(0,87,255,.04);}
+.day{background:var(--card2);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--accent);}
+.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.sb-act{background:rgba(0,200,83,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
+.sb-ina{background:rgba(255,59,59,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
+.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
+.loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
+.loader.show{display:flex;}
+.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.inner-pad{padding:14px 12px;}
 </style>
 </head>
 <body>
-<div class="overlay" id="overlay" onclick="closeMenu()"></div>
-
-<!-- SIDEBAR MENU -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-header">CashLink Menu</div>
-  <div class="sidebar-menu">
-    <a href="/dashboard.html" class="active"><span class="icon">🏠</span> Dashboard</a>
-    <a href="/tasks.html"><span class="icon">📋</span> Tasks</a>
-    <a href="/watch.html"><span class="icon">📺</span> Watch Videos</a>
-    <a href="/spin.html"><span class="icon">🎰</span> Spin & Win</a>
-    <a href="/surveys.html"><span class="icon">📝</span> Surveys</a>
-    <a href="/quiz.html"><span class="icon">❓</span> Quiz</a>
-    <a href="/refer.html"><span class="icon">👥</span> Refer & Earn</a>
-    <a href="/deposit.html"><span class="icon">💰</span> Deposit</a>
-    <a href="/withdraw.html"><span class="icon">💸</span> Withdraw</a>
-    <a href="/profile.html"><span class="icon">👤</span> Profile</a>
-    <a href="/settings.html"><span class="icon">⚙️</span> Settings</a>
-    <a href="/history.html"><span class="icon">📊</span> Transaction History</a>
-    <a href="/support.html"><span class="icon">🎧</span> Support</a>
-    <a href="/logout.html"><span class="icon">🚪</span> Logout</a>
-  </div>
-</nav>
-
-<div class="main">
-  <div class="topbar">
-    <div class="tb-left">
-      <button class="menu-btn" onclick="openMenu()">☰</button>
-      <div class="tb-title">CashLink Agencies</div>
+<div class="loader" id="loader"><div class="ring"></div></div>
+<div class="overlay" id="overlay" onclick="closeSB()"></div>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-head"><div class="logo"><div class="logo-icon">💸</div><div><div class="logo-text">CASHLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+    <div class="sb-nav">
+      <a class="ni active" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
+      <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
+      <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+      <a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
+      <a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
+      <a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
+      <a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
+      <a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
+      <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
+      <a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
+      <a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
+      <div class="ns">Videos</div>
+      <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
+      <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
+      <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
+      <div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
+      <div class="sub-nav" id="sw">
+        <a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
+        <a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
+      </div>
+      <div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
+      <div class="sub-nav" id="sd">
+        <a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
+        <a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
+        <a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
+      </div>
+      <div class="ns">More</div>
+      <a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
+      <a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
+      <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+      <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
+      <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
+      <a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
+      <a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
+      <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
+      <a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
+      <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
+      <a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
     </div>
-    <button class="notif-btn" onclick="window.location.href='/notifications.html'">🔔<span class="notif-badge" id="notifCount">5</span></button>
-  </div>
+  </nav>
 
-  <div class="content" id="content">Loading...</div>
+  <div class="main">
+    <!-- RED TOPBAR -->
+    <div class="topbar">
+      <div class="tb-left">
+        <button class="menu-btn" onclick="openSB()">☰</button>
+        <div class="tb-title">CashLink Agencies</div>
+      </div>
+      <div class="tb-right">
+        <button class="notif-btn">🔔<span class="notif-badge" id="notifCount">0</span></button>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <div style="text-align:center;padding:40px;color:var(--text2);">Loading...</div>
+    </div>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app = initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e"});
+const app = initializeApp({
+  apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
+  authDomain:"netlink-agencies-6399e.firebaseapp.com",
+  projectId:"netlink-agencies-6399e",
+  storageBucket:"netlink-agencies-6399e.firebasestorage.app",
+  messagingSenderId:"546397751362",
+  appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"
+});
 const auth = getAuth(app), db = getFirestore(app);
-let UD = null;
+let U = null, UD = null;
+let rendered = false;
 
-const fmt = n => 'KES ' + Number(n||0).toLocaleString('en-KE');
+// ── INSTANT RENDER from localStorage cache ──────────────────────
+const cached = localStorage.getItem('nlUser');
+if (cached) {
+  try {
+    UD = JSON.parse(cached);
+    rendered = true;
+    renderHome();
+  } catch(e) { localStorage.removeItem('nlUser'); }
+}
+
+// ── TIMEOUT FALLBACK: if Firebase takes too long, redirect to login ──
+const authTimeout = setTimeout(() => {
+  if (!rendered) {
+    document.getElementById('content').innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;margin-bottom:12px;">⚠️</div>
+        <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Connection Timeout</div>
+        <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">Taking too long. Check your internet connection.</div>
+        <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        <br><br>
+        <a href="/login.html" style="color:var(--accent);font-size:13px;">Back to Login</a>
+      </div>`;
+  }
+}, 8000); // 8 second timeout
 
 onAuthStateChanged(auth, async u => {
-  if (!u) return window.location.href = '/login.html';
-  const snap = await getDoc(doc(db, 'users', u.uid));
-  if (!snap.exists()) return window.location.href = '/login.html';
-  UD = snap.data();
-  draw();
+  clearTimeout(authTimeout);
+  if (!u) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
+  U = u;
+  try {
+    const snap = await getDoc(doc(db, 'users', u.uid));
+    if (!snap.exists()) { localStorage.removeItem('nlUser'); window.location.href = '/login.html'; return; }
+    UD = snap.data();
+    if (!UD.activated) { window.location.href = '/activate.html'; return; }
+    localStorage.setItem('nlUser', JSON.stringify({...UD, uid: u.uid}));
+    rendered = true;
+    renderHome(); // re-render with fresh data
+  } catch(err) {
+    // If Firestore fails but we already showed cached data, stay on page
+    if (!rendered) {
+      document.getElementById('content').innerHTML = `
+        <div style="text-align:center;padding:40px;">
+          <div style="font-size:40px;margin-bottom:12px;">📡</div>
+          <div style="color:#fff;font-weight:700;font-size:15px;margin-bottom:8px;">Network Error</div>
+          <div style="color:var(--text2);font-size:13px;margin-bottom:20px;">${err.message}</div>
+          <button onclick="window.location.reload()" style="background:var(--primary);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        </div>`;
+    }
+  }
 });
 
-function greet(){
-  const h=new Date().getHours();
-  if(h<12)return'🌤️ Good morning';
-  if(h<17)return'☀️ Good afternoon';
-  return'🌙 Good evening';
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return '🌤️ Good morning';
+  if (h < 17) return '☀️ Good afternoon';
+  return '🌙 Good evening';
 }
 
-function draw(){
+function fmt(n) {
+  return Number(n || 0).toLocaleString('en-KE');
+}
+
+function renderHome() {
+  const ref = `https://netlinkagencies.linkpc.net/register.html?ref=${UD.referralCode}`;
   document.getElementById('content').innerHTML = `
-    <div class="greet">
-      <div class="greet-top">
+    <!-- GREETING -->
+    <div class="greeting-bar">
+      <div class="greeting-top">
         <div>
-          <div class="greet-text">${greet()} User, @${UD.username} <span class="tick">✔</span></div>
-          <div class="greet-sub">Welcome to CashLink Agencies</div>
+          <div class="greeting-text">${getGreeting()} User, <span class="uname">@${UD.username}</span> <span class="checkmark">✔</span></div>
+          <div class="greeting-sub">Welcome to CashLink Agencies</div>
         </div>
-        <div class="level-box">${UD.level||5}</div>
+        <div class="level-badge">5</div>
       </div>
     </div>
 
-    <div class="cards">
-      <div class="row-2">
-        <div class="card red"><div class="lab">EXPENSES</div><div class="amt">${fmt(UD.expenses)}</div><div class="pill">0% Higher</div><div class="icon">↗</div></div>
-        <div class="card orange"><div class="lab">TOTAL EARNINGS</div><div class="amt">${fmt(UD.totalEarnings)}</div><div class="pill">0% Increased</div><div class="icon">↗</div></div>
+    <!-- TOP 2 STATS -->
+    <div class="top-stats">
+      <div class="ts-card expenses">
+        <div class="ts-label">📉 EXPENSES</div>
+        <div class="ts-amount">KES 150</div>
+        <div class="ts-icon">📉</div>
       </div>
-      <div class="card blue"><div class="lab">ACCOUNT BALANCE</div><div class="amt">${fmt(UD.balance)}</div><div class="pill">0% Higher</div><div class="icon">🛒</div></div>
-      <div class="card red-orange"><div class="lab">WITHDRAWN AMOUNT</div><div class="amt">${fmt(UD.withdrawn)}</div><div class="pill">0% Increased</div><div class="icon">⬆</div></div>
-      <div class="card orange"><div class="lab">PENDING AMOUNT</div><div class="amt">${fmt(UD.pending)}</div><div class="pill">0% Increased</div><div class="icon">⏱</div></div>
-      <div class="card purple"><div class="lab">KARIBU BONUS</div><div class="amt">${fmt(UD.karibuBonus)}</div><div class="pill">0% Increased</div><div class="icon">$</div></div>
-      <div class="card green"><div class="lab">WEEKLY BONUS</div><div class="amt">${fmt(UD.weeklyBonus)}</div><div class="pill">0% Increased</div><div class="icon">📈</div></div>
+      <div class="ts-card earnings">
+        <div class="ts-label">📈 TOTAL EARNINGS</div>
+        <div class="ts-amount">KES ${fmt(UD.totalEarnings)}</div>
+        <div class="ts-icon">📈</div>
+      </div>
+    </div>
+
+    <!-- STAT CARDS -->
+    <div class="stat-cards">
+      <div class="stat-card balance">
+        <div class="stat-left">
+          <div class="stat-label">ACCOUNT BALANCE</div>
+          <div class="stat-amount">KES ${fmt(UD.balance)}</div>
+          <div class="stat-pill">0% Higher</div>
+        </div>
+        <div class="stat-icon">🛒</div>
+      </div>
+
+      <div class="stat-card withdrawn">
+        <div class="stat-left">
+          <div class="stat-label">WITHDRAWN AMOUNT</div>
+          <div class="stat-amount">KES ${fmt(UD.withdrawn)}</div>
+          <div class="stat-pill">0% Increased</div>
+        </div>
+        <div class="stat-icon">↑</div>
+      </div>
+
+      <div class="stat-card pending">
+        <div class="stat-left">
+          <div class="stat-label">PENDING AMOUNT</div>
+          <div class="stat-amount">KES ${fmt(UD.pending)}</div>
+          <div class="stat-pill">0% Increased</div>
+        </div>
+        <div class="stat-icon">🕐</div>
+      </div>
+
+      <div class="stat-card karibu">
+        <div class="stat-left">
+          <div class="stat-label">KARIBU BONUS</div>
+          <div class="stat-amount">KES ${fmt(UD.karibu)}</div>
+          <div class="stat-pill">0% Increased</div>
+        </div>
+        <div class="stat-icon">💲</div>
+      </div>
+
+      <div class="stat-card weekly">
+        <div class="stat-left">
+          <div class="stat-label">WEEKLY BONUS</div>
+          <div class="stat-amount">KES ${fmt(UD.weeklyBonus)}</div>
+          <div class="stat-pill">0% Increased</div>
+        </div>
+        <div class="stat-icon">📈</div>
+      </div>
+    </div>
+
+    <!-- REFERRAL -->
+    <div class="ref-section">
+      <div class="ref-box">
+        <div class="ref-title">🔗 Your Referral Link</div>
+        <div class="ref-link" id="rl">${ref}</div>
+        <div class="ref-btns">
+          <button class="rb cp" onclick="copyRef()">📋 Copy</button>
+          <button class="rb wa" onclick="window.open('https://wa.me/?text=Join CashLink Agencies! ${encodeURIComponent(ref)}','_blank')">WhatsApp</button>
+          <button class="rb fb" onclick="window.open('https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(ref)}','_blank')">Facebook</button>
+          <button class="rb tg" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(ref)}','_blank')">Telegram</button>
+        </div>
+        <div class="lgrid">
+          <div class="lc"><div class="ln">Level 1</div><div class="la">KSH 80</div></div>
+          <div class="lc"><div class="ln">Level 2</div><div class="la">KSH 20</div></div>
+          <div class="lc"><div class="ln">Level 3</div><div class="la">KSH 10</div></div>
+        </div>
+      </div>
     </div>
   `;
-  document.getElementById('notifCount').textContent = UD.notifications||5;
 }
 
-// SIDEBAR FUNCTIONS - NOW WORKING
-window.openMenu = function(){
+window.copyRef = () => {
+  const t = document.getElementById('rl')?.textContent;
+  if (t) navigator.clipboard.writeText(t).then(() => alert('Copied!'));
+};
+window.openSB = () => {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('overlay').classList.add('show');
-}
-window.closeMenu = function(){
+};
+window.closeSB = () => {
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
-}
+};
+window.toggleSub = function(id, el) {
+  const c = document.getElementById(id);
+  c.classList.toggle('open');
+  el.querySelector('.arr').textContent = c.classList.contains('open') ? '▴' : '▾';
+};
+window.doLogout = async () => {
+  await signOut(auth);
+  localStorage.removeItem('nlUser');
+  window.location.href = '/login.html';
+};
 </script>
 </body>
-                                                                 </html>
+</html>
