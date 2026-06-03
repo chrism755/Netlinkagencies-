@@ -1,69 +1,231 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Trivia Quiz — NETLINK AGENCIES</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
-<style>:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;}*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}.layout{display:flex;min-height:100vh;}.sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}.sidebar.open{transform:translateX(0);}.sb-head{padding:18px 16px;border-bottom:1px solid var(--border);}.logo{display:flex;align-items:center;gap:10px;}.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;}.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:12px;color:var(--white);line-height:1.1;}.logo-sub{font-size:8px;color:var(--accent);letter-spacing:3px;font-family:'Orbitron',monospace;}.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}.ni-icon{font-size:15px;width:20px;text-align:center;}.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--text2);opacity:.4;letter-spacing:2px;text-transform:uppercase;}.arr{margin-left:auto;font-size:10px;}.sub-nav{display:none;background:rgba(0,0,0,.2);}.sub-nav.open{display:block;}.sub-ni{padding-left:44px!important;font-size:12px;}.main{flex:1;}.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}.content{padding:16px 14px;max-width:760px;margin:0 auto;}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}.overlay.show{display:block;}.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}.card h3{font-size:15px;font-weight:800;color:var(--white);margin-bottom:10px;}.card p{font-size:13px;color:var(--text2);line-height:1.7;}.reward{display:inline-flex;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:10px;}.qq{font-size:14px;font-weight:700;color:var(--white);margin-bottom:12px;}.qopts{display:grid;gap:7px;}.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:11px 14px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s;}.qo:hover{border-color:var(--primary);color:var(--accent);}.qo.correct{border-color:var(--green);background:rgba(0,200,83,.1);color:#69F0AE;}.qo.wrong{border-color:var(--red);background:rgba(255,59,59,.1);color:#FF8A80;}.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:12px;font-size:13px;margin:10px 0;display:none;}.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:8px;}.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-top:8px;}.tg-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#2CA5E0;color:#fff;margin-top:8px;}.tt{width:100%;border-collapse:collapse;}.tt th{background:var(--primary);color:#fff;padding:9px 12px;text-align:left;font-size:11px;font-weight:800;}.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;}.tt tr:nth-child(even) td{background:rgba(0,87,255,.04);}.day{background:var(--card);border-radius:5px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--accent);}.pav{width:72px;height:72px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;margin:0 auto 12px;}.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}.pl{font-size:11px;color:var(--text2);font-weight:700;}.pv{font-size:13px;color:#fff;font-weight:700;}.badge{display:inline-flex;align-items:center;background:rgba(0,87,255,.2);border:1px solid var(--primary);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--accent);margin-left:7px;}</style></head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Trivia Quiz — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffb3d9;--gold:#FFD700;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:260px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar.open{transform:translateX(0);}
+.sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni-icon{font-size:15px;width:20px;text-align:center;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
+.arr{margin-left:auto;font-size:10px;}
+.sub-nav{display:none;background:rgba(0,0,0,.3);}
+.sub-nav.open{display:block;}
+.sub-ni{padding-left:44px!important;font-size:12px;}
+.main{flex:1;}
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
+.menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
+.tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
+.content{padding:16px 14px;max-width:760px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
+.overlay.show{display:block;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
+.card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
+.card p{font-size:13px;color:var(--text2);line-height:1.7;}
+.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
+.card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
+.card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
+.reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
+.btn-wa{background:#25D366!important;box-shadow:none!important;}
+.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
+.fg{margin-bottom:14px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
+input:focus,textarea:focus,select:focus{border-color:var(--pk);}
+input::placeholder,textarea::placeholder{color:var(--text2);opacity:.6;}
+select option{background:var(--bg3);}
+.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
+.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
+.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
+.qopts{display:grid;gap:8px;}
+.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);transition:.2s;}
+.qo:hover{border-color:var(--pk);color:#fff;}
+.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
+.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
+.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.vi h4{font-size:13px;font-weight:800;color:#fff;}
+.vi p{font-size:11px;color:var(--text2);margin-top:2px;}
+.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
+.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
+.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
+.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
+.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
+.tt{width:100%;border-collapse:collapse;}
+.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
+.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2);}
+.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
+.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
+.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
+.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
+.pl{font-size:11px;color:var(--text2);font-weight:700;}
+.pv{font-size:13px;color:#fff;font-weight:700;}
+.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
+.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
+.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
+.amt-w{position:relative;}
+.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
+.amt-i{padding-left:52px!important;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.stat-row:last-child{border:none;}
+.stat-label{font-size:12px;color:var(--text2);font-weight:600;}
+.stat-value{font-size:14px;font-weight:800;color:#fff;}
+.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
+.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
 <body>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="layout">
-  <nav class="sidebar" id="sb">
-    <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
-    <div class="sb-nav">
-      <a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
-      <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
-      <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-      <a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
-      <a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
-      <a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
-      <a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
-      <a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
-      <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
-      <a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
-      <a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
-      <div class="ns">Videos</div>
-      <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
-      <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
-      <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
-      <div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
-      <div class="sub-nav" id="sw"><a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a><a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a><a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a><a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a></div>
-      <div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
-      <div class="sub-nav" id="sd"><a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a><a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a><a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a></div>
-      <div class="ns">More</div>
-      <a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-      <a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
-      <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
-      <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
-      <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
-      <a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
-      <a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
-      <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
-      <a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
-      <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
-      <a class="ni" style="color:#FF3B3B;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
-    </div>
-  </nav>
-  <div class="main">
-    <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Trivia Quiz</div><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;" id="un">User</span></div></div>
-    <div class="content">
-<div class="card"><h3>🧠 Trivia Quiz</h3><p>Answer 6 questions per week and earn <strong style="color:var(--gold);">KES 5</strong> per correct answer!</p><div class="reward">💰 KES 5 per correct answer · 6 questions per week</div></div>
-<div class="qc"><div class="qq">1. What is the capital of Kenya?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,0)">Nairobi</div><div class="qo" onclick="answerQ(this,1,0)">Mombasa</div><div class="qo" onclick="answerQ(this,2,0)">Kisumu</div><div class="qo" onclick="answerQ(this,3,0)">Nakuru</div></div></div>
-<div class="qc"><div class="qq">2. Which ocean borders Kenya to the east?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,2)">Atlantic</div><div class="qo" onclick="answerQ(this,1,2)">Pacific</div><div class="qo" onclick="answerQ(this,2,2)">Indian</div><div class="qo" onclick="answerQ(this,3,2)">Arctic</div></div></div>
-<div class="qc"><div class="qq">3. What currency does Kenya use?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,1)">Dollar</div><div class="qo" onclick="answerQ(this,1,1)">Shilling</div><div class="qo" onclick="answerQ(this,2,1)">Euro</div><div class="qo" onclick="answerQ(this,3,1)">Pound</div></div></div>
-<div class="qc"><div class="qq">4. How many counties does Kenya have?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,1)">42</div><div class="qo" onclick="answerQ(this,1,1)">47</div><div class="qo" onclick="answerQ(this,2,1)">52</div><div class="qo" onclick="answerQ(this,3,1)">38</div></div></div>
-<div class="qc"><div class="qq">5. Who was Kenya's first president?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,2)">Daniel Moi</div><div class="qo" onclick="answerQ(this,1,2)">Mwai Kibaki</div><div class="qo" onclick="answerQ(this,2,2)">Jomo Kenyatta</div><div class="qo" onclick="answerQ(this,3,2)">William Ruto</div></div></div>
-<div class="qc"><div class="qq">6. What is the highest mountain in Kenya?</div><div class="qopts"><div class="qo" onclick="answerQ(this,0,1)">Kilimanjaro</div><div class="qo" onclick="answerQ(this,1,1)">Mount Kenya</div><div class="qo" onclick="answerQ(this,2,1)">Mount Elgon</div><div class="qo" onclick="answerQ(this,3,1)">Longonot</div></div></div>
-    </div>
+<nav class="sidebar" id="sb">
+<div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+<div class="sb-nav">
+<a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
+<a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
+<a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+<a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
+<a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
+<a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
+<a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
+<a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
+<a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
+<a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
+<a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
+<div class="ns">Videos</div>
+<a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
+<a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
+<a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
+<div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
+<div class="sub-nav" id="sw">
+<a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
+</div>
+<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
+<div class="sub-nav" id="sd">
+<a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
+<a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
+<a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
+</div>
+<div class="ns">More</div>
+<a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
+<a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
+<a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+<a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
+<a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
+<a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
+<a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
+<a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
+<a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
+<a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
+<a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+</div></nav>
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="openSB()">☰</button>
+<div class="tb-title">Trivia Quiz</div>
+<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div>
+</div>
+<div class="content">
+
+<div class="card-pink"><h3>🧠 Trivia Quiz</h3><p>6 questions per day. KES 50 per correct answer. Money goes to Total Earnings!</p></div>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;">
+    <div><div style="font-size:11px;color:var(--text2);">TODAY'S EARNINGS</div><div id="qz-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
+    <div><div style="font-size:11px;color:var(--text2);">CORRECT ANSWERS</div><div id="qz-score" style="font-size:20px;font-weight:900;color:#fff;">0 / 6</div></div>
   </div>
+  <div class="reward">💰 KES 50 per correct answer · Resets daily</div>
+</div>
+<div class="qc">
+  <div class="qq">1. What is the capital of Kenya?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,0,50)">Nairobi</div><div class="qo" onclick="doAnswer(this,1,0,50)">Mombasa</div><div class="qo" onclick="doAnswer(this,2,0,50)">Kisumu</div><div class="qo" onclick="doAnswer(this,3,0,50)">Nakuru</div></div>
+</div>
+<div class="qc">
+  <div class="qq">2. Which ocean borders Kenya to the east?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,2,50)">Atlantic</div><div class="qo" onclick="doAnswer(this,1,2,50)">Pacific</div><div class="qo" onclick="doAnswer(this,2,2,50)">Indian</div><div class="qo" onclick="doAnswer(this,3,2,50)">Arctic</div></div>
+</div>
+<div class="qc">
+  <div class="qq">3. What currency does Kenya use?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,1,50)">Dollar</div><div class="qo" onclick="doAnswer(this,1,1,50)">Shilling</div><div class="qo" onclick="doAnswer(this,2,1,50)">Euro</div><div class="qo" onclick="doAnswer(this,3,1,50)">Pound</div></div>
+</div>
+<div class="qc">
+  <div class="qq">4. How many counties does Kenya have?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,1,50)">42</div><div class="qo" onclick="doAnswer(this,1,1,50)">47</div><div class="qo" onclick="doAnswer(this,2,1,50)">52</div><div class="qo" onclick="doAnswer(this,3,1,50)">38</div></div>
+</div>
+<div class="qc">
+  <div class="qq">5. Who was Kenya's first president?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,2,50)">Daniel Moi</div><div class="qo" onclick="doAnswer(this,1,2,50)">Mwai Kibaki</div><div class="qo" onclick="doAnswer(this,2,2,50)">Jomo Kenyatta</div><div class="qo" onclick="doAnswer(this,3,2,50)">William Ruto</div></div>
+</div>
+<div class="qc">
+  <div class="qq">6. What is the highest mountain in Kenya?</div>
+  <div class="qopts"><div class="qo" onclick="doAnswer(this,0,1,50)">Kilimanjaro</div><div class="qo" onclick="doAnswer(this,1,1,50)">Mount Kenya</div><div class="qo" onclick="doAnswer(this,2,1,50)">Mount Elgon</div><div class="qo" onclick="doAnswer(this,3,1,50)">Longonot</div></div>
+</div>
+</div>
+</div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
+const app=initializeApp(FB);
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
-onAuthStateChanged(auth,async u=>{if(!u){window.location.replace('/login.html');return;}U=u;const snap=await getDoc(doc(db,'users',u.uid));if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}UD=snap.data();document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();document.getElementById('un').textContent=UD.username;if(typeof onLoad==='function')onLoad(db,U,UD,collection,getDocs,addDoc,serverTimestamp,query,where);});
-window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
-window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
-window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
-window.answerQ=function(el,c,a){el.closest('.qopts').querySelectorAll('.qo').forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add('correct');});if(c!==a)el.classList.add('wrong');};
-</script></body></html>
+onAuthStateChanged(auth,async u=>{
+  if(!u){window.location.replace("/login.html");return;}
+  U=u;
+  const snap=await getDoc(doc(db,"users",u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate.html");return;}
+  UD=snap.data();UD.uid=u.uid;
+  document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
+  document.getElementById("un").textContent=UD.username;
+  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+});
+window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
+window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
+window.doLogout=async()=>{await signOut(auth);window.location.replace("/login.html");};
+window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
+
+let score=0,earned=0;
+async function pageReady(db,U,UD,F){window._db=db;window._U=U;window._UD=UD;window._F=F;}
+window.doAnswer=async function(el,c,a,reward){
+  const opts=el.closest('.qopts').querySelectorAll('.qo');
+  opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add('correct');});
+  if(c!==a){el.classList.add('wrong');return;}
+  score++;earned+=reward;
+  document.getElementById('qz-score').textContent=score+' / 6';
+  document.getElementById('qz-earn').textContent='KES '+earned;
+  try{
+    const {updateDoc,doc,increment}=_F;
+    await updateDoc(doc(_db,'users',_U.uid),{totalEarnings:increment(reward)});
+  }catch(e){console.error(e);}
+};
+
+</script>
+</body>
+</html>
