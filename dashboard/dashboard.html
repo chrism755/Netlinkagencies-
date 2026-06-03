@@ -77,10 +77,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 }
 
 /* TOP 2-COLUMN STATS */
-.top-stats{display:flex;margin:0;}
-.ts-card{flex:1;padding:18px 14px;display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden;}
+.top-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 10px 0;}
+.ts-card{padding:18px 14px;display:flex;flex-direction:column;gap:3px;position:relative;overflow:hidden;border-radius:14px;}
 .ts-card.expenses{background:linear-gradient(135deg,#e84040,#c0392b);}
-.ts-card.earnings{background:linear-gradient(135deg,#e67e22,#d35400);border-left:1.5px solid rgba(255,255,255,.2);}
+.ts-card.earnings{background:linear-gradient(135deg,#e67e22,#d35400);}
 .ts-label{font-size:9px;font-weight:900;letter-spacing:1.5px;color:rgba(255,255,255,.85);text-transform:uppercase;}
 .ts-amount{font-size:26px;font-weight:900;color:#fff;margin-top:5px;font-family:'Nunito',sans-serif;}
 .ts-icon{position:absolute;right:12px;bottom:10px;font-size:30px;opacity:.25;}
