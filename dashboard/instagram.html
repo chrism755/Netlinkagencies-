@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Instagram Videos — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:260px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
 .logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
-.sb-nav::-webkit-scrollbar{width:3px;}
-.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
 .ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:#FF80CE;letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
 .sub-nav{display:none;background:rgba(0,0,0,.3);}
 .sub-nav.open{display:block;}
@@ -39,9 +36,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
 .card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
 .card p{font-size:13px;color:#fff;line-height:1.7;}
-.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
-.card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
-.card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
+.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;}
+.card-pink h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;}
+.card-pink p{font-size:13px;color:#fff;opacity:.9;line-height:1.6;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
 .btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
@@ -52,7 +49,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
 input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
 input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
+input::placeholder,textarea::placeholder{color:#fff;opacity:.5;}
 select option{background:var(--bg3);}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
@@ -60,41 +57,31 @@ select option{background:var(--bg3);}
 .qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
 .qopts{display:grid;gap:8px;}
 .qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
+.qo:hover{border-color:var(--pk);}
+.qo.selected{border-color:var(--pk);background:rgba(233,30,140,.2);}
 .qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
 .qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
 .vi h4{font-size:13px;font-weight:800;color:#fff;}
 .vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
 .du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
 .sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
+.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3);margin:10px 0;}
+.upload-box:hover{border-color:var(--pk);}
 .prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
 .pl{font-size:11px;color:#fff;font-weight:700;}
 .pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
+.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:#FF80CE;margin-left:7px;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.video-player{background:#000;border-radius:12px;width:100%;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;overflow:hidden;}
+.play-btn{width:60px;height:60px;background:linear-gradient(135deg,var(--pkd),var(--pk));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:none;}
+.progress-ring{width:70px;height:70px;}
+.amt-w{position:relative;}
+.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#FF80CE;font-weight:800;font-size:13px;}
+.amt-i{padding-left:52px!important;}
 </style>
 </head>
 <body>
@@ -142,88 +129,101 @@ select option{background:var(--bg3);}
 <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
 <a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
 <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
-<a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+<a class="ni" style="color:#FF5252;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
-<div class="topbar">
-<button class="menu-btn" onclick="openSB()">☰</button>
-<div class="tb-title">Instagram Videos</div>
-<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div>
-</div>
+<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Instagram Videos</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-
-<div class="card-pink"><h3>📸 Instagram Videos</h3><p>Watch 3 Instagram videos per day. KES 20 per video. Money goes to Total Earnings. New videos at 12:00 AM midnight!</p></div>
+<div class="card-pink"><h3>📸 Instagram Videos</h3><p>Watch 3 videos per day. KES 20 per video. Watch full 30 seconds then earn! Money goes to Total Earnings. Resets at midnight.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-    <div><div style="font-size:11px;color:#fff;">TODAY'S EARNINGS</div><div id="ig-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
-    <div><div style="font-size:11px;color:#fff;">VIDEOS WATCHED</div><div id="ig-count" style="font-size:20px;font-weight:900;color:#fff;">0 / 3</div></div>
+    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ig-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
+    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">WATCHED</div><div id="ig-count" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
   </div>
-  <div class="reward">💰 KES 20 per video · 3 per day · Resets at midnight</div>
+  <div class="reward">💰 KES 20 per video · 3 per day · Resets midnight</div>
 </div>
 <div id="ig-list"></div>
-
 </div>
-</div>
-</div>
+</div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
-const app=initializeApp(FB);
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login.html");return;}
+  if(!u){window.location.replace('/login.html');return;}
   U=u;
-  const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate.html");return;}
+  const snap=await getDoc(doc(db,'users',u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
   UD=snap.data();UD.uid=u.uid;
-  document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
-  document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  if(typeof pageReady==='function') pageReady();
 });
-window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
-window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
-window.doLogout=async()=>{await signOut(auth);window.location.replace("/login.html");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
 
-async function pageReady(db,U,UD,F){
-  window._db=db;window._U=U;window._UD=UD;window._F=F;
+
+async function pageReady(){
   const today=new Date().toDateString();
-  const saved=JSON.parse(localStorage.getItem('ig_'+U.uid+'_'+today)||'[]');
-  const watched=saved.length;
-  document.getElementById('ig-count').textContent=watched+' / 3';
-  document.getElementById('ig-earn').textContent='KES '+(watched*20);
-  const videos=[{t:'Instagram Video 1',d:'Watch full 30s video to earn KES 20'},{t:'Instagram Video 2',d:'Watch full 30s video to earn KES 20'},{t:'Instagram Video 3',d:'Watch full 30s video to earn KES 20'}];
+  const watched=JSON.parse(localStorage.getItem('ig_'+U.uid+'_'+today)||'[]');
+  document.getElementById('ig-count').textContent=watched.length+'/3';
+  document.getElementById('ig-earn').textContent='KES '+(watched.length*20);
+  const videos=[
+    {t:'Instagram Videos 1',url:'https://www.w3schools.com/html/mov_bbb.mp4'},
+    {t:'Instagram Videos 2',url:'https://www.w3schools.com/html/mov_bbb.mp4'},
+    {t:'Instagram Videos 3',url:'https://www.w3schools.com/html/mov_bbb.mp4'},
+  ];
   document.getElementById('ig-list').innerHTML=videos.map((v,i)=>`
-    <div class="vc">
-      <div class="vi"><h4>${v.t}</h4><p>${v.d}</p></div>
-      <button class="wb ${saved.includes(i)?'done':''}" id="ig-btn-${i}" onclick="watchVid('ig',${i},20)" ${saved.includes(i)?'disabled':''}>
-        ${saved.includes(i)?'✅ +KES 20':'▶ Watch'}
-      </button>
+    <div class="card" id="ig-card-${i}">
+      <h3>${v.t}</h3>
+      <video id="ig-vid-${i}" width="100%" style="border-radius:10px;margin:10px 0;max-height:200px;" controls>
+        <source src="${v.url}" type="video/mp4"/>
+        Your browser does not support video.
+      </video>
+      ${watched.includes(i)?
+        '<div class="ok" style="display:block;">✅ You have watched this video and earned KES 20!</div>':
+        `<button class="btn" id="ig-btn-${i}" onclick="watchVideo('ig',${i},20)">▶️ Watch & Earn KES 20</button>`
+      }
     </div>`).join('');
 }
-window.watchVid=async function(prefix,i,reward){
-  const today=new Date().toDateString();
-  const key=prefix+'_'+_U.uid+'_'+today;
-  const saved=JSON.parse(localStorage.getItem(key)||'[]');
-  const btn=document.getElementById(prefix+'-btn-'+i);
-  btn.disabled=true;let s=15;btn.textContent='⏳ '+s+'s';
-  const t=setInterval(()=>{s--;btn.textContent='⏳ '+s+'s';if(s<=0){clearInterval(t);(async()=>{
-    try{
-      const {updateDoc,doc,increment}=_F;
-      await updateDoc(doc(_db,'users',_U.uid),{totalEarnings:increment(reward)});
-      saved.push(i);localStorage.setItem(key,JSON.stringify(saved));
-      const w=saved.length;
-      document.getElementById(prefix+'-count').textContent=w+' / 3';
-      document.getElementById(prefix+'-earn').textContent='KES '+(w*reward);
-      btn.textContent='✅ +KES '+reward;btn.classList.add('done');
-    }catch(e){btn.disabled=false;btn.textContent='▶ Watch';}
-  })();}},1000);
+window.watchVideo=async function(pfx,i,reward){
+  const btn=document.getElementById(pfx+'-btn-'+i);
+  const vid=document.getElementById(pfx+'-vid-'+i);
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Watch 30 seconds to earn...';
+  vid.play();
+  let elapsed=0;
+  const interval=setInterval(()=>{
+    elapsed++;
+    btn.innerHTML='<span class="spinner"></span>Watching... '+elapsed+'/30s';
+    if(elapsed>=30){
+      clearInterval(interval);
+      vid.pause();
+      completeVideo(pfx,i,reward,btn);
+    }
+  },1000);
 };
+async function completeVideo(pfx,i,reward,btn){
+  try{
+    await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(reward)});
+    const today=new Date().toDateString();
+    const watched=JSON.parse(localStorage.getItem(pfx+'_'+U.uid+'_'+today)||'[]');
+    watched.push(i);
+    localStorage.setItem(pfx+'_'+U.uid+'_'+today,JSON.stringify(watched));
+    document.getElementById('ig-count').textContent=watched.length+'/3';
+    document.getElementById('ig-earn').textContent='KES '+(watched.length*reward);
+    btn.style.display='none';
+    const card=document.getElementById(pfx+'-card-'+i);
+    const okDiv=document.createElement('div');
+    okDiv.className='ok';okDiv.style.display='block';
+    okDiv.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have watched the full video and earned <strong>KES '+reward+'</strong>. KES '+reward+' has been instantly disbursed to your Total Earnings!';
+    card.appendChild(okDiv);
+  }catch(e){btn.disabled=false;btn.textContent='▶️ Watch & Earn KES '+reward;}
+}
 
 </script>
-</body>
-</html>
+</body></html>
