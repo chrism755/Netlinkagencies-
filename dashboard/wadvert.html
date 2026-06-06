@@ -26,7 +26,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
-.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
 .avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
@@ -38,50 +38,21 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .card p{font-size:13px;color:#fff;line-height:1.7;}
 .card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;}
 .card-pink h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;}
-.card-pink p{font-size:13px;color:#fff;opacity:.9;line-height:1.6;}
+.card-pink p{font-size:13px;color:#fff;opacity:.9;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;}
+.btn:disabled{opacity:.5;}
 .fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.5;}
-select option{background:var(--bg3);}
+label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
+input:focus{border-color:var(--pk);}
+input::placeholder{color:#fff;opacity:.5;}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);}
-.qo.selected{border-color:var(--pk);background:rgba(233,30,140,.2);}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3);margin:10px 0;}
+.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:var(--bg3);margin:10px 0;}
 .upload-box:hover{border-color:var(--pk);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:#FF80CE;margin-left:7px;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.video-player{background:#000;border-radius:12px;width:100%;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;overflow:hidden;}
-.play-btn{width:60px;height:60px;background:linear-gradient(135deg,var(--pkd),var(--pk));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:none;}
-.progress-ring{width:70px;height:70px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#FF80CE;font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
 </style>
 </head>
 <body>
@@ -93,81 +64,68 @@ select option{background:var(--bg3);}
 <a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
 <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
 <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-<a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
 <a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
-<a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
-<a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
-<a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
 <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
-<a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
-<a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
-<div class="ns">Videos</div>
 <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
 <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
 <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
-<div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
-<div class="sub-nav" id="sw">
-<a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
-</div>
-<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
-<div class="sub-nav" id="sd">
-<a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
-<a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
-<a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
-</div>
 <div class="ns">More</div>
-<a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-<a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
+<a class="ni active" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
 <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
 <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
 <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
-<a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
 <a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
 <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
-<a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
 <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
 <a class="ni" style="color:#FF5252;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">WhatsApp Adverts</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on WhatsApp status. Upload screenshot of viewers. KES 1 per viewer goes to Total Earnings!</p></div>
-<div class="card">
-  <h3>📸 This Week's Advert</h3>
-  <div style="background:#000;border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
-    <div style="text-align:center;"><div style="font-size:50px;">📢</div><p style="color:#fff;font-size:13px;margin-top:8px;">Weekly Advert Picture</p></div>
-  </div>
-  <button class="btn" onclick="alert('📸 Advert picture saved! Post it on your WhatsApp status.')">⬇️ Download Advert Picture</button>
-</div>
-<div class="card" id="submit-section">
-  <h3>📤 Submit Your Views</h3>
-  <p style="margin-bottom:14px;font-size:13px;">After posting on WhatsApp status, upload a screenshot of your viewers count and enter the number of views.</p>
-  <div class="fg"><label>Upload Screenshot of Views</label>
-    <div class="upload-box" onclick="document.getElementById('ss-file').click()">
-      <div style="font-size:32px;margin-bottom:8px;">📸</div>
-      <p style="color:#fff;font-size:13px;">Tap to upload screenshot</p>
-      <input type="file" id="ss-file" accept="image/*" style="display:none;" onchange="previewImg(this)"/>
+  <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. KES 1 per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
+  <div class="card">
+    <h3>📸 This Week's Advert Picture</h3>
+    <div style="background:#000;border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+      <div style="text-align:center;"><div style="font-size:50px;">📢</div><p style="color:#fff;font-size:13px;margin-top:8px;">Weekly Advert Picture</p></div>
     </div>
-    <div id="ss-preview"></div>
+    <button class="btn" onclick="alert('📸 Advert picture downloaded! Post it on your WhatsApp status.')">⬇️ Download Advert Picture</button>
   </div>
-  <div class="fg"><label>Number of Views</label><input id="wa-views" type="number" placeholder="Enter exact number of viewers"/></div>
-  <div class="ok" id="wa-ok"></div>
-  <div class="err" id="wa-err"></div>
-  <button class="btn" id="wa-btn" onclick="submitWA()">📤 Submit Views</button>
+  <div class="card" id="submit-section">
+    <h3>📤 Submit Your Views</h3>
+    <p style="margin-bottom:14px;font-size:13px;">Post the picture on your WhatsApp status, screenshot your viewers, upload it below and enter number of views.</p>
+    <div class="fg"><label>Upload Screenshot of Views</label>
+      <div class="upload-box" onclick="document.getElementById('ss-file').click()">
+        <div style="font-size:32px;margin-bottom:8px;">📸</div>
+        <p style="color:#fff;font-size:13px;">Tap to upload screenshot</p>
+        <input type="file" id="ss-file" accept="image/*" style="display:none;" onchange="previewImg(this)"/>
+      </div>
+      <div id="ss-preview"></div>
+    </div>
+    <div class="fg"><label>Number of Views</label><input id="wa-views" type="number" placeholder="Enter exact number of viewers"/></div>
+    <div class="ok" id="wa-ok"></div>
+    <div class="err" id="wa-err"></div>
+    <button class="btn" id="wa-btn" onclick="submitWA()">📤 Submit Views</button>
+  </div>
 </div>
 </div>
-</div></div>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
+
+// Get current week number (resets every Thursday)
+function getWeekKey(){
+  const now=new Date();
+  const day=now.getDay(); // 0=Sun, 4=Thu
+  const diff=now.getDate()-(day>=4?day-4:day+3);
+  const thursday=new Date(now.setDate(diff));
+  return thursday.toISOString().split('T')[0];
+}
+
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login.html');return;}
   U=u;
@@ -175,59 +133,71 @@ onAuthStateChanged(auth,async u=>{
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
   UD=snap.data();UD.uid=u.uid;
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
-  if(typeof pageReady==='function') pageReady();
-});
-window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
-window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
-window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
 
-
-function getWeekNumber(){
-  const d=new Date();
-  const day=d.getDay();
-  const thursday=new Date(d);
-  thursday.setDate(d.getDate()-(day-4+7)%7);
-  return thursday.toDateString();
-}
-async function pageReady(){
-  const weekKey='wa_done_'+U.uid+'_'+getWeekNumber();
-  if(localStorage.getItem(weekKey)){
-    const nextThursday=getWeekNumber();
-    document.getElementById('submit-section').innerHTML='<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you have already uploaded this week. Come again on Thursday. Thank you!</div>';
+  // Check if already submitted this week using FIREBASE (not localStorage)
+  const weekKey=getWeekKey();
+  const q=query(collection(db,'waAdverts'),where('uid','==',u.uid),where('week','==',weekKey));
+  const existing=await getDocs(q);
+  if(!existing.empty){
+    const data=existing.docs[0].data();
+    document.getElementById('submit-section').innerHTML=
+      '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you have already uploaded this week ('+data.views+' views = KES '+data.views+'). Come again on Thursday. Thank you!</div>';
   }
-}
+});
+
 window.previewImg=function(input){
   if(input.files&&input.files[0]){
     const r=new FileReader();
-    r.onload=e=>document.getElementById('ss-preview').innerHTML='<img src="'+e.target.result+'" style="width:100%;border-radius:10px;margin-top:8px;"/>';
+    r.onload=e=>document.getElementById('ss-preview').innerHTML='<img src="'+e.target.result+'" style="width:100%;border-radius:10px;margin-top:8px;max-height:200px;object-fit:cover;"/>';
     r.readAsDataURL(input.files[0]);
   }
 };
+
 window.submitWA=async function(){
   const views=parseInt(document.getElementById('wa-views').value)||0;
   const file=document.getElementById('ss-file').files[0];
   const ok=document.getElementById('wa-ok'),err=document.getElementById('wa-err'),btn=document.getElementById('wa-btn');
   ok.style.display='none';err.style.display='none';
-  const weekKey='wa_done_'+U.uid+'_'+getWeekNumber();
-  if(localStorage.getItem(weekKey)){
+
+  if(!views){err.textContent='⚠️ Please enter number of views.';err.style.display='block';return;}
+  if(!file){err.textContent='⚠️ Please upload a screenshot of your views.';err.style.display='block';return;}
+
+  // Check Firebase again before submitting
+  const weekKey=getWeekKey();
+  const q=query(collection(db,'waAdverts'),where('uid','==',U.uid),where('week','==',weekKey));
+  const existing=await getDocs(q);
+  if(!existing.empty){
     err.textContent='❌ Sorry '+UD.username+', you have already uploaded this week. Come again on Thursday. Thank you!';
     err.style.display='block';return;
   }
-  if(!views){err.textContent='⚠️ Enter number of views.';err.style.display='block';return;}
-  if(!file){err.textContent='⚠️ Please upload a screenshot of your views.';err.style.display='block';return;}
+
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
   try{
+    // Save to Firebase with week key
+    await addDoc(collection(db,'waAdverts'),{
+      uid:U.uid,username:UD.username,
+      views:views,amount:views,
+      week:weekKey,
+      createdAt:serverTimestamp()
+    });
+    // Credit total earnings
     await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(views)});
-    await addDoc(collection(db,'waAdverts'),{uid:U.uid,username:UD.username,views:views,amount:views,week:getWeekNumber(),createdAt:serverTimestamp()});
-    localStorage.setItem(weekKey,'1');
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong> for submitting your WhatsApp viewers! You had <strong>'+views+' views</strong>. You have earned <strong>KES '+views+'</strong>. KES '+views+' has been instantly disbursed to your Total Earnings. Come back next week for a new advert picture!';
+
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong> for submitting your WhatsApp viewers! You had <strong>'+views+' views</strong>. You have earned <strong>KES '+views+'</strong>. KES '+views+' has been instantly disbursed to your Total Earnings. Come back next Thursday for a new advert picture!';
     ok.style.display='block';
     document.getElementById('submit-section').querySelector('.fg').style.display='none';
     document.getElementById('wa-views').style.display='none';
     btn.style.display='none';
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📤 Submit Views';}
+  }catch(e){
+    err.textContent='❌ '+e.message;err.style.display='block';
+    btn.disabled=false;btn.textContent='📤 Submit Views';
+  }
 };
 
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
 </script>
-</body></html>
+</body>
+</html>
