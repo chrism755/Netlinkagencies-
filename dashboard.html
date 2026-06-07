@@ -180,7 +180,7 @@ input:focus,textarea:focus{border-color:var(--primary);}
 <div class="overlay" id="overlay" onclick="closeSB()"></div>
 <div class="layout">
   <nav class="sidebar" id="sidebar">
-    <div class="sb-head"><div class="logo"><div class="logo-icon">💸</div><div><div class="logo-text">CASHLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+    <div class="sb-head"><div class="logo"><div class="logo-icon">💸</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
     <div class="sb-nav">
       <a class="ni active" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
       <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
@@ -230,7 +230,7 @@ input:focus,textarea:focus{border-color:var(--primary);}
     <div class="topbar">
       <div class="tb-left">
         <button class="menu-btn" onclick="openSB()">☰</button>
-        <div class="tb-title">CashLink Agencies</div>
+        <div class="tb-title">NETLINK AGENCIES</div>
       </div>
       <div class="tb-right">
         <button class="notif-btn">🔔<span class="notif-badge" id="notifCount">0</span></button>
@@ -329,118 +329,4 @@ function renderHome() {
     <div class="greeting-bar">
       <div class="greeting-top">
         <div>
-          <div class="greeting-text">${getGreeting()} User, <span class="uname">@${UD.username}</span> <span class="checkmark">✔</span></div>
-          <div class="greeting-sub">Welcome to CashLink Agencies</div>
-        </div>
-        <div class="level-badge">5</div>
-      </div>
-    </div>
-
-    <!-- TOP 2 STATS -->
-    <div class="top-stats">
-      <div class="ts-card expenses">
-        <div class="ts-label">📉 EXPENSES</div>
-        <div class="ts-amount">KES 150</div>
-        <div class="ts-icon">📉</div>
-      </div>
-      <div class="ts-card earnings">
-        <div class="ts-label">📈 TOTAL EARNINGS</div>
-        <div class="ts-amount">KES ${fmt(UD.totalEarnings)}</div>
-        <div class="ts-icon">📈</div>
-      </div>
-    </div>
-
-    <!-- STAT CARDS -->
-    <div class="stat-cards">
-      <div class="stat-card balance">
-        <div class="stat-left">
-          <div class="stat-label">ACCOUNT BALANCE</div>
-          <div class="stat-amount">KES ${fmt(UD.balance)}</div>
-          <div class="stat-pill">0% Higher</div>
-        </div>
-        <div class="stat-icon">🛒</div>
-      </div>
-
-      <div class="stat-card withdrawn">
-        <div class="stat-left">
-          <div class="stat-label">WITHDRAWN AMOUNT</div>
-          <div class="stat-amount">KES ${fmt(UD.withdrawn)}</div>
-          <div class="stat-pill">0% Increased</div>
-        </div>
-        <div class="stat-icon">↑</div>
-      </div>
-
-      <div class="stat-card pending">
-        <div class="stat-left">
-          <div class="stat-label">PENDING AMOUNT</div>
-          <div class="stat-amount">KES ${fmt(UD.pending)}</div>
-          <div class="stat-pill">0% Increased</div>
-        </div>
-        <div class="stat-icon">🕐</div>
-      </div>
-
-      <div class="stat-card karibu">
-        <div class="stat-left">
-          <div class="stat-label">KARIBU BONUS</div>
-          <div class="stat-amount">KES ${fmt(UD.karibu)}</div>
-          <div class="stat-pill">0% Increased</div>
-        </div>
-        <div class="stat-icon">💲</div>
-      </div>
-
-      <div class="stat-card weekly">
-        <div class="stat-left">
-          <div class="stat-label">WEEKLY BONUS</div>
-          <div class="stat-amount">KES ${fmt(UD.weeklyBonus)}</div>
-          <div class="stat-pill">0% Increased</div>
-        </div>
-        <div class="stat-icon">📈</div>
-      </div>
-    </div>
-
-    <!-- REFERRAL -->
-    <div class="ref-section">
-      <div class="ref-box">
-        <div class="ref-title">🔗 Your Referral Link</div>
-        <div class="ref-link" id="rl">${ref}</div>
-        <div class="ref-btns">
-          <button class="rb cp" onclick="copyRef()">📋 Copy</button>
-          <button class="rb wa" onclick="window.open('https://wa.me/?text=Join CashLink Agencies! ${encodeURIComponent(ref)}','_blank')">WhatsApp</button>
-          <button class="rb fb" onclick="window.open('https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(ref)}','_blank')">Facebook</button>
-          <button class="rb tg" onclick="window.open('https://t.me/share/url?url=${encodeURIComponent(ref)}','_blank')">Telegram</button>
-        </div>
-        <div class="lgrid">
-          <div class="lc"><div class="ln">Level 1</div><div class="la">KSH 80</div></div>
-          <div class="lc"><div class="ln">Level 2</div><div class="la">KSH 20</div></div>
-          <div class="lc"><div class="ln">Level 3</div><div class="la">KSH 10</div></div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-window.copyRef = () => {
-  const t = document.getElementById('rl')?.textContent;
-  if (t) navigator.clipboard.writeText(t).then(() => alert('Copied!'));
-};
-window.openSB = () => {
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-};
-window.closeSB = () => {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-};
-window.toggleSub = function(id, el) {
-  const c = document.getElementById(id);
-  c.classList.toggle('open');
-  el.querySelector('.arr').textContent = c.classList.contains('open') ? '▴' : '▾';
-};
-window.doLogout = async () => {
-  await signOut(auth);
-  localStorage.removeItem('nlUser');
-  window.location.href = '/login.html';
-};
-</script>
-</body>
-</html>
+          <div class="greeting-text">${getGreeting()} Use
