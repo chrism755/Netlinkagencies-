@@ -54,10 +54,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .loader-text{color:var(--pk2);font-size:13px;font-weight:700;}
 .empty{text-align:center;padding:40px;color:#fff;opacity:.6;}
 .amount-big{font-size:18px;font-weight:900;color:var(--gold);}
+.msg-ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
+.msg-err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
 </style>
 </head>
 <body>
-<div class="loader" id="loader"><div class="ring"></div><div class="loader-text">Loading...</div></div>
+<div class="loader" id="loader"><div class="ring"></div><div class="loader-text">Processing...</div></div>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="layout">
   <nav class="sidebar" id="sb">
@@ -90,6 +92,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
         <div class="tab" onclick="filterTab('approved',this)">✅ Approved</div>
         <div class="tab" onclick="filterTab('rejected',this)">❌ Rejected</div>
       </div>
+      <div id="msg-area"></div>
       <div id="list"><div class="empty">Loading...</div></div>
     </div>
   </div>
@@ -97,24 +100,30 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 <script type="module">
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, increment, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const db=getFirestore(app);
 let allData=[],currentFilter='pending';
+
+function showMsg(msg,type){
+  const area=document.getElementById('msg-area');
+  area.innerHTML='<div class="msg-'+(type==='ok'?'ok':'err')+'">'+msg+'</div>';
+  setTimeout(()=>area.innerHTML='',5000);
+}
 
 async function load(){
   document.getElementById('loader').classList.add('show');
   const snap=await getDocs(collection(db,'pendingWithdrawals'));
   allData=snap.docs.map(d=>({id:d.id,...d.data()}));
-  // Stats
-  const pending=allData.filter(d=>d.status==='pending').length;
-  const approved=allData.filter(d=>d.status==='approved').length;
-  const totalPaid=allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
-  document.getElementById('s-pending').textContent=pending;
-  document.getElementById('s-approved').textContent=approved;
-  document.getElementById('s-total').textContent='KES '+totalPaid;
+  updateStats();
   document.getElementById('loader').classList.remove('show');
   render();
+}
+
+function updateStats(){
+  document.getElementById('s-pending').textContent=allData.filter(d=>d.status==='pending').length;
+  document.getElementById('s-approved').textContent=allData.filter(d=>d.status==='approved').length;
+  document.getElementById('s-total').textContent='KES '+allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
 }
 
 function render(){
@@ -130,7 +139,7 @@ function render(){
       ${d.paypalEmail?`<div class="rrow"><div class="rl">PayPal</div><div class="rv">${d.paypalEmail}</div></div>`:''}
       <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
       ${d.status==='pending'?`<div class="btns">
-        <button class="ab ap" onclick="approve('${d.id}','${d.uid||''}',${d.amount||0})">✅ Approve</button>
+        <button class="ab ap" onclick="approve('${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}')">✅ Approve</button>
         <button class="ab rj" onclick="reject('${d.id}','${d.uid||''}',${d.amount||0})">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
@@ -142,55 +151,70 @@ window.filterTab=function(f,el){
   el.classList.add('active');render();
 };
 
-window.showMsg=function(msg,type){
-  const el=document.createElement('div');
-  el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;';
-  el.innerHTML=msg;
-  const list=document.getElementById('list');
-  list.insertBefore(el,list.firstChild);
-  setTimeout(()=>el.remove(),5000);
-};
-window.approve=async function(docId,uid,amount){
-  
+window.approve=async function(docId,uid,amount,username){
   document.getElementById('loader').classList.add('show');
+  document.getElementById('loader').querySelector('.loader-text').textContent='Approving withdrawal...';
   try{
+    // Mark withdrawal as approved
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
-    // Update user: move from pending to withdrawn
+
     if(uid){
-      await updateDoc(doc(db,'users',uid),{
-        pending:increment(-amount),
-        withdrawn:increment(amount)
-      });
+      // Get current user data to calculate correct values
+      const userSnap=await getDoc(doc(db,'users',uid));
+      if(userSnap.exists()){
+        const userData=userSnap.data();
+        const currentPending=userData.pending||0;
+        const currentWithdrawn=userData.withdrawn||0;
+
+        // CORRECT: subtract from pending, add to withdrawn
+        // Do NOT use increment to avoid double counting
+        await updateDoc(doc(db,'users',uid),{
+          pending: Math.max(0, currentPending - amount),
+          withdrawn: currentWithdrawn + amount
+        });
+      }
     }
+
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
     document.getElementById('loader').classList.remove('show');
-    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(0,230,118,.1);border:1.5px solid #00E676;color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">✅ Withdrawal of KES '+amount+' approved successfully!</div>');
-    render();
-    // Refresh stats
-    const totalPaid=allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
-    document.getElementById('s-pending').textContent=allData.filter(d=>d.status==='pending').length;
-    document.getElementById('s-approved').textContent=allData.filter(d=>d.status==='approved').length;
-    document.getElementById('s-total').textContent='KES '+totalPaid;
-  }catch(e){document.getElementById('loader').classList.remove('show');alert('❌ Error: '+e.message);}
+    showMsg('✅ Withdrawal of KES '+amount+' for '+username+' approved! Amount moved from Pending to Withdrawn.','ok');
+    updateStats();render();
+  }catch(e){
+    document.getElementById('loader').classList.remove('show');
+    showMsg('❌ Error: '+e.message,'err');
+  }
 };
 
 window.reject=async function(docId,uid,amount){
-  
   document.getElementById('loader').classList.add('show');
   try{
+    // Mark as rejected
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected'});
-    // Return money to balance
+
     if(uid){
-      await updateDoc(doc(db,'users',uid),{
-        pending:increment(-amount),
-        balance:increment(amount)
-      });
+      // Get current user data
+      const userSnap=await getDoc(doc(db,'users',uid));
+      if(userSnap.exists()){
+        const userData=userSnap.data();
+        const currentPending=userData.pending||0;
+        const currentBalance=userData.balance||0;
+
+        // CORRECT: subtract from pending, return to balance
+        await updateDoc(doc(db,'users',uid),{
+          pending: Math.max(0, currentPending - amount),
+          balance: currentBalance + amount
+        });
+      }
     }
+
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
     document.getElementById('loader').classList.remove('show');
-    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(255,82,82,.1);border:1.5px solid #FF5252;color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">❌ Withdrawal rejected. KES '+amount+' returned to user balance.</div>');
-    render();
-  }catch(e){document.getElementById('loader').classList.remove('show');alert('❌ Error: '+e.message);}
+    showMsg('❌ Withdrawal rejected. KES '+amount+' returned to user Account Balance.','err');
+    updateStats();render();
+  }catch(e){
+    document.getElementById('loader').classList.remove('show');
+    showMsg('❌ Error: '+e.message,'err');
+  }
 };
 
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
