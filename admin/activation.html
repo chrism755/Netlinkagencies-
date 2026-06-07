@@ -136,7 +136,6 @@ window.filterTab=function(f,el){
 
 // ── APPROVE AND PAY REFERRAL COMMISSIONS ──
 window.approve=async function(docId,uid,referredBy){
-  if(!confirm('Approve this activation and pay referral commissions?')) return;
   document.getElementById('loader').classList.add('show');
   document.getElementById('loader').querySelector('.loader-text').textContent='Activating account & paying commissions...';
   try{
@@ -196,7 +195,7 @@ window.approve=async function(docId,uid,referredBy){
     render();
   }catch(e){
     document.getElementById('loader').classList.remove('show');
-    alert('❌ Error: '+e.message);
+    showMsg('❌ Error: '+e.message,'err');
   }
 };
 

@@ -66,12 +66,12 @@ input:focus{border-color:var(--primary);}
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="modal" id="modal">
   <div class="mcard">
-    <h3 id="modal-title">Add Balance</h3>
-    <div class="fg"><label>Add Balance (KES)</label><input id="m-balance" type="number" placeholder="Enter amount to add"/></div>
-    <div class="fg"><label>Add Earnings (KES)</label><input id="m-earnings" type="number" placeholder="Enter amount to add"/></div>
+    <h3 id="modal-title">Edit User</h3>
+    <div class="fg"><label>Balance (KES)</label><input id="m-balance" type="number"/></div>
+    <div class="fg"><label>Total Earnings (KES)</label><input id="m-earnings" type="number"/></div>
     <div class="fg"><label>New Password (leave blank to skip)</label><input id="m-pw" type="password" placeholder="New password"/></div>
     <div class="ok" id="m-ok">✅ User updated!</div>
-    <button class="btn" onclick="saveEdit()">💾 Add Money</button>
+    <button class="btn" onclick="saveEdit()">💾 Save Changes</button>
     <button class="cbtn" onclick="closeModal()">Cancel</button>
   </div>
 </div>
@@ -104,7 +104,7 @@ input:focus{border-color:var(--primary);}
 <script type="module">
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const db=getFirestore(app);
 let allUsers=[];let editDocId=null;
@@ -130,7 +130,7 @@ function renderUsers(users){
       <div class="urow"><div class="ul">Referral Code</div><div class="uv" style="color:var(--accent);">${u.referralCode||'—'}</div></div>
       <div class="btns">
         ${!u.activated?`<button class="ab act" onclick="setActive('${u.id}',true)">✅ Activate</button>`:`<button class="ab dea" onclick="setActive('${u.id}',false)">❌ Deactivate</button>`}
-        <button class="ab edit" onclick="openEdit('${u.id}','${u.username||''}')">💰 Add Money</button>
+        <button class="ab edit" onclick="openEdit('${u.id}',${u.balance||0},${u.totalEarnings||0},'${u.username||''}')">✏️ Edit</button>
         <button class="ab wa" onclick="window.open('https://wa.me/${(u.whatsapp||'').replace(/[^0-9]/g,'')}','_blank')">💬 WhatsApp</button>
       </div>
     </div>`).join('');
@@ -144,41 +144,30 @@ window.setActive=async function(id,val){
   allUsers=allUsers.map(u=>u.id===id?{...u,activated:val}:u);
   renderUsers(allUsers);
 };
-window.openEdit=function(id,name){
+window.openEdit=function(id,balance,earnings,name){
   editDocId=id;
-  document.getElementById('modal-title').textContent='Add Money to: '+name;
-  document.getElementById('m-balance').value='';
-  document.getElementById('m-earnings').value='';
+  document.getElementById('modal-title').textContent='Edit: '+name;
+  document.getElementById('m-balance').value=balance;
+  document.getElementById('m-earnings').value=earnings;
   document.getElementById('m-pw').value='';
   document.getElementById('m-ok').style.display='none';
   document.getElementById('modal').classList.add('show');
 };
 window.closeModal=()=>document.getElementById('modal').classList.remove('show');
 window.saveEdit=async function(){
-  const addBalance=parseInt(document.getElementById('m-balance').value)||0;
-  const addEarnings=parseInt(document.getElementById('m-earnings').value)||0;
-  const pw=document.getElementById('m-pw').value;
-  
-  let updateData = {};
-  
-  // KEY FIX: Use increment() so it ADDS money instead of setting
-  if(addBalance > 0) updateData.balance = increment(addBalance);
-  if(addEarnings > 0) updateData.totalEarnings = increment(addEarnings);
-  if(pw) updateData.password = pw;
-  
-  if(Object.keys(updateData).length === 0) return alert('Enter amount to add');
-  
-  await updateDoc(doc(db,'users',editDocId), updateData);
-  
-  // Update local array
-  const user = allUsers.find(u=>u.id===editDocId);
-  if(user){
-    user.balance = (user.balance||0) + addBalance;
-    user.totalEarnings = (user.totalEarnings||0) + addEarnings;
-  }
-  
+  const balance=parseInt(document.getElementById('m-balance').value)||0;
+  const earnings=parseInt(document.getElementById('m-earnings').value)||0;
+  await updateDoc(doc(db,'users',editDocId),{balance,totalEarnings:earnings});
+  allUsers=allUsers.map(u=>u.id===editDocId?{...u,balance,totalEarnings:earnings}:u);
   document.getElementById('m-ok').style.display='block';
   setTimeout(()=>{closeModal();renderUsers(allUsers);},1200);
+};
+
+window.showMsg=function(msg,type){
+  let area=document.getElementById('msg-area');
+  if(!area){area=document.createElement('div');area.id='msg-area';document.querySelector('.content').prepend(area);}
+  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;">'+msg+'</div>';
+  setTimeout(()=>{if(area)area.innerHTML='';},5000);
 };
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
@@ -186,4 +175,4 @@ window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/adm
 loadUsers();
 </script>
 </body>
-  </html>
+</html>

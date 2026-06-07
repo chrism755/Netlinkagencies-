@@ -95,6 +95,13 @@ input:focus{border-color:var(--primary);}
 <script>
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 window.save=function(okId){document.getElementById(okId).style.display='block';setTimeout(()=>document.getElementById(okId).style.display='none',2000);};
+
+window.showMsg=function(msg,type){
+  let area=document.getElementById('msg-area');
+  if(!area){area=document.createElement('div');area.id='msg-area';document.querySelector('.content').prepend(area);}
+  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;">'+msg+'</div>';
+  setTimeout(()=>{if(area)area.innerHTML='';},5000);
+};
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};

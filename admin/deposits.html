@@ -148,7 +148,6 @@ window.filterTab=function(f,el){
 };
 
 window.showMsg=function(msg,type){const el=document.createElement('div');el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;';el.innerHTML=msg;const list=document.getElementById('list');list.insertBefore(el,list.firstChild);setTimeout(()=>el.remove(),5000);};window.approve=async function(docId,uid,amount,username){
-  if(!confirm('Approve deposit of KES '+amount+' for '+username+'?\nThis will add KES '+amount+' to their Account Balance.'))return;
   document.getElementById('loader').classList.add('show');
   document.getElementById('loader').querySelector('.loader-text').textContent='Crediting KES '+amount+' to '+username+'...';
   try{
@@ -164,7 +163,6 @@ window.showMsg=function(msg,type){const el=document.createElement('div');el.styl
 };
 
 window.reject=async function(docId){
-  if(!confirm('Reject this deposit?'))return;
   document.getElementById('loader').classList.add('show');
   try{
     await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected'});
