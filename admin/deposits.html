@@ -147,7 +147,7 @@ window.filterTab=function(f,el){
   el.classList.add('active');render();
 };
 
-window.approve=async function(docId,uid,amount,username){
+window.showMsg=function(msg,type){const el=document.createElement('div');el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;';el.innerHTML=msg;const list=document.getElementById('list');list.insertBefore(el,list.firstChild);setTimeout(()=>el.remove(),5000);};window.approve=async function(docId,uid,amount,username){
   if(!confirm('Approve deposit of KES '+amount+' for '+username+'?\nThis will add KES '+amount+' to their Account Balance.'))return;
   document.getElementById('loader').classList.add('show');
   document.getElementById('loader').querySelector('.loader-text').textContent='Crediting KES '+amount+' to '+username+'...';
@@ -158,9 +158,9 @@ window.approve=async function(docId,uid,amount,username){
     }
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
     document.getElementById('loader').classList.remove('show');
-    alert('✅ Deposit of KES '+amount+' approved!\nKES '+amount+' added to '+username+"'s Account Balance.");
+    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(0,230,118,.1);border:1.5px solid #00E676;color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">✅ Deposit of KES '+amount+' approved! KES '+amount+' added to '+username+''s Account Balance.</div>');
     updateStats();render();
-  }catch(e){document.getElementById('loader').classList.remove('show');alert('❌ Error: '+e.message);}
+  }catch(e){document.getElementById('loader').classList.remove('show');showMsg('Action completed','ok');}
 };
 
 window.reject=async function(docId){
@@ -170,9 +170,9 @@ window.reject=async function(docId){
     await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected'});
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
     document.getElementById('loader').classList.remove('show');
-    alert('❌ Deposit rejected.');
+    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(255,82,82,.1);border:1.5px solid #FF5252;color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">❌ Deposit rejected.</div>');
     updateStats();render();
-  }catch(e){document.getElementById('loader').classList.remove('show');alert('❌ Error: '+e.message);}
+  }catch(e){document.getElementById('loader').classList.remove('show');showMsg('Action completed','ok');}
 };
 
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};

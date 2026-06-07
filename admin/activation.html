@@ -120,6 +120,14 @@ function render(){
     </div>`).join('');
 }
 
+window.showMsg=function(msg,type){
+  const el=document.createElement('div');
+  el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;';
+  el.innerHTML=msg;
+  const list=document.getElementById('list');
+  list.insertBefore(el,list.firstChild);
+  setTimeout(()=>el.remove(),5000);
+};
 window.filterTab=function(f,el){
   currentFilter=f;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -184,7 +192,7 @@ window.approve=async function(docId,uid,referredBy){
 
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
     document.getElementById('loader').classList.remove('show');
-    alert('✅ Account activated!\n\nReferral commissions paid:\n• Level 1 referrer: +KES 80\n• Level 2 referrer: +KES 20\n• Level 3 referrer: +KES 10');
+    showMsg('✅ Account activated! Referral commissions paid — Level 1: +KES 80 · Level 2: +KES 20 · Level 3: +KES 10','ok');
     render();
   }catch(e){
     document.getElementById('loader').classList.remove('show');
@@ -195,7 +203,7 @@ window.approve=async function(docId,uid,referredBy){
 window.reject=async function(docId){
   await updateDoc(doc(db,'pendingActivations',docId),{status:'rejected'});
   allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
-  alert('❌ Activation rejected.');render();
+  showMsg('❌ Activation rejected.','err');render();
 };
 
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};

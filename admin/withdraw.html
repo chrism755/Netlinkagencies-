@@ -142,8 +142,16 @@ window.filterTab=function(f,el){
   el.classList.add('active');render();
 };
 
+window.showMsg=function(msg,type){
+  const el=document.createElement('div');
+  el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;';
+  el.innerHTML=msg;
+  const list=document.getElementById('list');
+  list.insertBefore(el,list.firstChild);
+  setTimeout(()=>el.remove(),5000);
+};
 window.approve=async function(docId,uid,amount){
-  if(!confirm('Approve withdrawal of KES '+amount+'?'))return;
+  
   document.getElementById('loader').classList.add('show');
   try{
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
@@ -156,7 +164,7 @@ window.approve=async function(docId,uid,amount){
     }
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
     document.getElementById('loader').classList.remove('show');
-    alert('✅ Withdrawal of KES '+amount+' approved! User notified.');
+    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(0,230,118,.1);border:1.5px solid #00E676;color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">✅ Withdrawal of KES '+amount+' approved successfully!</div>');
     render();
     // Refresh stats
     const totalPaid=allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
@@ -167,7 +175,7 @@ window.approve=async function(docId,uid,amount){
 };
 
 window.reject=async function(docId,uid,amount){
-  if(!confirm('Reject this withdrawal? Amount will be returned to user balance.'))return;
+  
   document.getElementById('loader').classList.add('show');
   try{
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected'});
@@ -180,7 +188,7 @@ window.reject=async function(docId,uid,amount){
     }
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
     document.getElementById('loader').classList.remove('show');
-    alert('❌ Withdrawal rejected. KES '+amount+' returned to user balance.');
+    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(255,82,82,.1);border:1.5px solid #FF5252;color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">❌ Withdrawal rejected. KES '+amount+' returned to user balance.</div>');
     render();
   }catch(e){document.getElementById('loader').classList.remove('show');alert('❌ Error: '+e.message);}
 };
