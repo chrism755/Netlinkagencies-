@@ -253,4 +253,14 @@ window.doWithdraw=async function(method){
     const {collection,addDoc,serverTimestamp,updateDoc,doc,increment}=_F;
     await addDoc(collection(_db,'pendingWithdrawals'),{uid:_U.uid,username:_UD.username,amount:amt,method:method,phone:_UD.phone||'',paypalEmail:method==='paypal'?(document.getElementById('pp-email').value||''):'',status:'pending',createdAt:serverTimestamp()});
     await updateDoc(doc(_db,'users',_U.uid),{pending:increment(amt),balance:increment(-amt)});
-    ok.innerHTML='✅ Your withdrawal request
+    ok.innerHTML='✅ Your withdrawal request of <strong>KES '+amt+'</strong> has been submitted! Wait for verification and disbursement to your account.';
+    ok.style.display='block';
+    _UD.balance=(_UD.balance||0)-amt;
+    document.getElementById('bal-show').textContent='KES '+_UD.balance;
+    btn.disabled=false;btn.textContent=method==='mpesa'?'📱 Submit M-PESA Withdrawal':'💳 Submit PayPal Withdrawal';
+  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;}
+};
+
+</script>
+</body>
+</html>
