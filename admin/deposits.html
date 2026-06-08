@@ -45,20 +45,19 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .rejected-badge{background:rgba(255,82,82,.15);border:1px solid var(--red);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .btns{display:flex;gap:7px;margin-top:10px;}
 .ab{padding:10px 0;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;flex:1;}
+.ab:disabled{opacity:.5;cursor:not-allowed;}
 .ap{background:var(--green);color:#fff;}
 .rj{background:var(--red);color:#fff;}
-.loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-.loader.show{display:flex;}
-.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--pk);border-radius:50%;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loader-text{color:var(--pk2);font-size:13px;font-weight:700;}
 .empty{text-align:center;padding:40px;color:#fff;opacity:.6;}
 .amount-big{font-size:18px;font-weight:900;color:var(--gold);}
 .txn-id{font-family:monospace;font-size:13px;color:var(--pk2);font-weight:700;letter-spacing:1px;}
+.msg-ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
+.msg-err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
-<div class="loader" id="loader"><div class="ring"></div><div class="loader-text">Loading...</div></div>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="layout">
   <nav class="sidebar" id="sb">
@@ -82,100 +81,132 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
     </div>
     <div class="content">
       <div class="stat-row">
-        <div class="stat-box"><div class="stat-num" id="s-pending">0</div><div class="stat-lbl">Pending</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-approved">0</div><div class="stat-lbl">Approved</div></div>
-        <div class="stat-box"><div class="stat-num" id="s-total" style="color:var(--green);">KES 0</div><div class="stat-lbl">Total Deposited</div></div>
+        <div class="stat-box"><div class="stat-num" id="s-pending">—</div><div class="stat-lbl">Pending</div></div>
+        <div class="stat-box"><div class="stat-num" id="s-approved">—</div><div class="stat-lbl">Approved</div></div>
+        <div class="stat-box"><div class="stat-num" id="s-total" style="color:var(--green);">—</div><div class="stat-lbl">Total Deposited</div></div>
       </div>
       <div class="tabs">
         <div class="tab active" onclick="filterTab('pending',this)">⏳ Pending</div>
         <div class="tab" onclick="filterTab('approved',this)">✅ Approved</div>
         <div class="tab" onclick="filterTab('rejected',this)">❌ Rejected</div>
       </div>
-      <div id="list"><div class="empty">Loading...</div></div>
+      <div id="msg-area"></div>
+      <div id="list"><div class="empty"><span class="spin"></span> Loading deposits...</div></div>
     </div>
   </div>
 </div>
 <script type="module">
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const db=getFirestore(app);
 let allData=[],currentFilter='pending';
 
-async function load(){
-  document.getElementById('loader').classList.add('show');
-  const snap=await getDocs(collection(db,'pendingDeposits'));
-  allData=snap.docs.map(d=>({id:d.id,...d.data()}));
-  updateStats();
-  document.getElementById('loader').classList.remove('show');
-  render();
+function showMsg(msg,type){
+  const area=document.getElementById('msg-area');
+  area.innerHTML='<div class="msg-'+(type==='ok'?'ok':'err')+'">'+msg+'</div>';
+  setTimeout(()=>{area.innerHTML='';},5000);
 }
 
 function updateStats(){
-  const pending=allData.filter(d=>d.status==='pending').length;
-  const approved=allData.filter(d=>d.status==='approved').length;
-  const total=allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
-  document.getElementById('s-pending').textContent=pending;
-  document.getElementById('s-approved').textContent=approved;
-  document.getElementById('s-total').textContent='KES '+total;
+  document.getElementById('s-pending').textContent=allData.filter(d=>d.status==='pending').length;
+  document.getElementById('s-approved').textContent=allData.filter(d=>d.status==='approved').length;
+  document.getElementById('s-total').textContent='KES '+allData.filter(d=>d.status==='approved').reduce((s,d)=>s+(d.amount||0),0);
 }
 
 function render(){
   const filtered=allData.filter(d=>d.status===currentFilter);
   const list=document.getElementById('list');
-  if(filtered.length===0){list.innerHTML='<div class="empty">No '+currentFilter+' deposits.</div>';return;}
+  if(filtered.length===0){
+    list.innerHTML='<div class="empty">No '+currentFilter+' deposits.</div>';
+    return;
+  }
   list.innerHTML=filtered.map(d=>`
     <div class="rc">
-      <div class="rn">${d.username||''} <span class="${d.status}-badge">${d.status}</span></div>
+      <div class="rn">${d.username||'Unknown'} <span class="${d.status}-badge">${d.status}</span></div>
       <div class="rrow"><div class="rl">Amount</div><div class="amount-big">KES ${d.amount||0}</div></div>
       <div class="rrow"><div class="rl">Transaction ID</div><div class="txn-id">${d.txnId||'—'}</div></div>
       <div class="rrow"><div class="rl">Phone Used</div><div class="rv">${d.phone||'—'}</div></div>
       <div class="rrow"><div class="rl">Depositor Name</div><div class="rv">${d.name||'—'}</div></div>
-      <div class="rrow"><div class="rl">Username</div><div class="rv">${d.username||'—'}</div></div>
-      <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
-      ${d.status==='pending'?`<div class="btns">
-        <button class="ab ap" onclick="approve('${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}')">✅ Approve & Credit</button>
-        <button class="ab rj" onclick="reject('${d.id}')">❌ Reject</button>
+      <div class="rrow"><div class="rl">Time</div><div class="rv" style="font-size:11px;">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():'—'}</div></div>
+      ${d.status==='pending'?`
+      <div class="btns">
+        <button class="ab ap" id="ap-${d.id}" onclick="approve('${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}')">✅ Approve & Credit</button>
+        <button class="ab rj" id="rj-${d.id}" onclick="reject('${d.id}')">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
+}
+
+// Load data without blocking loader overlay
+async function load(){
+  try{
+    const snap = await getDocs(collection(db,'pendingDeposits'));
+    allData = snap.docs.map(d=>({id:d.id,...d.data()}));
+    updateStats();
+    render();
+  }catch(e){
+    document.getElementById('list').innerHTML='<div class="empty">❌ Failed to load: '+e.message+'<br><br><button onclick="load()" style="background:var(--pk);color:#fff;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:700;">🔄 Retry</button></div>';
+  }
 }
 
 window.filterTab=function(f,el){
   currentFilter=f;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');render();
+  el.classList.add('active');
+  render();
 };
 
-window.showMsg=function(msg,type){const el=document.createElement('div');el.style.cssText='background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;';el.innerHTML=msg;const list=document.getElementById('list');list.insertBefore(el,list.firstChild);setTimeout(()=>el.remove(),5000);};window.approve=async function(docId,uid,amount,username){
-  document.getElementById('loader').classList.add('show');
-  document.getElementById('loader').querySelector('.loader-text').textContent='Crediting KES '+amount+' to '+username+'...';
+window.approve=async function(docId,uid,amount,username){
+  const apBtn=document.getElementById('ap-'+docId);
+  const rjBtn=document.getElementById('rj-'+docId);
+  if(apBtn){apBtn.disabled=true;apBtn.innerHTML='<span class="spin"></span>Processing...';}
+  if(rjBtn) rjBtn.disabled=true;
   try{
     await updateDoc(doc(db,'pendingDeposits',docId),{status:'approved'});
     if(uid){
-      await updateDoc(doc(db,'users',uid),{balance:increment(amount)});
+      const userSnap=await getDoc(doc(db,'users',uid));
+      if(userSnap.exists()){
+        const ud=userSnap.data();
+        await updateDoc(doc(db,'users',uid),{
+          balance:(ud.balance||0)+amount
+        });
+      }
     }
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
-    document.getElementById('loader').classList.remove('show');
-    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(0,230,118,.1);border:1.5px solid #00E676;color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">✅ Deposit of KES '+amount+' approved! KES '+amount+' added to '+username+''s Account Balance.</div>');
+    showMsg('✅ Deposit of KES '+amount+' approved! KES '+amount+" added to "+username+"'s Account Balance.",'ok');
     updateStats();render();
-  }catch(e){document.getElementById('loader').classList.remove('show');showMsg('Action completed','ok');}
+  }catch(e){
+    if(apBtn){apBtn.disabled=false;apBtn.innerHTML='✅ Approve & Credit';}
+    if(rjBtn) rjBtn.disabled=false;
+    showMsg('❌ Error: '+e.message,'err');
+  }
 };
 
 window.reject=async function(docId){
-  document.getElementById('loader').classList.add('show');
+  const apBtn=document.getElementById('ap-'+docId);
+  const rjBtn=document.getElementById('rj-'+docId);
+  if(rjBtn){rjBtn.disabled=true;rjBtn.innerHTML='<span class="spin"></span>Rejecting...';}
+  if(apBtn) apBtn.disabled=true;
   try{
     await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected'});
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
-    document.getElementById('loader').classList.remove('show');
-    document.getElementById('list').insertAdjacentHTML('afterbegin','<div style="background:rgba(255,82,82,.1);border:1.5px solid #FF5252;color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;">❌ Deposit rejected.</div>');
+    showMsg('❌ Deposit rejected successfully.','err');
     updateStats();render();
-  }catch(e){document.getElementById('loader').classList.remove('show');showMsg('Action completed','ok');}
+  }catch(e){
+    if(rjBtn){rjBtn.disabled=false;rjBtn.innerHTML='❌ Reject';}
+    if(apBtn) apBtn.disabled=false;
+    showMsg('❌ Error: '+e.message,'err');
+  }
 };
 
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
+
+// Start loading immediately
 load();
 </script>
 </body>
