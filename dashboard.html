@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Dashboard — NETLINK AGENCIES</title>
+<title>NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 :root{--sw:260px;}
@@ -10,7 +10,7 @@
 body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 
-/* ── SIDEBAR ── */
+/* SIDEBAR */
 .sidebar{width:var(--sw);background:#1a0a2e;border-right:1px solid #2d1a4e;position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid #2d1a4e;background:linear-gradient(135deg,#E91E8C,#FF4DB8);}
@@ -30,68 +30,84 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 
-/* ── TOPBAR ── */
+/* TOPBAR */
 .main{flex:1;}
-.topbar{background:linear-gradient(135deg,#E91E8C,#FF4DB8);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
+.topbar{background:linear-gradient(135deg,#E91E8C,#FF6B35);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
-.tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.notif-btn{background:rgba(255,255,255,.2);border:none;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;}
-.notif-badge{position:absolute;top:-2px;right:-2px;background:#FFD700;color:#000;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.5);}
+.tb-brand{font-size:16px;font-weight:900;color:#fff;flex:1;letter-spacing:.5px;}
+.notif-wrap{position:relative;cursor:pointer;}
+.notif-btn{width:38px;height:38px;background:rgba(255,255,255,.2);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#fff;}
+.notif-badge{position:absolute;top:-3px;right:-3px;background:#FFD700;color:#000;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
 
-/* ── CONTENT ── */
+/* NOTIFICATION DROPDOWN */
+.notif-dropdown{position:fixed;top:64px;right:10px;width:300px;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:200;display:none;overflow:hidden;max-height:400px;overflow-y:auto;}
+.notif-dropdown.show{display:block;}
+.notif-header{background:linear-gradient(135deg,#E91E8C,#FF4DB8);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;}
+.notif-header h3{color:#fff;font-size:14px;font-weight:800;}
+.notif-clear{background:none;border:none;color:rgba(255,255,255,.8);font-size:11px;cursor:pointer;font-weight:700;}
+.notif-item{padding:14px 16px;border-bottom:1px solid #f0f0f0;display:flex;gap:10px;align-items:flex-start;}
+.notif-item.unread{background:#fff5fb;}
+.notif-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.notif-icon.green{background:#e8f5e9;}
+.notif-icon.red{background:#fce4ec;}
+.notif-icon.blue{background:#e3f2fd;}
+.notif-text{font-size:12px;color:#333;line-height:1.5;}
+.notif-text strong{color:#E91E8C;}
+.notif-time{font-size:10px;color:#999;margin-top:3px;}
+.notif-empty{padding:30px;text-align:center;color:#999;font-size:13px;}
+
+/* CONTENT */
 .content{padding:16px 14px;max-width:500px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
-.overlay.show{display:block;}
 
-/* ── GREETING ── */
-.greeting-box{background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
-.greeting-text{font-size:16px;font-weight:800;color:#222;margin-bottom:4px;}
+/* GREETING */
+.greeting-box{background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;}
+.greeting-left{}
+.greeting-text{font-size:15px;font-weight:800;color:#222;margin-bottom:2px;}
 .greeting-sub{font-size:12px;color:#888;}
-.verified-badge{display:inline-flex;align-items:center;gap:3px;background:#E3F2FD;color:#1565C0;border-radius:20px;padding:1px 8px;font-size:10px;font-weight:800;margin-left:4px;}
+.greeting-num{width:42px;height:42px;background:linear-gradient(135deg,#E91E8C,#FF4DB8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
 
-/* ── TOP 2 CARDS ── */
-.top-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.top-card{border-radius:16px;padding:16px;position:relative;overflow:hidden;min-height:90px;}
-.top-card.expenses{background:linear-gradient(135deg,#FF6B35,#FF8C42);}
-.top-card.earnings{background:linear-gradient(135deg,#FF9800,#FFB74D);}
-.top-card-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
-.top-card-amount{font-size:22px;font-weight:900;color:#fff;}
-.top-card-icon{position:absolute;right:12px;bottom:12px;font-size:28px;opacity:.35;}
-.top-card-trend{font-size:10px;color:rgba(255,255,255,.8);margin-top:4px;}
+/* TOP 2 CARDS */
+.top-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.top-card{border-radius:16px;padding:16px;position:relative;overflow:hidden;min-height:95px;}
+.top-card.expenses{background:linear-gradient(135deg,#FF3D00,#FF6E40);}
+.top-card.earnings{background:linear-gradient(135deg,#FF6D00,#FFA726);}
+.top-card-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
+.top-card-amount{font-size:20px;font-weight:900;color:#fff;}
+.top-card-icon{position:absolute;right:10px;bottom:10px;width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 
-/* ── STAT CARDS ── */
-.stat-card{border-radius:16px;padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;min-height:90px;}
+/* STAT CARDS */
+.stat-card{border-radius:16px;padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden;}
 .stat-card.blue{background:linear-gradient(135deg,#1565C0,#1E88E5);}
 .stat-card.red{background:linear-gradient(135deg,#C62828,#E53935);}
+.stat-card.orange{background:linear-gradient(135deg,#E65100,#F57C00);}
 .stat-card.purple{background:linear-gradient(135deg,#6A1B9A,#8E24AA);}
-.stat-card.green{background:linear-gradient(135deg,#1B5E20,#388E3C);}
 .stat-card.teal{background:linear-gradient(135deg,#00695C,#00897B);}
-.stat-info{}
-.stat-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.stat-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .stat-amount{font-size:26px;font-weight:900;color:#fff;line-height:1;}
-.stat-pill{display:inline-flex;align-items:center;gap:3px;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700;color:#fff;margin-top:6px;}
-.stat-icon{font-size:38px;opacity:.3;margin-left:10px;}
+.stat-pill{display:inline-flex;align-items:center;gap:3px;background:rgba(0,0,0,.2);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);margin-top:8px;}
+.stat-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:42px;opacity:.2;}
 
-/* ── REFERRAL ── */
+/* REFERRAL */
 .ref-card{background:#fff;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
-.ref-title{font-size:13px;font-weight:800;color:#E91E8C;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.ref-title{font-size:12px;font-weight:800;color:#E91E8C;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 .ref-link-box{background:#f8f0ff;border:1.5px solid #E91E8C;border-radius:10px;padding:10px 13px;font-size:11px;color:#6A1B9A;word-break:break-all;font-family:monospace;margin-bottom:12px;}
 .ref-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .rb{flex:1;min-width:60px;padding:9px 6px;border:none;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;color:#fff;}
-.rb.cp{background:#E91E8C;}.rb.wa{background:#25D366;}.rb.fb{background:#1877F2;}.rb.tg{background:#2CA5E0;}
-.levels-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
-.lc{border-radius:10px;padding:12px;text-align:center;}
-.lc.l1{background:linear-gradient(135deg,#E91E8C,#FF4DB8);}
-.lc.l2{background:linear-gradient(135deg,#1565C0,#1E88E5);}
-.lc.l3{background:linear-gradient(135deg,#6A1B9A,#8E24AA);}
-.ln{font-size:10px;color:rgba(255,255,255,.8);font-weight:700;margin-bottom:4px;}
-.la{font-size:16px;font-weight:900;color:#fff;}
+.rb.cp{background:#E91E8C;}
+.rb.wa{background:#25D366;}
+.rb.fb{background:#1877F2;}
+.rb.tg{background:#2CA5E0;}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
 </style>
 </head>
 <body>
-<div class="overlay" id="ov" onclick="closeSB()"></div>
+
+<div class="overlay" id="ov" onclick="closeSB();closeNotif()"></div>
+
 <div class="layout">
+  <!-- SIDEBAR -->
   <nav class="sidebar" id="sb">
     <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
     <div class="sb-nav">
@@ -139,102 +155,98 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
   </nav>
 
   <div class="main">
+    <!-- TOPBAR -->
     <div class="topbar">
       <button class="menu-btn" onclick="openSB()">☰</button>
-      <div class="tb-title">Dashboard</div>
-      <button class="notif-btn"><span>🔔</span><span class="notif-badge" id="notif-count">0</span></button>
-      <div class="avatar" id="av">U</div>
+      <div class="tb-brand">NETLINK AGENCIES</div>
+      <div class="notif-wrap">
+        <button class="notif-btn" onclick="toggleNotif()">🔔</button>
+        <div class="notif-badge" id="notif-count">0</div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION DROPDOWN -->
+    <div class="notif-dropdown" id="notif-dropdown">
+      <div class="notif-header">
+        <h3>🔔 Notifications</h3>
+        <button class="notif-clear" onclick="clearNotifs()">Clear all</button>
+      </div>
+      <div id="notif-list"><div class="notif-empty">No notifications yet</div></div>
     </div>
 
     <div class="content">
       <!-- GREETING -->
       <div class="greeting-box">
-        <div class="greeting-text" id="greeting-text">Good morning ☀️, User!
-          <span class="verified-badge">✔ Verified</span>
+        <div class="greeting-left">
+          <div class="greeting-text" id="greeting-text">Good morning ☀️, User!</div>
+          <div class="greeting-sub">Welcome to NETLINK AGENCIES</div>
         </div>
-        <div class="greeting-sub">Welcome to NETLINK AGENCIES</div>
+        <div class="greeting-num" id="greeting-num">5</div>
       </div>
 
       <!-- TOP 2 CARDS -->
       <div class="top-grid">
         <div class="top-card expenses">
-          <div class="top-card-label">Expenses</div>
+          <div class="top-card-label">📉 Expenses</div>
           <div class="top-card-amount">KES 150</div>
-          <div class="top-card-trend">Activation Fee</div>
           <div class="top-card-icon">📉</div>
         </div>
         <div class="top-card earnings">
-          <div class="top-card-label">Total Earnings</div>
+          <div class="top-card-label">📈 Total Earnings</div>
           <div class="top-card-amount" id="total-earn">KES 0</div>
-          <div class="top-card-trend">↑ All Tasks</div>
           <div class="top-card-icon">📈</div>
         </div>
       </div>
 
       <!-- ACCOUNT BALANCE -->
       <div class="stat-card blue">
-        <div class="stat-info">
-          <div class="stat-label">Account Balance</div>
-          <div class="stat-amount" id="acc-balance">KES 0</div>
-          <div class="stat-pill">💼 Referrals + Deposits</div>
-        </div>
+        <div class="stat-label">Account Balance</div>
+        <div class="stat-amount" id="acc-balance">KES 0</div>
+        <div class="stat-pill">0% Higher</div>
         <div class="stat-icon">🛒</div>
       </div>
 
       <!-- WITHDRAWN -->
       <div class="stat-card red">
-        <div class="stat-info">
-          <div class="stat-label">Withdrawn Amount</div>
-          <div class="stat-amount" id="withdrawn">KES 0</div>
-          <div class="stat-pill">↑ Total Withdrawn</div>
-        </div>
+        <div class="stat-label">Withdrawn Amount</div>
+        <div class="stat-amount" id="withdrawn">KES 0</div>
+        <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">↑</div>
       </div>
 
       <!-- PENDING -->
-      <div class="stat-card purple">
-        <div class="stat-info">
-          <div class="stat-label">Pending Amount</div>
-          <div class="stat-amount" id="pending">KES 0</div>
-          <div class="stat-pill">⏳ Awaiting Approval</div>
-        </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pending Amount</div>
+        <div class="stat-amount" id="pending">KES 0</div>
+        <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">🕐</div>
       </div>
 
       <!-- KARIBU BONUS -->
-      <div class="stat-card green">
-        <div class="stat-info">
-          <div class="stat-label">Karibu Bonus</div>
-          <div class="stat-amount" id="karibu">KES 0</div>
-          <div class="stat-pill">🎁 20 Referrals = KES 100</div>
-        </div>
+      <div class="stat-card purple">
+        <div class="stat-label">Karibu Bonus</div>
+        <div class="stat-amount" id="karibu">KES 0</div>
+        <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">💵</div>
       </div>
 
       <!-- WEEKLY BONUS -->
       <div class="stat-card teal">
-        <div class="stat-info">
-          <div class="stat-label">Weekly Bonus</div>
-          <div class="stat-amount" id="weekly">KES 0</div>
-          <div class="stat-pill">📈 50 Referrals = KES 200</div>
-        </div>
+        <div class="stat-label">Weekly Bonus</div>
+        <div class="stat-amount" id="weekly">KES 0</div>
+        <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">📊</div>
       </div>
 
       <!-- REFERRAL LINK -->
       <div class="ref-card">
         <div class="ref-title">🔗 Your Referral Link</div>
-        <div class="ref-link-box" id="reflink">https://netlinkagencies.linkpc.net/register.html?ref=username</div>
+        <div class="ref-link-box" id="reflink">Loading...</div>
         <div class="ref-btns">
           <button class="rb cp" onclick="copyRef()">📋 Copy</button>
           <button class="rb wa" id="wa-share">WhatsApp</button>
           <button class="rb fb" id="fb-share">Facebook</button>
           <button class="rb tg" id="tg-share">Telegram</button>
-        </div>
-        <div class="levels-grid">
-          <div class="lc l1"><div class="ln">Level 1</div><div class="la">KSH 80</div></div>
-          <div class="lc l2"><div class="ln">Level 2</div><div class="la">KSH 20</div></div>
-          <div class="lc l3"><div class="ln">Level 3</div><div class="la">KSH 10</div></div>
         </div>
       </div>
     </div>
@@ -244,9 +256,13 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
+
+// Format numbers with commas
+function fmt(n){return Number(n||0).toLocaleString('en-KE');}
 
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login.html');return;}
@@ -257,16 +273,16 @@ onAuthStateChanged(auth,async u=>{
   // Greeting
   const h=new Date().getHours();
   const g=h<12?'Good morning ☀️':h<17?'Good afternoon 🌤️':'Good evening 🌙';
-  document.getElementById('greeting-text').innerHTML=g+', <strong>'+UD.username+'</strong>! <span class="verified-badge">✔ Verified</span>';
-  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  document.getElementById('greeting-text').innerHTML=g+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
+  document.getElementById('greeting-num').textContent=UD.level1Count||0;
 
-  // Stats
-  document.getElementById('total-earn').textContent='KES '+(UD.totalEarnings||0);
-  document.getElementById('acc-balance').textContent='KES '+(UD.balance||0);
-  document.getElementById('withdrawn').textContent='KES '+(UD.withdrawn||0);
-  document.getElementById('pending').textContent='KES '+(UD.pending||0);
-  document.getElementById('karibu').textContent='KES '+(UD.karibu||0);
-  document.getElementById('weekly').textContent='KES '+(UD.weeklyBonus||0);
+  // Stats with commas
+  document.getElementById('total-earn').textContent='KES '+fmt(UD.totalEarnings);
+  document.getElementById('acc-balance').textContent='KES '+fmt(UD.balance);
+  document.getElementById('withdrawn').textContent='KES '+fmt(UD.withdrawn);
+  document.getElementById('pending').textContent='KES '+fmt(UD.pending);
+  document.getElementById('karibu').textContent='KES '+fmt(UD.karibu);
+  document.getElementById('weekly').textContent='KES '+fmt(UD.weeklyBonus);
 
   // Referral link
   const ref='https://netlinkagencies.linkpc.net/register.html?ref='+UD.referralCode;
@@ -274,9 +290,110 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('wa-share').onclick=()=>window.open('https://wa.me/?text=Join NETLINK AGENCIES and earn daily! '+encodeURIComponent(ref),'_blank');
   document.getElementById('fb-share').onclick=()=>window.open('https://facebook.com/sharer/sharer.php?u='+encodeURIComponent(ref),'_blank');
   document.getElementById('tg-share').onclick=()=>window.open('https://t.me/share/url?url='+encodeURIComponent(ref),'_blank');
+
+  // Load notifications
+  loadNotifications(u.uid, UD.username);
 });
 
-window.copyRef=()=>{const t=document.getElementById('reflink').textContent;navigator.clipboard.writeText(t).then(()=>alert('✅ Referral link copied!'));};
+// NOTIFICATIONS
+async function loadNotifications(uid, username){
+  try{
+    const notifications = [];
+
+    // Check withdrawals
+    const wSnap = await getDocs(query(collection(db,'pendingWithdrawals'),where('uid','==',uid)));
+    wSnap.docs.forEach(d=>{
+      const data=d.data();
+      if(data.status==='approved'){
+        notifications.push({
+          type:'green',icon:'✅',
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>KES ${fmt(data.amount)}</strong> has been approved and disbursed to your account.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      } else if(data.status==='rejected'){
+        notifications.push({
+          type:'red',icon:'❌',
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>KES ${fmt(data.amount)}</strong> was rejected. KES ${fmt(data.amount)} has been returned to your balance.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      }
+    });
+
+    // Check deposits
+    const dSnap = await getDocs(query(collection(db,'pendingDeposits'),where('uid','==',uid)));
+    dSnap.docs.forEach(d=>{
+      const data=d.data();
+      if(data.status==='approved'){
+        notifications.push({
+          type:'green',icon:'💰',
+          msg:`Dear <strong>${username}</strong>, your deposit of <strong>KES ${fmt(data.amount)}</strong> has been approved and added to your Account Balance.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      } else if(data.status==='rejected'){
+        notifications.push({
+          type:'red',icon:'❌',
+          msg:`Dear <strong>${username}</strong>, your deposit of <strong>KES ${fmt(data.amount)}</strong> (Txn: ${data.txnId}) was rejected. Please contact admin.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      }
+    });
+
+    // Check activation
+    const aSnap = await getDocs(query(collection(db,'pendingActivations'),where('uid','==',uid)));
+    aSnap.docs.forEach(d=>{
+      const data=d.data();
+      if(data.status==='approved'){
+        notifications.push({
+          type:'blue',icon:'🎉',
+          msg:`Dear <strong>${username}</strong>, your account has been activated successfully! Welcome to NETLINK AGENCIES.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      }
+    });
+
+    // Update badge count
+    document.getElementById('notif-count').textContent=notifications.length;
+    document.getElementById('notif-count').style.display=notifications.length>0?'flex':'none';
+
+    // Render notifications
+    if(notifications.length===0){
+      document.getElementById('notif-list').innerHTML='<div class="notif-empty">No notifications yet</div>';
+    } else {
+      document.getElementById('notif-list').innerHTML=notifications.map(n=>`
+        <div class="notif-item unread">
+          <div class="notif-icon ${n.type}">${n.icon}</div>
+          <div>
+            <div class="notif-text">${n.msg}</div>
+            <div class="notif-time">${n.time}</div>
+          </div>
+        </div>`).join('');
+    }
+  }catch(e){console.log('Notif error:',e);}
+}
+
+window.toggleNotif=function(){
+  const d=document.getElementById('notif-dropdown');
+  const ov=document.getElementById('ov');
+  d.classList.toggle('show');
+  ov.classList.toggle('show');
+};
+window.closeNotif=function(){
+  document.getElementById('notif-dropdown').classList.remove('show');
+};
+window.clearNotifs=function(){
+  document.getElementById('notif-list').innerHTML='<div class="notif-empty">No notifications yet</div>';
+  document.getElementById('notif-count').textContent='0';
+  document.getElementById('notif-dropdown').classList.remove('show');
+  document.getElementById('ov').classList.remove('show');
+};
+window.copyRef=()=>{
+  const t=document.getElementById('reflink').textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const btn=document.querySelector('.rb.cp');
+    btn.textContent='✅ Copied!';
+    setTimeout(()=>btn.textContent='📋 Copy',2000);
+  });
+};
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
