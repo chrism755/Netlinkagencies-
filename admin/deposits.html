@@ -170,8 +170,10 @@ window.approve=async function(docId,uid,amount,username){
       const userSnap=await getDoc(doc(db,'users',uid));
       if(userSnap.exists()){
         const ud=userSnap.data();
+        // Add to BOTH balance AND totalEarnings
         await updateDoc(doc(db,'users',uid),{
-          balance:(ud.balance||0)+amount
+          balance:(ud.balance||0)+amount,
+          totalEarnings:(ud.totalEarnings||0)+amount
         });
       }
     }
