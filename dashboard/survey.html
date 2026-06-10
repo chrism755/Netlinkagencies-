@@ -5,7 +5,7 @@
 <title>Daily Survey — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--green:#00E676;--red:#FF5252;--gold:#FFD700;--sw:260px;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
@@ -17,6 +17,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
 .logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
 .ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
@@ -26,7 +28,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
-.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
 .avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
@@ -38,50 +40,27 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .card p{font-size:13px;color:#fff;line-height:1.7;}
 .card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;}
 .card-pink h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;}
-.card-pink p{font-size:13px;color:#fff;opacity:.9;line-height:1.6;}
+.card-pink p{font-size:13px;color:#fff;opacity:.9;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.5;}
-select option{background:var(--bg3);}
-.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
-.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
 .qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
 .qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
 .qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
+.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;display:flex;align-items:center;gap:10px;}
 .qo:hover{border-color:var(--pk);}
 .qo.selected{border-color:var(--pk);background:rgba(233,30,140,.2);}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3);margin:10px 0;}
-.upload-box:hover{border-color:var(--pk);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:#FF80CE;margin-left:7px;}
+.qo.correct{border-color:var(--green);background:rgba(0,230,118,.15);color:#69F0AE;}
+.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.15);color:#FF8A80;}
+.qo .opt-letter{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
+.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:16px;font-size:14px;line-height:1.8;margin:14px 0;display:none;text-align:center;}
+.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.video-player{background:#000;border-radius:12px;width:100%;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;overflow:hidden;}
-.play-btn{width:60px;height:60px;background:linear-gradient(135deg,var(--pkd),var(--pk));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:none;}
-.progress-ring{width:70px;height:70px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#FF80CE;font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
+.score-box{display:flex;justify-content:space-around;margin-bottom:10px;}
+.score-item{text-align:center;}
+.score-num{font-size:22px;font-weight:900;color:var(--gold);}
+.score-label{font-size:11px;color:#fff;opacity:.7;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -93,34 +72,13 @@ select option{background:var(--bg3);}
 <a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
 <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
 <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-<a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
 <a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
-<a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
-<a class="ni" href="/dashboard/companyadvert.html"><span class="ni-icon">📢</span>Company Advert</a>
-<a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
 <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
-<a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
-<a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
-<div class="ns">Videos</div>
 <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
 <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
 <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
-<div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
-<div class="sub-nav" id="sw">
-<a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
-</div>
-<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
-<div class="sub-nav" id="sd">
-<a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
-<a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
-<a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
-</div>
 <div class="ns">More</div>
 <a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-<a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
 <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
 <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
 <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
@@ -132,44 +90,64 @@ select option{background:var(--bg3);}
 <a class="ni" style="color:#FF5252;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
-<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Daily Survey</div><div class="avatar" id="av">U</div></div>
+<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Daily Survey</div><div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div></div>
 <div class="content">
-<div class="card-pink"><h3>📋 Daily Survey</h3><p>Answer all questions then click Submit. KES 50 per correct answer. Money goes to Total Earnings!</p></div>
+
+<div class="card-pink">
+  <h3>📋 Daily Survey</h3>
+  <p>Answer all 3 questions then tap Submit. KES 50 per correct answer. Money goes to Total Earnings!</p>
+  <div class="reward">💰 KES 50 per correct answer · 3 questions daily</div>
+</div>
+
 <div class="card">
-  <div style="display:flex;justify-content:space-between;">
-    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="sv-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
-    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">SCORE</div><div id="sv-score" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
+  <div class="score-box">
+    <div class="score-item"><div class="score-num" id="earn-display">KES 0</div><div class="score-label">Today's Earnings</div></div>
+    <div class="score-item"><div class="score-num" id="score-display">0/3</div><div class="score-label">Score</div></div>
   </div>
-  <div class="reward">💰 KES 50 per correct answer · Daily survey</div>
 </div>
-<div id="survey-area">
-<div class="qc"><div class="qq">1. How satisfied are you with NETLINK services?</div><div class="qopts">
-<div class="qo" onclick="selectSV(this,0,0)">Very Satisfied ⭐⭐⭐⭐⭐</div>
-<div class="qo" onclick="selectSV(this,0,1)">Satisfied ⭐⭐⭐⭐</div>
-<div class="qo" onclick="selectSV(this,0,2)">Neutral ⭐⭐⭐</div>
-<div class="qo" onclick="selectSV(this,0,3)">Not Satisfied ⭐</div></div></div>
-<div class="qc"><div class="qq">2. How often do you complete daily tasks on NETLINK?</div><div class="qopts">
-<div class="qo" onclick="selectSV(this,1,0)">Every day</div>
-<div class="qo" onclick="selectSV(this,1,1)">3-4 times a week</div>
-<div class="qo" onclick="selectSV(this,1,2)">Once a week</div>
-<div class="qo" onclick="selectSV(this,1,3)">Rarely</div></div></div>
-<div class="qc"><div class="qq">3. Which task do you enjoy most?</div><div class="qopts">
-<div class="qo" onclick="selectSV(this,2,0)">Videos</div>
-<div class="qo" onclick="selectSV(this,2,1)">Quiz</div>
-<div class="qo" onclick="selectSV(this,2,2)">Referrals</div>
-<div class="qo" onclick="selectSV(this,2,3)">WhatsApp Adverts</div></div></div>
-<div class="ok" id="sv-ok"></div>
-<div class="err" id="sv-err"></div>
-<button class="btn" id="sv-btn" onclick="submitSurvey()">✅ Submit Survey</button>
+
+<div id="quiz-area">
+<div class="qc">
+  <div class="qq">1. How satisfied are you with NETLINK AGENCIES services?</div>
+  <div class="qopts"><div class="qo" id="q0opt0" onclick="selectOpt(0,0)"><span class="opt-letter">A</span>Very Satisfied ⭐⭐⭐⭐⭐</div>
+<div class="qo" id="q0opt1" onclick="selectOpt(0,1)"><span class="opt-letter">B</span>Satisfied ⭐⭐⭐⭐</div>
+<div class="qo" id="q0opt2" onclick="selectOpt(0,2)"><span class="opt-letter">C</span>Neutral ⭐⭐⭐</div>
+<div class="qo" id="q0opt3" onclick="selectOpt(0,3)"><span class="opt-letter">D</span>Not Satisfied ⭐</div>
 </div>
 </div>
-</div></div>
+<div class="qc">
+  <div class="qq">2. How often do you complete daily tasks on NETLINK?</div>
+  <div class="qopts"><div class="qo" id="q1opt0" onclick="selectOpt(1,0)"><span class="opt-letter">A</span>Every single day</div>
+<div class="qo" id="q1opt1" onclick="selectOpt(1,1)"><span class="opt-letter">B</span>3-4 times a week</div>
+<div class="qo" id="q1opt2" onclick="selectOpt(1,2)"><span class="opt-letter">C</span>Once a week</div>
+<div class="qo" id="q1opt3" onclick="selectOpt(1,3)"><span class="opt-letter">D</span>Rarely</div>
+</div>
+</div>
+<div class="qc">
+  <div class="qq">3. Which task do you enjoy most on NETLINK?</div>
+  <div class="qopts"><div class="qo" id="q2opt0" onclick="selectOpt(2,0)"><span class="opt-letter">A</span>Watching Videos</div>
+<div class="qo" id="q2opt1" onclick="selectOpt(2,1)"><span class="opt-letter">B</span>Answering Quizzes</div>
+<div class="qo" id="q2opt2" onclick="selectOpt(2,2)"><span class="opt-letter">C</span>Referring Friends</div>
+<div class="qo" id="q2opt3" onclick="selectOpt(2,3)"><span class="opt-letter">D</span>WhatsApp Adverts</div>
+</div>
+</div>
+
+<div class="err" id="quiz-err"></div>
+<button class="btn" id="submit-btn" onclick="submitQuiz()">✅ Submit Answers</button>
+</div>
+
+<div class="ok" id="quiz-ok"></div>
+
+</div>
+</div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
@@ -179,7 +157,8 @@ onAuthStateChanged(auth,async u=>{
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
   UD=snap.data();UD.uid=u.uid;
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
-  if(typeof pageReady==='function') pageReady();
+  document.getElementById('un').textContent=UD.username;
+  checkDone();
 });
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
@@ -187,40 +166,106 @@ window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList
 window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
 
 
-const SV_ANSWERS=[0,0,0];
-const svSelected={};
-async function pageReady(){
-  const today=new Date().toDateString();
-  if(localStorage.getItem('survey_done_'+U.uid+'_'+today)){
-    document.getElementById('survey-area').innerHTML='<div class="ok" style="display:block;">✅ You have completed today's survey! Come back tomorrow.</div>';
+const ANSWERS = [0, 0, 0];
+const TOTAL = 3;
+const REWARD = 50;
+const STORAGE_KEY = 'survey';
+const selected = {};
+
+function checkDone(){
+  const today = new Date().toDateString();
+  const key = STORAGE_KEY+'_'+U.uid+'_'+today;
+  if(localStorage.getItem(key)){
+    const saved = JSON.parse(localStorage.getItem(key));
+    document.getElementById('quiz-area').innerHTML = '';
+    document.getElementById('earn-display').textContent = 'KES '+saved.earned;
+    document.getElementById('score-display').textContent = saved.score+'/'+TOTAL;
+    const ok = document.getElementById('quiz-ok');
+    ok.innerHTML = '🎉 You already completed today\'s Daily Survey!<br>You got <strong>'+saved.score+'/'+TOTAL+'</strong> correct answers and earned <strong>KES '+saved.earned+'</strong>.<br>Come back tomorrow for new questions!';
+    ok.style.display = 'block';
   }
 }
-window.selectSV=function(el,qIdx,aIdx){
-  el.closest('.qopts').querySelectorAll('.qo').forEach(o=>o.classList.remove('selected'));
-  el.classList.add('selected');
-  svSelected[qIdx]=aIdx;
-};
-window.submitSurvey=async function(){
-  const ok=document.getElementById('sv-ok'),err=document.getElementById('sv-err'),btn=document.getElementById('sv-btn');
-  ok.style.display='none';err.style.display='none';
-  if(Object.keys(svSelected).length<3){err.textContent='⚠️ Please answer all questions before submitting.';err.style.display='block';return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
-  await new Promise(r=>setTimeout(r,1000));
-  let correct=0;
-  document.querySelectorAll('#survey-area .qopts').forEach((opts,qi)=>{
-    opts.querySelectorAll('.qo').forEach((o,ai)=>{o.onclick=null;if(ai===SV_ANSWERS[qi])o.classList.add('correct');else if(svSelected[qi]===ai&&ai!==SV_ANSWERS[qi])o.classList.add('wrong');});
-    if(svSelected[qi]===SV_ANSWERS[qi]) correct++;
-  });
-  const reward=correct*50;
-  try{
-    if(reward>0) await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(reward)});
-    localStorage.setItem('survey_done_'+U.uid+'_'+new Date().toDateString(),'1');
-    document.getElementById('sv-score').textContent=correct+'/3';
-    document.getElementById('sv-earn').textContent='KES '+reward;
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You got <strong>'+correct+'/3</strong> correct. You have earned <strong>KES '+reward+'</strong>. KES '+reward+' instantly disbursed to your Total Earnings!';
-    ok.style.display='block';btn.style.display='none';
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='✅ Submit Survey';}
+
+window.selectOpt = function(qIdx, aIdx){
+  // Clear previous selection for this question
+  for(let j=0;j<4;j++){
+    const el = document.getElementById('q'+qIdx+'opt'+j);
+    if(el) el.classList.remove('selected');
+  }
+  // Select new option
+  const el = document.getElementById('q'+qIdx+'opt'+aIdx);
+  if(el) el.classList.add('selected');
+  selected[qIdx] = aIdx;
+  
+  // Update score display
+  document.getElementById('score-display').textContent = Object.keys(selected).length+'/'+TOTAL;
 };
 
+window.submitQuiz = async function(){
+  const err = document.getElementById('quiz-err');
+  const ok = document.getElementById('quiz-ok');
+  const btn = document.getElementById('submit-btn');
+  err.style.display='none';
+  
+  // Check all questions answered
+  if(Object.keys(selected).length < TOTAL){
+    const remaining = TOTAL - Object.keys(selected).length;
+    err.textContent = '⚠️ Please answer all '+TOTAL+' questions. You still have '+remaining+' question(s) left.';
+    err.style.display = 'block';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Checking your answers...';
+  await new Promise(r=>setTimeout(r,1000));
+  
+  // Check answers and show correct/wrong
+  let correct = 0;
+  for(let i=0;i<TOTAL;i++){
+    for(let j=0;j<4;j++){
+      const el = document.getElementById('q'+i+'opt'+j);
+      if(!el) continue;
+      el.onclick = null;
+      if(j === ANSWERS[i]){
+        el.classList.add('correct');
+        el.classList.remove('selected');
+      } else if(selected[i] === j && j !== ANSWERS[i]){
+        el.classList.add('wrong');
+        el.classList.remove('selected');
+      }
+    }
+    if(selected[i] === ANSWERS[i]) correct++;
+  }
+  
+  const earned = correct * REWARD;
+  
+  try{
+    // Credit to Firebase
+    if(earned > 0){
+      await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(earned)});
+    }
+    
+    // Save to localStorage so user can't retake today
+    const today = new Date().toDateString();
+    localStorage.setItem(STORAGE_KEY+'_'+U.uid+'_'+today, JSON.stringify({score:correct,earned:earned}));
+    
+    // Update display
+    document.getElementById('earn-display').textContent = 'KES '+earned;
+    document.getElementById('score-display').textContent = correct+'/'+TOTAL;
+    
+    // Show result
+    btn.style.display = 'none';
+    ok.innerHTML = '🎉 Congratulations <strong>'+UD.username+'</strong>!<br><br>You got <strong>'+correct+'/'+TOTAL+'</strong> correct answers.<br>You have earned <strong>KES '+earned+'</strong>.<br><br>'+
+      (earned>0 ? 'KES '+earned+' has been instantly credited to your Total Earnings! 💰' : 'Keep practicing! Come back tomorrow for more questions. 💪');
+    ok.style.display = 'block';
+    
+  }catch(e){
+    btn.disabled = false;
+    btn.textContent = '✅ Submit Answers';
+    err.textContent = '❌ Error crediting earnings: '+e.message;
+    err.style.display = 'block';
+  }
+};
 </script>
-</body></html>
+</body>
+</html>
