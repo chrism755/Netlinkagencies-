@@ -95,6 +95,13 @@ select option{background:var(--bg3);}
 .upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+
+/* TOAST NOTIFICATION */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:9999;background:#2e7d32;color:#fff;border-radius:16px;padding:18px 20px 18px 16px;width:90%;max-width:420px;box-shadow:0 8px 30px rgba(0,0,0,.3);display:flex;align-items:flex-start;gap:12px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);font-size:14px;line-height:1.6;font-weight:600;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast-icon{width:28px;height:28px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+.toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.8);font-size:18px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
+.toast-text{}
 </style>
 </head>
 <body>
@@ -168,9 +175,11 @@ select option{background:var(--bg3);}
     KES 3,000–10,000 → Fee: KES 150
   </div>
   <div style="background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:16px;font-size:13px;">
-    <strong style="color:#fff;">Disbursed to:</strong> <span id="user-phone" style="color:var(--pk3);">Loading...</span><br>
-    <span style="font-size:11px;color:#fff;">Wrong number? </span>
-    <button onclick="window.open('https://wa.me/254706494401','_blank')" style="background:none;border:none;color:var(--pk3);font-size:11px;cursor:pointer;font-weight:700;text-decoration:underline;">Verify Me</button>
+    <span style="font-size:13px;color:#fff;">Your withdrawn amount will be disbursed to: <strong id="user-phone" style="color:#FFD700;">Loading...</strong></span><br><br>
+    <span style="font-size:12px;color:#fff;">If this is not the number to receive payment, click </span>
+    <button onclick="window.open('https://wa.me/254706494401','_blank')" style="background:none;border:none;color:#FFD700;font-size:12px;cursor:pointer;font-weight:800;text-decoration:underline;">Verify Me</button>
+    <span style="font-size:12px;color:#fff;"> and send a message before withdrawing with a reason.</span><br><br>
+    <span style="font-size:12px;color:#fff;font-style:italic;">Happy networking with <strong>NETLINK AGENCIES</strong> 🎉</span>
   </div>
 </div>
 <div class="card">
@@ -226,7 +235,7 @@ window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll
 async function pageReady(db,U,UD,F){
   window._db=db;window._U=U;window._UD=UD;window._F=F;
   document.getElementById('bal-show').textContent='KES '+(UD.balance||0);
-  document.getElementById('user-phone').textContent=UD.phone||'—';
+  document.getElementById('user-phone').textContent=maskPhone(UD.phone||'');
 }
 window.calcFee=function(){
   const a=parseInt(document.getElementById('w-amt').value)||0;
@@ -241,26 +250,4 @@ window.calcUSD=function(){
 window.doWithdraw=async function(method){
   const amtId=method==='mpesa'?'w-amt':'pp-amt';
   const okId=method==='mpesa'?'w-ok':'pp-ok';
-  const errId=method==='mpesa'?'w-err':'pp-err';
-  const btnId=method==='mpesa'?'w-btn':'pp-btn';
-  const amt=parseInt(document.getElementById(amtId).value)||0;
-  const ok=document.getElementById(okId),err=document.getElementById(errId),btn=document.getElementById(btnId);
-  ok.style.display='none';err.style.display='none';
-  if(amt<150){err.textContent='⚠️ Minimum withdrawal is KES 150.';err.style.display='block';return;}
-  if(amt>(_UD.balance||0)){err.textContent='❌ Insufficient balance. Your balance is KES '+(_UD.balance||0)+'. Only account balance can be withdrawn.';err.style.display='block';return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Processing...';
-  try{
-    const {collection,addDoc,serverTimestamp,updateDoc,doc,increment}=_F;
-    await addDoc(collection(_db,'pendingWithdrawals'),{uid:_U.uid,username:_UD.username,amount:amt,method:method,phone:_UD.phone||'',paypalEmail:method==='paypal'?(document.getElementById('pp-email').value||''):'',status:'pending',createdAt:serverTimestamp()});
-    await updateDoc(doc(_db,'users',_U.uid),{pending:increment(amt),balance:increment(-amt)});
-    ok.innerHTML='✅ Your withdrawal request of <strong>KES '+amt+'</strong> has been submitted! Wait for verification and disbursement to your account.';
-    ok.style.display='block';
-    _UD.balance=(_UD.balance||0)-amt;
-    document.getElementById('bal-show').textContent='KES '+_UD.balance;
-    btn.disabled=false;btn.textContent=method==='mpesa'?'📱 Submit M-PESA Withdrawal':'💳 Submit PayPal Withdrawal';
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;}
-};
-
-</script>
-</body>
-</html>
+  const err
