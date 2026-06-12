@@ -48,7 +48,7 @@ input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(2
 input::placeholder{color:var(--text2);opacity:.7;}
 select option{background:var(--bg3);color:var(--text);}
 .profile-pic-input{display:none;}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);z-index:10;position:relative;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF3B3B;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
@@ -87,7 +87,6 @@ select option{background:var(--bg3);color:var(--text);}
         <div class="node"></div>
         <div class="network-center default-logo" id="network-center">
           <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron,monospace;font-weight:900;font-size:28px%7D.node%7Bfill:%23FF1493;filter:drop-shadow(0 0 8px rgba(255,20,147,0.8))%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' fill='%231a0a2e' opacity='0.9'/%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='rgba(255,20,147,0.4)' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='75' fill='none' stroke='rgba(255,20,147,0.3)' stroke-width='1.5'/%3E%3Ccircle cx='100' cy='30' r='6' class='node'/%3E%3Ccircle cx='156' cy='45' r='6' class='node'/%3E%3Ccircle cx='170' cy='100' r='6' class='node'/%3E%3Ccircle cx='156' cy='155' r='6' class='node'/%3E%3Ccircle cx='100' cy='170' r='6' class='node'/%3E%3Ccircle cx='44' cy='155' r='6' class='node'/%3E%3Ccircle cx='30' cy='100' r='6' class='node'/%3E%3Ccircle cx='44' cy='45' r='6' class='node'/%3E%3Cline x1='100' y1='100' x2='100' y2='30' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='170' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='100' y2='170' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='30' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='35' class='logo-center'/%3E%3Ctext x='100' y='115' text-anchor='middle' class='logo-text'%3EN%3C/text%3E%3C/svg%3E" alt="NETLINK Logo"/>
-          <input type="file" id="profile-pic-input" class="profile-pic-input" accept="image/*"/>
         </div>
       </div>
     </div>
@@ -114,9 +113,10 @@ select option{background:var(--bg3);color:var(--text);}
     <div class="fg"><label>Confirm Password</label><input id="confirm" type="password" placeholder="Repeat password"/></div>
     <div class="err" id="err"></div>
     <button class="btn" id="btn" onclick="doRegister()">🚀 Create Account</button>
-    <div class="link">Already have an account? <a href="/login.html">Log In</a></div>
+    <div class="link">Already have an account? <a href="/login">Log In</a></div>
   </div>
 </div>
+<input type="file" id="profile-pic-input" class="profile-pic-input" accept="image/*"/>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -135,10 +135,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const ref = new URLSearchParams(window.location.search).get('ref');
-if(ref){
+const refParam = new URLSearchParams(window.location.search).get('ref');
+if(refParam){
   document.getElementById('ref-box').style.display='block';
-  document.getElementById('ref-by').textContent=ref;
+  document.getElementById('ref-by').textContent=refParam;
 }
 
 // Profile picture upload on logo click
@@ -285,7 +285,7 @@ window.doRegister = async function(){
       profilePicture:profilePicURL,
       activated:false, 
       referralCode:refCode, 
-      referredBy:ref||'',
+      referredBy:refParam||'',
       balance:0, 
       totalEarnings:0, 
       withdrawn:0, 
@@ -301,7 +301,7 @@ window.doRegister = async function(){
     localStorage.setItem('nlUID', uid);
     localStorage.setItem('nlActivated', 'false');
     localStorage.removeItem('nlAdmin');
-    window.location.replace('https://netlinkagencies.linkpc.net/activate.html');
+    window.location.replace('https://netlinkagencies.linkpc.net/activate');
 
   }catch(e2){
     btn.disabled=false;
