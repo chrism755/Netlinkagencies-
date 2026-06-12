@@ -37,7 +37,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .tb-brand{font-size:16px;font-weight:900;color:#fff;flex:1;letter-spacing:.5px;}
 .notif-wrap{position:relative;cursor:pointer;}
 .notif-btn{width:38px;height:38px;background:rgba(255,255,255,.2);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#fff;}
-.notif-badge{position:absolute;top:-3px;right:-3px;background:#FFD700;color:#000;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
+.notif-badge{position:absolute;top:-3px;right:-3px;background:#FFD700;color:#000;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;}
 
 /* NOTIFICATION DROPDOWN */
 .notif-dropdown{position:fixed;top:64px;right:10px;width:300px;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:200;display:none;overflow:hidden;max-height:400px;overflow-y:auto;}
@@ -64,7 +64,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .greeting-left{}
 .greeting-text{font-size:15px;font-weight:800;color:#222;margin-bottom:2px;}
 .greeting-sub{font-size:12px;color:#888;}
-.greeting-num{width:42px;height:42px;background:linear-gradient(135deg,#E91E8C,#FF4DB8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
+.greeting-num{width:42px;height:42px;background:linear-gradient(135deg,#E91E8C,#FF4DB8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;}
 
 /* TOP 2 CARDS */
 .top-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
@@ -258,7 +258,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-63"});
 const auth=getAuth(app),db=getFirestore(app);
 
 // Format numbers with commas
