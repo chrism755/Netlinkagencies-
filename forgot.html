@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Forgot Password — NETLINK AGENCIES</title>
+<title>Reset Password — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 :root{--primary:#E91E63;--accent:#FF1493;--green:#00C853;--red:#FF3B3B;--bg:#E91E63;--bg3:#F0F4F8;--card:#FFFFFF;--border:#E0E0E0;--text:#1A1A1A;--text2:#666666;--white:#FFFFFF;}
@@ -50,6 +50,8 @@ input::placeholder{color:var(--text2);opacity:.7;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#C62828;border-radius:10px;padding:12px 15px;font-size:13px;margin:10px 0;display:none;font-weight:500;}
 .link{text-align:center;margin-top:16px;font-size:13px;color:var(--text2);}
 .link a{color:var(--primary);font-weight:700;text-decoration:none;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
@@ -90,8 +92,8 @@ input::placeholder{color:var(--text2);opacity:.7;}
     <div class="fg"><label>Username or Email</label><input id="email" type="text" placeholder="Enter username or email"/></div>
     <div class="ok" id="ok">✅ Reset link sent! Check your inbox.</div>
     <div class="err" id="err"></div>
-    <button class="btn" onclick="doForgot()">Send Reset Instructions</button>
-    <div class="link" style="margin-top:16px;"><a href="/login.html">← Back to Login</a></div>
+    <button class="btn" id="btn" onclick="doForgot()">Send Reset Instructions</button>
+    <div class="link" style="margin-top:16px;"><a href="/login">← Back to Login</a></div>
   </div>
 </div>
 <script type="module">
@@ -100,10 +102,35 @@ import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebas
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app);
 window.doForgot=async function(){
+  const btn = document.getElementById('btn');
+  const ok = document.getElementById('ok');
+  const err = document.getElementById('err');
   const e=document.getElementById('email').value.trim();
-  if(!e){return;}
-  try{await sendPasswordResetEmail(auth,e);document.getElementById('ok').style.display='block';}
-  catch(e2){document.getElementById('err').textContent='❌ Email not found.';document.getElementById('err').style.display='block';}
+  
+  ok.style.display='none';
+  err.style.display='none';
+  
+  if(!e){
+    err.textContent='⚠️ Please enter your username or email.';
+    err.style.display='block';
+    return;
+  }
+  
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span> Sending...';
+  
+  try{
+    await sendPasswordResetEmail(auth,e);
+    ok.style.display='block';
+    document.getElementById('email').value='';
+    btn.disabled=false;
+    btn.innerHTML='Send Reset Instructions';
+  }catch(e2){
+    err.textContent='❌ Email not found or invalid.';
+    err.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='Send Reset Instructions';
+  }
 };
 </script>
 </body>
