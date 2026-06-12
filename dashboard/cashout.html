@@ -216,11 +216,13 @@ function fmt(n){return Number(n||0).toLocaleString('en-KE');}
 
 // Get transaction fee
 function getFee(amt){
-  if(amt>=150&&amt<=350) return 15;
-  if(amt>350&&amt<=700) return 30;
-  if(amt>700&&amt<=1500) return 50;
-  if(amt>1500&&amt<=3000) return 70;
-  if(amt>3000) return 150;
+  if(amt>=150&&amt<=250) return 15;
+  if(amt>250&&amt<=500) return 35;
+  if(amt>500&&amt<=1000) return 55;
+  if(amt>1000&&amt<=2000) return 75;
+  if(amt>2000&&amt<=4000) return 150;
+  if(amt>4000&&amt<=10000) return 250;
+  if(amt>10000) return 500;
   return 0;
 }
 
