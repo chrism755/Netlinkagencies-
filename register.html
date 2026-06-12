@@ -18,8 +18,10 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E91E63,#
 /* Outer circles */
 .network-outer{position:absolute;width:100%;height:100%;border:2px solid rgba(255,20,147,.4);border-radius:50%;animation:pulse 3s ease-in-out infinite;}
 .network-middle{position:absolute;width:85%;height:85%;border:1.5px solid rgba(255,20,147,.5);border-radius:50%;animation:pulse 3s ease-in-out infinite .3s;}
-/* Center circle with N */
-.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#fff;box-shadow:0 0 20px rgba(255,20,147,.6),inset 0 0 10px rgba(0,0,0,.2);z-index:10;}
+/* Center circle with profile picture */
+.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#fff;overflow:hidden;cursor:pointer;transition:all .3s;}
+.network-center img{width:100%;height:100%;object-fit:cover;}
+.network-center.default-logo{background:linear-gradient(135deg,#FF1493,#E91E63);}
 /* Nodes around the circle */
 .node{position:absolute;width:12px;height:12px;background:radial-gradient(circle,#FF1493,#E91E63);border-radius:50%;box-shadow:0 0 15px rgba(255,20,147,.8);}
 .node:nth-child(2){top:5%;left:50%;transform:translateX(-50%);}
@@ -41,11 +43,12 @@ h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--wh
 .stitle{display:none;}
 .fg{margin-bottom:16px;}
 label{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:.5px;text-transform:none;}
-input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
+input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:all .3s;}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
 input::placeholder{color:var(--text2);opacity:.7;}
 select option{background:var(--bg3);color:var(--text);}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:.3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
+.profile-pic-input{display:none;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF3B3B;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
@@ -82,7 +85,10 @@ select option{background:var(--bg3);color:var(--text);}
         <div class="node"></div>
         <div class="node"></div>
         <div class="node"></div>
-        <div class="network-center">N</div>
+        <div class="network-center default-logo" id="network-center">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron,monospace;font-weight:900;font-size:28px%7D.node%7Bfill:%23FF1493;filter:drop-shadow(0 0 8px rgba(255,20,147,0.8))%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' fill='%231a0a2e' opacity='0.9'/%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='rgba(255,20,147,0.4)' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='75' fill='none' stroke='rgba(255,20,147,0.3)' stroke-width='1.5'/%3E%3Ccircle cx='100' cy='30' r='6' class='node'/%3E%3Ccircle cx='156' cy='45' r='6' class='node'/%3E%3Ccircle cx='170' cy='100' r='6' class='node'/%3E%3Ccircle cx='156' cy='155' r='6' class='node'/%3E%3Ccircle cx='100' cy='170' r='6' class='node'/%3E%3Ccircle cx='44' cy='155' r='6' class='node'/%3E%3Ccircle cx='30' cy='100' r='6' class='node'/%3E%3Ccircle cx='44' cy='45' r='6' class='node'/%3E%3Cline x1='100' y1='100' x2='100' y2='30' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='170' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='100' y2='170' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='30' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='35' class='logo-center'/%3E%3Ctext x='100' y='115' text-anchor='middle' class='logo-text'%3EN%3C/text%3E%3C/svg%3E" alt="NETLINK Logo"/>
+          <input type="file" id="profile-pic-input" class="profile-pic-input" accept="image/*"/>
+        </div>
       </div>
     </div>
     <div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
@@ -115,6 +121,7 @@ select option{background:var(--bg3);color:var(--text);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, collection, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
@@ -126,12 +133,36 @@ const app = initializeApp({
 });
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 const ref = new URLSearchParams(window.location.search).get('ref');
 if(ref){
   document.getElementById('ref-box').style.display='block';
   document.getElementById('ref-by').textContent=ref;
 }
+
+// Profile picture upload on logo click
+const networkCenter = document.getElementById('network-center');
+const profilePicInput = document.getElementById('profile-pic-input');
+
+networkCenter.addEventListener('click', () => {
+  profilePicInput.click();
+});
+
+profilePicInput.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if(file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const img = networkCenter.querySelector('img');
+      if(img) {
+        img.src = event.target.result;
+      }
+      networkCenter.classList.remove('default-logo');
+    };
+    reader.readAsDataURL(file);
+  }
+});
 
 function isValidWhatsApp(number) {
   const cleaned = number.replace(/[\s\-\+]/g, '');
@@ -180,6 +211,7 @@ window.doRegister = async function(){
   const co = document.getElementById('country').value;
   const pw = document.getElementById('password').value;
   const cp = document.getElementById('confirm').value;
+  const picFile = document.getElementById('profile-pic-input').files[0];
 
   if(!u||!e||!ph||!wa||!co||!pw||!cp){
     err.textContent='⚠️ Please fill all fields.';
@@ -232,6 +264,16 @@ window.doRegister = async function(){
     const cred = await createUserWithEmailAndPassword(auth, e, pw);
     const uid = cred.user.uid;
     const refCode = u.toLowerCase().replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
+    
+    let profilePicURL = '';
+    
+    // Upload profile picture if provided
+    if(picFile) {
+      btn.innerHTML='<span class="spinner"></span> Uploading photo...';
+      const storageRef = ref(storage, `profilePictures/${uid}`);
+      await uploadBytes(storageRef, picFile);
+      profilePicURL = await getDownloadURL(storageRef);
+    }
 
     await setDoc(doc(db,'users',uid),{
       uid, 
@@ -240,6 +282,7 @@ window.doRegister = async function(){
       phone:ph, 
       whatsapp:wa, 
       country:co,
+      profilePicture:profilePicURL,
       activated:false, 
       referralCode:refCode, 
       referredBy:ref||'',
