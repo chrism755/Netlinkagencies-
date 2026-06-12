@@ -45,10 +45,10 @@ select option{background:var(--bg3);color:var(--text);}
   <p class="sub">Linking You to Financial Solutions</p>
   <div class="card">
     <div class="ref-box" id="ref-box">🔗 Referred by: <strong id="ref-by"></strong></div>
-    <div class="fg"><label>Username</label><input id="username" type="text" placeholder="e.g. john_doe2024"/></div>
+    <div class="fg"><label>Username</label><input id="username" type="text" placeholder="Enter username"/></div>
     <div class="fg"><label>Email Address</label><input id="email" type="email" placeholder="e.g. john@gmail.com"/></div>
-    <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="e.g. 254712345678"/></div>
-    <div class="fg"><label>WhatsApp Number <span style="color:#FF3B3B;">*</span></label><input id="whatsapp" type="tel" placeholder="e.g. 254712345678 (with country code)"/></div>
+    <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="e.g. 0712345678"/></div>
+    <div class="fg"><label>WhatsApp Number</label><input id="whatsapp" type="tel" placeholder="+254712345678"/></div>
     <div class="fg"><label>Country</label>
       <select id="country">
         <option value="">Select your country</option>
@@ -58,7 +58,7 @@ select option{background:var(--bg3);color:var(--text);}
         <option>United Kingdom</option><option>Other</option>
       </select>
     </div>
-    <div class="fg"><label>Password</label><input id="password" type="password" placeholder="e.g. StrongP@ss123"/></div>
+    <div class="fg"><label>Password</label><input id="password" type="password" placeholder="Enter password"/></div>
     <div class="fg"><label>Confirm Password</label><input id="confirm" type="password" placeholder="Repeat password"/></div>
     <div class="err" id="err"></div>
     <button class="btn" id="btn" onclick="doRegister()">🚀 Create Account</button>
@@ -90,11 +90,10 @@ if(ref){
 
 // Validate WhatsApp number has country code
 function isValidWhatsApp(number) {
-  // Must start with + or digits and have country code (2-3 digits)
-  // Remove spaces and hyphens
-  const cleaned = number.replace(/[\s\-]/g, '');
-  // Check if it starts with country code (should be 10-15 digits total)
-  return /^\d{10,15}$/.test(cleaned) && cleaned.length >= 10 && /^[0-9]{1,3}[0-9]/.test(cleaned);
+  // Must start with + or country code digits
+  const cleaned = number.replace(/[\s\-\+]/g, '');
+  // Check if it's 10-15 digits (includes country code)
+  return /^\d{10,15}$/.test(cleaned);
 }
 
 // Check for duplicate username
@@ -130,17 +129,6 @@ async function isPhoneTaken(phone) {
   }
 }
 
-// Check for duplicate WhatsApp
-async function isWhatsAppTaken(whatsapp) {
-  try {
-    const q = query(collection(db, 'users'), where('whatsapp', '==', whatsapp));
-    const snapshot = await getDocs(q);
-    return !snapshot.empty;
-  } catch (e) {
-    return false;
-  }
-}
-
 window.doRegister = async function(){
   const btn = document.getElementById('btn');
   const err = document.getElementById('err');
@@ -156,7 +144,7 @@ window.doRegister = async function(){
 
   // Validate all fields
   if(!u||!e||!ph||!wa||!co||!pw||!cp){
-    err.textContent='⚠️ Please fill all fields (WhatsApp is required).';
+    err.textContent='⚠️ Please fill all fields.';
     err.style.display='block';
     return;
   }
@@ -184,14 +172,7 @@ window.doRegister = async function(){
 
   // Validate WhatsApp has country code
   if(!isValidWhatsApp(wa)){
-    err.textContent='⚠️ WhatsApp number must start with country code (e.g., 254712345678).';
-    err.style.display='block';
-    return;
-  }
-
-  // Validate phone and WhatsApp are different
-  if(ph === wa){
-    err.textContent='⚠️ WhatsApp number must be different from phone number.';
+    err.textContent='⚠️ WhatsApp number must start with country code (e.g., +254712345678).';
     err.style.display='block';
     return;
   }
@@ -214,11 +195,6 @@ window.doRegister = async function(){
     // Check for duplicate phone
     if(await isPhoneTaken(ph)){
       throw new Error('phone_taken');
-    }
-
-    // Check for duplicate WhatsApp
-    if(await isWhatsAppTaken(wa)){
-      throw new Error('whatsapp_taken');
     }
 
     // Show creating message
@@ -266,7 +242,6 @@ window.doRegister = async function(){
     if(msg === 'username_taken') msg='⚠️ Username already used, please enter different username.';
     else if(msg === 'email_already_in_use' || msg.includes('email-already-in-use')) msg='⚠️ This email is already registered. Please log in.';
     else if(msg === 'phone_taken') msg='⚠️ This phone number is already registered.';
-    else if(msg === 'whatsapp_taken') msg='⚠️ This WhatsApp number is already registered.';
     else if(msg.includes('invalid-email')) msg='⚠️ Invalid email address.';
     else if(msg.includes('weak-password')) msg='⚠️ Password is too weak.';
     
