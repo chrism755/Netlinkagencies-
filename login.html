@@ -13,7 +13,7 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#E91E63 0
 .bg::after{content:'';position:absolute;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);border-radius:50%;}
 .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:60px 16px;}
 .logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:20px;}
-.logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#8B4513,#CD853F);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 20px rgba(0,0,0,.25);}
+.logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#8B4513,#CD853F);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 20px rgba(0,0,0,.2);}
 .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:18px;color:var(--white);line-height:1.1;}
 .logo-sub{font-size:10px;color:rgba(255,255,255,.9);letter-spacing:2px;font-family:'Orbitron',monospace;}
 h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--white);margin-bottom:6px;text-align:center;}
@@ -25,7 +25,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bott
 input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
 input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
 input::placeholder{color:var(--text2);opacity:.7;}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#E91E63,#FF9800);color:var(--white);box-shadow:0 8px 20px rgba(233,30,99,.3);transition:.2s;margin-top:8px;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#E91E63,#FF9800);color:var(--white);transition:.3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#C62828;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;font-weight:500;}
@@ -45,7 +45,7 @@ input::placeholder{color:var(--text2);opacity:.7;}
   <h1>Welcome Back</h1>
   <p class="sub">Linking You to Financial Solutions</p>
   <div class="card">
-    <div class="fg"><label>Email</label><input id="email" type="text" placeholder="you@gmail.com"/></div>
+    <div class="fg"><label>Username</label><input id="username" type="text" placeholder="your username"/></div>
     <div class="fg"><label>Password</label><input id="password" type="password" placeholder="••••••" onkeypress="if(event.key==='Enter')doLogin()"/></div>
     <div class="err" id="err"></div>
     <button class="btn" id="btn" onclick="doLogin()">Login</button>
@@ -56,7 +56,7 @@ input::placeholder{color:var(--text2);opacity:.7;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
@@ -77,11 +77,11 @@ window.doLogin = async function(){
   const err = document.getElementById('err');
   err.style.display='none';
 
-  const e = document.getElementById('email').value.trim();
+  const username = document.getElementById('username').value.trim();
   const pw = document.getElementById('password').value;
 
-  if(!e||!pw){
-    err.textContent='⚠️ Enter email and password.';
+  if(!username||!pw){
+    err.textContent='⚠️ Enter username and password.';
     err.style.display='block';
     return;
   }
@@ -90,12 +90,24 @@ window.doLogin = async function(){
   btn.innerHTML='<span class="spinner"></span> Signing in...';
 
   try{
-    // Sign in with Firebase
-    const cred = await signInWithEmailAndPassword(auth, e, pw);
-    const uid = cred.user.uid;
+    // Find user by username in Firestore
+    const q = query(collection(db, 'users'), where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    
+    if(querySnapshot.empty){
+      throw new Error('Username not found');
+    }
+    
+    // Get email from username
+    const userDoc = querySnapshot.docs[0];
+    const email = userDoc.data().email;
+    const uid = userDoc.id;
 
-    // Get user data from Firestore
-    const snap = await getDoc(doc(db,'users', uid));
+    // Sign in with Firebase using email and password
+    const cred = await signInWithEmailAndPassword(auth, email, pw);
+
+    // Get full user data from Firestore
+    const snap = await getDoc(doc(db, 'users', uid));
 
     if(snap.exists()){
       const data = snap.data();
@@ -120,6 +132,7 @@ window.doLogin = async function(){
     btn.innerHTML='Login';
     err.textContent='Invalid username or password.';
     err.style.display='block';
+    console.error('Login error:', e2);
   }
 };
 </script>
