@@ -12,8 +12,27 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E91E63,#
 .bg::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.1),transparent 70%);border-radius:50%;}
 .bg::after{content:'';position:absolute;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);border-radius:50%;}
 .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:40px 16px 60px;}
-.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:20px;}
-.logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#00C853,#66BB6A);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 8px 20px rgba(0,0,0,.2);}
+.logo{display:flex;align-items:center;gap:15px;justify-content:center;margin-bottom:20px;}
+.logo-icon{width:80px;height:80px;position:relative;display:flex;align-items:center;justify-content:center;}
+.netlink-logo{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+/* Outer circles */
+.network-outer{position:absolute;width:100%;height:100%;border:2px solid rgba(255,20,147,.4);border-radius:50%;animation:pulse 3s ease-in-out infinite;}
+.network-middle{position:absolute;width:85%;height:85%;border:1.5px solid rgba(255,20,147,.5);border-radius:50%;animation:pulse 3s ease-in-out infinite .3s;}
+/* Center circle with N */
+.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#fff;box-shadow:0 0 20px rgba(255,20,147,.6),inset 0 0 10px rgba(0,0,0,.2);z-index:10;}
+/* Nodes around the circle */
+.node{position:absolute;width:12px;height:12px;background:radial-gradient(circle,#FF1493,#E91E63);border-radius:50%;box-shadow:0 0 15px rgba(255,20,147,.8);}
+.node:nth-child(2){top:5%;left:50%;transform:translateX(-50%);}
+.node:nth-child(3){top:13%;right:13%;transform:translate(0,0);}
+.node:nth-child(4){right:5%;top:50%;transform:translateY(-50%);}
+.node:nth-child(5){bottom:13%;right:13%;}
+.node:nth-child(6){bottom:5%;left:50%;transform:translateX(-50%);}
+.node:nth-child(7){bottom:13%;left:13%;}
+.node:nth-child(8){left:5%;top:50%;transform:translateY(-50%);}
+.node:nth-child(9){top:13%;left:13%;}
+/* Lines connecting nodes */
+svg{position:absolute;width:100%;height:100%;top:0;left:0;z-index:1;}
+@keyframes pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
 .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:18px;color:var(--white);line-height:1.1;}
 .logo-sub{font-size:10px;color:rgba(255,255,255,.9);letter-spacing:2px;font-family:'Orbitron',monospace;}
 h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--white);margin-bottom:6px;text-align:center;}
@@ -40,7 +59,34 @@ select option{background:var(--bg3);color:var(--text);}
 <body>
 <div class="bg"></div>
 <div class="wrap">
-  <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="80" height="80" viewBox="0 0 80 80">
+        <line x1="40" y1="40" x2="40" y2="8" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="63" y2="17" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="72" y2="40" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="63" y2="63" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="40" y2="72" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="17" y2="63" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="8" y2="40" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+        <line x1="40" y1="40" x2="17" y2="17" stroke="rgba(255,20,147,0.3)" stroke-width="1.5"/>
+      </svg>
+      <div class="netlink-logo">
+        <div class="network-outer"></div>
+        <div class="network-middle"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="node"></div>
+        <div class="network-center">N</div>
+      </div>
+    </div>
+    <div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
+  </div>
   <h1>Create Account</h1>
   <p class="sub">Linking You to Financial Solutions</p>
   <div class="card">
@@ -81,22 +127,17 @@ const app = initializeApp({
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Check referral
 const ref = new URLSearchParams(window.location.search).get('ref');
 if(ref){
   document.getElementById('ref-box').style.display='block';
   document.getElementById('ref-by').textContent=ref;
 }
 
-// Validate WhatsApp number has country code
 function isValidWhatsApp(number) {
-  // Must start with + or country code digits
   const cleaned = number.replace(/[\s\-\+]/g, '');
-  // Check if it's 10-15 digits (includes country code)
   return /^\d{10,15}$/.test(cleaned);
 }
 
-// Check for duplicate username
 async function isUsernameTaken(username) {
   try {
     const q = query(collection(db, 'users'), where('username', '==', username.toLowerCase()));
@@ -107,7 +148,6 @@ async function isUsernameTaken(username) {
   }
 }
 
-// Check for duplicate email
 async function isEmailTaken(email) {
   try {
     const q = query(collection(db, 'users'), where('email', '==', email.toLowerCase()));
@@ -118,7 +158,6 @@ async function isEmailTaken(email) {
   }
 }
 
-// Check for duplicate phone
 async function isPhoneTaken(phone) {
   try {
     const q = query(collection(db, 'users'), where('phone', '==', phone));
@@ -142,70 +181,58 @@ window.doRegister = async function(){
   const pw = document.getElementById('password').value;
   const cp = document.getElementById('confirm').value;
 
-  // Validate all fields
   if(!u||!e||!ph||!wa||!co||!pw||!cp){
     err.textContent='⚠️ Please fill all fields.';
     err.style.display='block';
     return;
   }
 
-  // Validate email format
   if(!e.includes('@')){
     err.textContent='⚠️ Enter a valid email.';
     err.style.display='block';
     return;
   }
 
-  // Validate passwords match
   if(pw!==cp){
     err.textContent='⚠️ Passwords do not match.';
     err.style.display='block';
     return;
   }
 
-  // Validate password length
   if(pw.length<6){
     err.textContent='⚠️ Password must be at least 6 characters.';
     err.style.display='block';
     return;
   }
 
-  // Validate WhatsApp has country code
   if(!isValidWhatsApp(wa)){
     err.textContent='⚠️ WhatsApp number must start with country code (e.g., +254712345678).';
     err.style.display='block';
     return;
   }
 
-  // Show spinner on button
   btn.disabled=true;
   btn.innerHTML='<span class="spinner"></span> Checking...';
 
   try{
-    // Check for duplicate username
     if(await isUsernameTaken(u)){
       throw new Error('username_taken');
     }
 
-    // Check for duplicate email
     if(await isEmailTaken(e)){
       throw new Error('email_already_in_use');
     }
 
-    // Check for duplicate phone
     if(await isPhoneTaken(ph)){
       throw new Error('phone_taken');
     }
 
-    // Show creating message
     btn.innerHTML='<span class="spinner"></span> Creating...';
 
-    // 1. Create auth account
     const cred = await createUserWithEmailAndPassword(auth, e, pw);
     const uid = cred.user.uid;
     const refCode = u.toLowerCase().replace(/\s+/g,'').replace(/[^a-z0-9]/g,'');
 
-    // 2. Save user data
     await setDoc(doc(db,'users',uid),{
       uid, 
       username:u.toLowerCase(), 
@@ -228,7 +255,6 @@ window.doRegister = async function(){
       createdAt:serverTimestamp()
     });
 
-    // 3. Save uid to localStorage then redirect
     localStorage.setItem('nlUID', uid);
     localStorage.setItem('nlActivated', 'false');
     localStorage.removeItem('nlAdmin');
