@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+I'm<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -272,8 +272,11 @@ onAuthStateChanged(auth,async u=>{
 
   // Greeting
   const h=new Date().getHours();
-  const g=h<12?'Good morning ☀️':h<17?'Good afternoon 🌤️':'Good evening 🌙';
-  document.getElementById('greeting-text').innerHTML=g+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
+  let g,emoji;
+  if(h>=5&&h<12){g='Good morning';emoji='🌞';}
+  else if(h>=12&&h<17){g='Good afternoon';emoji='☀️';}
+  else{g='Good evening';emoji='🌙';}
+  document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
   document.getElementById('greeting-num').textContent=UD.level1Count||0;
 
   // Stats with commas
