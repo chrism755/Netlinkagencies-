@@ -17,8 +17,9 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#E91E63 0
 /* Outer circles */
 .network-outer{position:absolute;width:100%;height:100%;border:2px solid rgba(255,20,147,.4);border-radius:50%;animation:pulse 3s ease-in-out infinite;}
 .network-middle{position:absolute;width:85%;height:85%;border:1.5px solid rgba(255,20,147,.5);border-radius:50%;animation:pulse 3s ease-in-out infinite .3s;}
-/* Center circle with N */
-.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#fff;box-shadow:0 0 20px rgba(255,20,147,.6),inset 0 0 10px rgba(0,0,0,.2);z-index:10;}
+/* Center circle with logo */
+.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#fff;overflow:hidden;}
+.network-center img{width:100%;height:100%;object-fit:cover;}
 /* Nodes around the circle */
 .node{position:absolute;width:12px;height:12px;background:radial-gradient(circle,#FF1493,#E91E63);border-radius:50%;box-shadow:0 0 15px rgba(255,20,147,.8);}
 .node:nth-child(2){top:5%;left:50%;transform:translateX(-50%);}
@@ -39,10 +40,10 @@ h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--wh
 .card{background:var(--card);border:none;border-radius:20px;padding:32px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
 .fg{margin-bottom:16px;}
 label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:all .3s;}
 input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
 input::placeholder{color:var(--text2);opacity:.7;}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#E91E63,#FF9800);color:var(--white);transition:.3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#E91E63,#FF9800);color:var(--white);transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#2E7D32;border-radius:10px;padding:12px 15px;font-size:13px;margin:10px 0;display:none;font-weight:500;}
@@ -77,7 +78,9 @@ input::placeholder{color:var(--text2);opacity:.7;}
         <div class="node"></div>
         <div class="node"></div>
         <div class="node"></div>
-        <div class="network-center">N</div>
+        <div class="network-center">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron,monospace;font-weight:900;font-size:28px%7D.node%7Bfill:%23FF1493;filter:drop-shadow(0 0 8px rgba(255,20,147,0.8))%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' fill='%231a0a2e' opacity='0.9'/%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='rgba(255,20,147,0.4)' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='75' fill='none' stroke='rgba(255,20,147,0.3)' stroke-width='1.5'/%3E%3Ccircle cx='100' cy='30' r='6' class='node'/%3E%3Ccircle cx='156' cy='45' r='6' class='node'/%3E%3Ccircle cx='170' cy='100' r='6' class='node'/%3E%3Ccircle cx='156' cy='155' r='6' class='node'/%3E%3Ccircle cx='100' cy='170' r='6' class='node'/%3E%3Ccircle cx='44' cy='155' r='6' class='node'/%3E%3Ccircle cx='30' cy='100' r='6' class='node'/%3E%3Ccircle cx='44' cy='45' r='6' class='node'/%3E%3Cline x1='100' y1='100' x2='100' y2='30' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='170' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='100' y2='170' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='30' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='35' class='logo-center'/%3E%3Ctext x='100' y='115' text-anchor='middle' class='logo-text'%3EN%3C/text%3E%3C/svg%3E" alt="NETLINK Logo"/>
+        </div>
       </div>
     </div>
     <div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
