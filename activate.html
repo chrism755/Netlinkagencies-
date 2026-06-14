@@ -101,7 +101,7 @@ onAuthStateChanged(auth,async u=>{
     const snap=await getDoc(doc(db,'users',u.uid));
     if(snap.exists()){
       userData=snap.data();
-      if(userData.activated) window.location.replace('https://netlinkagencies.linkpc.net/dashboard.html');
+      if(userData.activated) window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
     }
   } else {
     window.location.replace('/login.html');
