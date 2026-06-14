@@ -19,10 +19,9 @@ h1{font-weight:900;font-size:20px;color:#fff;margin-bottom:6px;text-align:center
 .sub{color:#fff;font-size:13px;text-align:center;margin-bottom:20px;opacity:.8;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:460px;margin-bottom:14px;}
 .amount{font-size:42px;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,.3);text-align:center;}
-.alabel{color:#fff;font-size:12px;text-align:center;margin-top:4px;margin-bottom:18px;opacity:.8;}
+.alabel{color:#fff;font-size:12px;text-align:center;margin-top:4px;margin-bottom:4px;opacity:.8;}
 .section-title{font-weight:800;font-size:15px;color:var(--pk2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .badge{background:var(--pk);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;}
-.divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
 .inst{background:var(--bg3);border-radius:12px;padding:16px;font-size:13px;line-height:1.9;color:#fff;margin-bottom:14px;}
 .inst strong{color:var(--pk2);}
 .snum{display:inline-flex;width:20px;height:20px;background:var(--pk);border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:800;margin-right:7px;}
@@ -34,23 +33,57 @@ input::placeholder{color:#fff;opacity:.4;}
 input:read-only{opacity:.6;cursor:not-allowed;}
 .btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-bottom:10px;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-outline{width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:#fff;margin-bottom:10px;}
-.btn-outline:hover{border-color:var(--pk);}
 .wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-bottom:10px;}
 .logout-btn{width:100%;padding:12px;border:1.5px solid var(--red);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:var(--red);}
-.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.collapse-btn{background:none;border:none;color:var(--pk2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;padding:0;margin-bottom:14px;text-decoration:underline;}
+.manual-link{background:none;border:none;color:var(--pk2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;padding:0;text-decoration:underline;width:100%;text-align:center;display:block;margin-top:4px;}
 .phone-prefix{display:flex;align-items:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
 .phone-prefix span{padding:12px 12px;color:#fff;opacity:.7;font-size:14px;border-right:1px solid var(--border);white-space:nowrap;}
 .phone-prefix input{border:none;border-radius:0;background:transparent;}
 .phone-prefix input:focus{border:none;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+.modal-box{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:460px;padding:0 0 30px 0;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 0;}
+.modal-title{text-align:center;font-size:17px;font-weight:800;color:#222;padding:16px 24px 0;}
+.modal-body{display:flex;flex-direction:column;align-items:center;padding:24px;}
+.modal-icon{width:72px;height:72px;background:rgba(0,200,100,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.modal-icon svg{width:36px;height:36px;}
+.modal-h{font-size:18px;font-weight:800;color:#222;margin-bottom:8px;text-align:center;}
+.modal-p{font-size:14px;color:#666;text-align:center;line-height:1.6;margin-bottom:0;}
+.modal-footer{padding:0 24px;}
+.modal-close{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;}
+.polling-bar{text-align:center;color:var(--pk2);font-size:13px;margin:10px 0;display:none;}
 </style>
 </head>
 <body>
 <div class="bg"></div>
+
+<!-- STK SUCCESS MODAL -->
+<div class="modal-overlay" id="stk-modal" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Payment Initiated</div>
+    <div class="modal-body">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+      <div class="modal-h">STK Push Sent Successfully</div>
+      <div class="modal-p">Please check your phone for the M-Pesa prompt to complete the payment.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="wrap">
   <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
   <h1>Activate Account</h1>
@@ -83,41 +116,38 @@ input:read-only{opacity:.6;cursor:not-allowed;}
       <label>Amount</label>
       <input type="text" value="KES 150" readonly/>
     </div>
-    <div class="ok" id="stk-ok"></div>
     <div class="err" id="stk-err"></div>
+    <div class="polling-bar" id="polling-msg"><span class="spinner"></span> Waiting for payment confirmation...</div>
+    <div class="ok" id="stk-activated" style="display:none;">🎉 <strong>Account Activated!</strong> Redirecting...</div>
     <button class="btn" id="stk-btn" onclick="sendSTK()">📱 Pay KES 150</button>
-    <div id="polling-msg" style="display:none;text-align:center;color:var(--pk2);font-size:13px;margin-bottom:10px;">
-      <span class="spinner"></span> Waiting for payment confirmation...
-    </div>
+    <button class="manual-link" onclick="showManual()">📋 Use Manual Payment Instead</button>
   </div>
 
   <!-- MANUAL PAYMENT CARD -->
-  <div class="card" id="manual-card">
-    <button class="collapse-btn" onclick="toggleManual()">📋 Manual Payment (Alternative)</button>
-    <div id="manual-section" style="display:none;">
-      <div class="section-title">🖐 Manual M-PESA Payment</div>
-      <div class="inst">
-        <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">M-PESA Steps</p>
-        <p><span class="snum">1</span>Open <strong>M-PESA</strong> on your phone</p>
-        <p><span class="snum">2</span>Select <strong>Send Money</strong></p>
-        <p><span class="snum">3</span>Till Number: <strong>9252910</strong></p>
-        <p><span class="snum">4</span>Name: <strong>MARY KINAITORE MPURUNGA</strong></p>
-        <p><span class="snum">5</span>Amount: <strong>KES 150</strong></p>
-        <p><span class="snum">6</span>Confirm with <strong>PIN</strong></p>
-        <p><span class="snum">7</span>Copy <strong>Transaction ID</strong> from SMS</p>
-      </div>
-      <div class="fg">
-        <label>Transaction ID</label>
-        <input id="txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
-      </div>
-      <div class="ok" id="manual-ok"></div>
-      <div class="err" id="manual-err"></div>
-      <button class="btn" id="manual-btn" onclick="submitTxn()">✅ Activate Account</button>
-      <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
+  <div class="card" id="manual-card" style="display:none;">
+    <div class="section-title">🖐 Manual M-PESA Payment</div>
+    <div class="inst">
+      <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">M-PESA Steps</p>
+      <p><span class="snum">1</span>Open <strong>M-PESA</strong> on your phone</p>
+      <p><span class="snum">2</span>Select <strong>Send Money</strong></p>
+      <p><span class="snum">3</span>Till Number: <strong>9252910</strong></p>
+      <p><span class="snum">4</span>Name: <strong>MARY KINAITORE MPURUNGA</strong></p>
+      <p><span class="snum">5</span>Amount: <strong>KES 150</strong></p>
+      <p><span class="snum">6</span>Confirm with <strong>PIN</strong></p>
+      <p><span class="snum">7</span>Copy <strong>Transaction ID</strong> from SMS</p>
     </div>
+    <div class="fg">
+      <label>Transaction ID</label>
+      <input id="txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
+    </div>
+    <div class="ok" id="manual-ok"></div>
+    <div class="err" id="manual-err"></div>
+    <button class="btn" id="manual-btn" onclick="submitTxn()">✅ Activate Account</button>
+    <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
+    <button class="manual-link" onclick="showAuto()" style="margin-top:8px;">⚡ Use Automatic Payment Instead</button>
   </div>
 
-  <!-- LOGOUT CARD -->
+  <!-- LOGOUT -->
   <div style="width:100%;max-width:460px;">
     <button class="logout-btn" onclick="logOut()">🚪 Logout</button>
   </div>
@@ -146,28 +176,35 @@ onAuthStateChanged(auth,async u=>{
       if(userData.activated) window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
     }
   } else {
-    window.location.replace('/login.html');
+    window.location.replace('https://netlinkagencies.linkpc.net/login');
   }
 });
 
-window.toggleManual=function(){
-  const s=document.getElementById('manual-section');
-  s.style.display=s.style.display==='none'?'block':'none';
+window.showManual=function(){
+  document.getElementById('auto-card').style.display='none';
+  document.getElementById('manual-card').style.display='block';
+};
+
+window.showAuto=function(){
+  document.getElementById('manual-card').style.display='none';
+  document.getElementById('auto-card').style.display='block';
+};
+
+window.closeModal=function(){
+  document.getElementById('stk-modal').style.display='none';
 };
 
 window.logOut=async function(){
   await signOut(auth);
-  window.location.replace('/login.html');
+  window.location.replace('https://netlinkagencies.linkpc.net/login');
 };
 
 window.sendSTK=async function(){
   const phoneInput=document.getElementById('phone').value.trim();
-  const stkOk=document.getElementById('stk-ok');
   const stkErr=document.getElementById('stk-err');
   const stkBtn=document.getElementById('stk-btn');
   const pollingMsg=document.getElementById('polling-msg');
 
-  stkOk.style.display='none';
   stkErr.style.display='none';
 
   if(!phoneInput||phoneInput.length<9){
@@ -175,7 +212,7 @@ window.sendSTK=async function(){
     stkErr.style.display='block';
     return;
   }
-  if(!currentUser){window.location.replace('/login.html');return;}
+  if(!currentUser){window.location.replace('https://netlinkagencies.linkpc.net/login');return;}
 
   const fullPhone='254'+phoneInput.replace(/^0/,'');
 
@@ -199,10 +236,9 @@ window.sendSTK=async function(){
 
     const data=await res.json();
 
-    if(res.ok && data.success !== false){
-      const ref=data.reference || data.CheckoutRequestID || data.id || null;
+    if(res.ok && data.success!==false){
+      const ref=data.reference||data.CheckoutRequestID||data.id||null;
 
-      // Save payment record to Firestore
       await addDoc(collection(db,'stkPayments'),{
         uid:currentUser.uid,
         username:userData?.username||'',
@@ -214,17 +250,16 @@ window.sendSTK=async function(){
         createdAt:serverTimestamp()
       });
 
-      stkOk.innerHTML='✅ STK Push sent to <strong>+'+fullPhone+'</strong>!<br>Check your phone and enter your <strong>M-Pesa PIN</strong> to complete payment.';
-      stkOk.style.display='block';
+      // Show modal popup
+      document.getElementById('stk-modal').style.display='flex';
       stkBtn.innerHTML='<span class="spinner"></span>Waiting for payment...';
       pollingMsg.style.display='block';
 
-      // Poll for payment confirmation
       if(ref) startPolling(ref);
       else startUserPolling();
 
     } else {
-      throw new Error(data.message || data.errorMessage || 'STK Push failed. Please try again.');
+      throw new Error(data.message||data.errorMessage||'STK Push failed. Please try again.');
     }
   } catch(e){
     stkErr.textContent='❌ '+e.message;
@@ -236,7 +271,7 @@ window.sendSTK=async function(){
 
 function startPolling(reference){
   let attempts=0;
-  const maxAttempts=24; // 2 minutes
+  const maxAttempts=24;
   const creds=btoa(PAYHERO_USER+':'+PAYHERO_PASS);
 
   pollingInterval=setInterval(async()=>{
@@ -250,20 +285,19 @@ function startPolling(reference){
       document.getElementById('stk-btn').textContent='📱 Try Again';
       return;
     }
-
     try{
       const res=await fetch('https://backend.payhero.co.ke/api/v2/transaction-status?reference='+reference,{
         headers:{'Authorization':'Basic '+creds}
       });
       const data=await res.json();
       const status=(data.status||'').toLowerCase();
-
       if(status==='success'||status==='completed'){
         clearInterval(pollingInterval);
         await activateUser(data.transaction_id||reference);
       } else if(status==='failed'||status==='cancelled'){
         clearInterval(pollingInterval);
         document.getElementById('polling-msg').style.display='none';
+        document.getElementById('stk-modal').style.display='none';
         document.getElementById('stk-err').textContent='❌ Payment failed or cancelled. Please try again.';
         document.getElementById('stk-err').style.display='block';
         document.getElementById('stk-btn').disabled=false;
@@ -274,15 +308,12 @@ function startPolling(reference){
 }
 
 function startUserPolling(){
-  // Fallback: watch Firestore user doc for activation
   const unsub=onSnapshot(doc(db,'users',currentUser.uid),(snap)=>{
     if(snap.exists()&&snap.data().activated){
       unsub();
-      clearInterval(pollingInterval);
       window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
     }
   });
-  // Stop after 3 minutes
   setTimeout(()=>unsub(),180000);
 }
 
@@ -295,9 +326,9 @@ async function activateUser(txnId){
       activationMethod:'stk'
     },{merge:true});
 
+    document.getElementById('stk-modal').style.display='none';
     document.getElementById('polling-msg').style.display='none';
-    document.getElementById('stk-ok').innerHTML='🎉 <strong>Account Activated Successfully!</strong><br>Redirecting to your dashboard...';
-    document.getElementById('stk-ok').style.display='block';
+    document.getElementById('stk-activated').style.display='block';
     document.getElementById('stk-btn').textContent='✅ Activated!';
 
     setTimeout(()=>window.location.replace('https://netlinkagencies.linkpc.net/dashboard'),2000);
@@ -314,7 +345,7 @@ window.submitTxn=async function(){
   const btn=document.getElementById('manual-btn');
   err.style.display='none';ok.style.display='none';
   if(!txn){err.textContent='⚠️ Please enter your Transaction ID.';err.style.display='block';return;}
-  if(!currentUser){window.location.replace('/login.html');return;}
+  if(!currentUser){window.location.replace('https://netlinkagencies.linkpc.net/login');return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
   try{
     await addDoc(collection(db,'pendingActivations'),{
