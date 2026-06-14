@@ -20,10 +20,10 @@ h1{font-weight:900;font-size:20px;color:#fff;margin-bottom:6px;text-align:center
 .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:460px;margin-bottom:14px;}
 .amount{font-size:42px;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,.3);text-align:center;}
 .alabel{color:#fff;font-size:12px;text-align:center;margin-top:4px;margin-bottom:18px;opacity:.8;}
-.tabs{display:flex;gap:10px;margin-bottom:16px;}
-.tab{flex:1;padding:11px;border:2px solid var(--border);border-radius:10px;text-align:center;cursor:pointer;font-weight:700;font-size:13px;color:#fff;transition:.2s;}
-.tab.active{border-color:var(--pk);background:rgba(233,30,140,.15);color:#fff;}
-.inst{background:var(--bg3);border-radius:12px;padding:16px;font-size:13px;line-height:1.9;color:#fff;}
+.section-title{font-weight:800;font-size:15px;color:var(--pk2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.badge{background:var(--pk);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;}
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+.inst{background:var(--bg3);border-radius:12px;padding:16px;font-size:13px;line-height:1.9;color:#fff;margin-bottom:14px;}
 .inst strong{color:var(--pk2);}
 .snum{display:inline-flex;width:20px;height:20px;background:var(--pk);border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:800;margin-right:7px;}
 .fg{margin-bottom:14px;}
@@ -31,13 +31,22 @@ label{display:block;font-size:12px;font-weight:700;color:#fff;margin-bottom:6px;
 input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:#fff;font-family:'Nunito',sans-serif;font-size:15px;outline:none;}
 input:focus{border-color:var(--pk);}
 input::placeholder{color:#fff;opacity:.4;}
+input:read-only{opacity:.6;cursor:not-allowed;}
 .btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-bottom:10px;}
-.btn:disabled{opacity:.5;}
-.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-outline{width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:#fff;margin-bottom:10px;}
+.btn-outline:hover{border-color:var(--pk);}
+.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-bottom:10px;}
+.logout-btn{width:100%;padding:12px;border:1.5px solid var(--red);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:var(--red);}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.collapse-btn{background:none;border:none;color:var(--pk2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;padding:0;margin-bottom:14px;text-decoration:underline;}
+.phone-prefix{display:flex;align-items:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.phone-prefix span{padding:12px 12px;color:#fff;opacity:.7;font-size:14px;border-right:1px solid var(--border);white-space:nowrap;}
+.phone-prefix input{border:none;border-radius:0;background:transparent;}
+.phone-prefix input:focus{border:none;}
 </style>
 </head>
 <body>
@@ -47,53 +56,86 @@ input::placeholder{color:#fff;opacity:.4;}
   <h1>Activate Account</h1>
   <p class="sub">Pay activation fee to unlock your dashboard</p>
 
+  <!-- AMOUNT CARD -->
   <div class="card">
     <div class="amount">KES 150</div>
     <div class="alabel">One-time Activation Fee</div>
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('mpesa',this)">📱 M-PESA</div>
-      <div class="tab" onclick="switchTab('paypal',this)">💳 PAYPAL</div>
+  </div>
+
+  <!-- AUTOMATIC STK PUSH CARD -->
+  <div class="card" id="auto-card">
+    <div class="section-title">⚡ Automatic Payment <span class="badge">RECOMMENDED</span></div>
+    <div class="inst">
+      <p><span class="snum">1</span>Enter your <strong>Safaricom number</strong> below</p>
+      <p><span class="snum">2</span>Click <strong>Pay KES 150</strong></p>
+      <p><span class="snum">3</span>An <strong>M-Pesa prompt</strong> will appear on your phone</p>
+      <p><span class="snum">4</span>Enter your <strong>M-Pesa PIN</strong> to confirm</p>
+      <p><span class="snum">5</span>Your account will be <strong>activated automatically!</strong> 🎉</p>
     </div>
-    <div id="mpesa-inst" class="inst">
-      <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">M-PESA Steps</p>
-      <p><span class="snum">1</span>Open <strong>M-PESA</strong> on your phone</p>
-      <p><span class="snum">2</span>Select <strong>Send Money</strong></p>
-      <p><span class="snum">3</span>Till Number: <strong>9252910</strong></p>
-      <p><span class="snum">4</span>Name: <strong>MARY KINAITORE MPURUNGA</strong></p>
-      <p><span class="snum">5</span>Amount: <strong>KES 150</strong></p>
-      <p><span class="snum">6</span>Confirm with PIN</p>
-      <p><span class="snum">7</span>Copy <strong>Transaction ID</strong> from SMS below</p>
+    <div class="fg">
+      <label>Safaricom Phone Number</label>
+      <div class="phone-prefix">
+        <span>🇰🇪 +254</span>
+        <input type="tel" id="phone" placeholder="7XXXXXXXX" maxlength="9"/>
+      </div>
     </div>
-    <div id="paypal-inst" class="inst" style="display:none;">
-      <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">PayPal Steps</p>
-      <p><span class="snum">1</span>Login to <strong>PayPal</strong></p>
-      <p><span class="snum">2</span>Click <strong>Send Money</strong></p>
-      <p><span class="snum">3</span>Email: <strong>marympurunga@gmail.com</strong></p>
-      <p><span class="snum">4</span>Amount: <strong>≈ USD 1.15</strong></p>
-      <p><span class="snum">5</span>Note: <strong>NETLINK Activation</strong></p>
-      <p><span class="snum">6</span>Copy <strong>Transaction ID</strong> below</p>
+    <div class="fg">
+      <label>Amount</label>
+      <input type="text" value="KES 150" readonly/>
+    </div>
+    <div class="ok" id="stk-ok"></div>
+    <div class="err" id="stk-err"></div>
+    <button class="btn" id="stk-btn" onclick="sendSTK()">📱 Pay KES 150</button>
+    <div id="polling-msg" style="display:none;text-align:center;color:var(--pk2);font-size:13px;margin-bottom:10px;">
+      <span class="spinner"></span> Waiting for payment confirmation...
     </div>
   </div>
 
-  <div class="card">
-    <div class="fg"><label>Transaction ID</label>
-      <input id="txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
+  <!-- MANUAL PAYMENT CARD -->
+  <div class="card" id="manual-card">
+    <button class="collapse-btn" onclick="toggleManual()">📋 Manual Payment (Alternative)</button>
+    <div id="manual-section" style="display:none;">
+      <div class="section-title">🖐 Manual M-PESA Payment</div>
+      <div class="inst">
+        <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">M-PESA Steps</p>
+        <p><span class="snum">1</span>Open <strong>M-PESA</strong> on your phone</p>
+        <p><span class="snum">2</span>Select <strong>Send Money</strong></p>
+        <p><span class="snum">3</span>Till Number: <strong>9252910</strong></p>
+        <p><span class="snum">4</span>Name: <strong>MARY KINAITORE MPURUNGA</strong></p>
+        <p><span class="snum">5</span>Amount: <strong>KES 150</strong></p>
+        <p><span class="snum">6</span>Confirm with <strong>PIN</strong></p>
+        <p><span class="snum">7</span>Copy <strong>Transaction ID</strong> from SMS</p>
+      </div>
+      <div class="fg">
+        <label>Transaction ID</label>
+        <input id="txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
+      </div>
+      <div class="ok" id="manual-ok"></div>
+      <div class="err" id="manual-err"></div>
+      <button class="btn" id="manual-btn" onclick="submitTxn()">✅ Activate Account</button>
+      <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
     </div>
-    <div class="ok" id="ok"></div>
-    <div class="err" id="err"></div>
-    <button class="btn" id="btn" onclick="submitTxn()">✅ Activate account</button>
-    <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
+  </div>
+
+  <!-- LOGOUT CARD -->
+  <div style="width:100%;max-width:460px;">
+    <button class="logout-btn" onclick="logOut()">🚪 Logout</button>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
-let currentUser=null,userData=null;
+let currentUser=null,userData=null,pollingInterval=null;
+
+const PAYHERO_USER='dsZy6WWL2SrvyjO15M3T';
+const PAYHERO_PASS='mionCxKDUCjnTtsrrKfIPOKlqajAJTBCVqBNdOXi';
+const PAYHERO_CHANNEL=9310;
+const AMOUNT=150;
 
 onAuthStateChanged(auth,async u=>{
   if(u){
@@ -108,16 +150,168 @@ onAuthStateChanged(auth,async u=>{
   }
 });
 
-window.switchTab=function(tab,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('mpesa-inst').style.display=tab==='mpesa'?'block':'none';
-  document.getElementById('paypal-inst').style.display=tab==='paypal'?'block':'none';
+window.toggleManual=function(){
+  const s=document.getElementById('manual-section');
+  s.style.display=s.style.display==='none'?'block':'none';
 };
+
+window.logOut=async function(){
+  await signOut(auth);
+  window.location.replace('/login.html');
+};
+
+window.sendSTK=async function(){
+  const phoneInput=document.getElementById('phone').value.trim();
+  const stkOk=document.getElementById('stk-ok');
+  const stkErr=document.getElementById('stk-err');
+  const stkBtn=document.getElementById('stk-btn');
+  const pollingMsg=document.getElementById('polling-msg');
+
+  stkOk.style.display='none';
+  stkErr.style.display='none';
+
+  if(!phoneInput||phoneInput.length<9){
+    stkErr.textContent='⚠️ Please enter a valid Safaricom number (e.g. 712345678)';
+    stkErr.style.display='block';
+    return;
+  }
+  if(!currentUser){window.location.replace('/login.html');return;}
+
+  const fullPhone='254'+phoneInput.replace(/^0/,'');
+
+  stkBtn.disabled=true;
+  stkBtn.innerHTML='<span class="spinner"></span>Sending STK Push...';
+
+  try{
+    const creds=btoa(PAYHERO_USER+':'+PAYHERO_PASS);
+    const res=await fetch('https://backend.payhero.co.ke/api/v2/payments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Basic '+creds},
+      body:JSON.stringify({
+        amount:AMOUNT,
+        phone_number:fullPhone,
+        channel_id:PAYHERO_CHANNEL,
+        provider:'m-pesa',
+        external_reference:'NETLINK-'+currentUser.uid.slice(0,8),
+        callback_url:'https://netlinkagencies.linkpc.net/activate'
+      })
+    });
+
+    const data=await res.json();
+
+    if(res.ok && data.success !== false){
+      const ref=data.reference || data.CheckoutRequestID || data.id || null;
+
+      // Save payment record to Firestore
+      await addDoc(collection(db,'stkPayments'),{
+        uid:currentUser.uid,
+        username:userData?.username||'',
+        email:currentUser.email,
+        phone:fullPhone,
+        amount:AMOUNT,
+        reference:ref,
+        status:'pending',
+        createdAt:serverTimestamp()
+      });
+
+      stkOk.innerHTML='✅ STK Push sent to <strong>+'+fullPhone+'</strong>!<br>Check your phone and enter your <strong>M-Pesa PIN</strong> to complete payment.';
+      stkOk.style.display='block';
+      stkBtn.innerHTML='<span class="spinner"></span>Waiting for payment...';
+      pollingMsg.style.display='block';
+
+      // Poll for payment confirmation
+      if(ref) startPolling(ref);
+      else startUserPolling();
+
+    } else {
+      throw new Error(data.message || data.errorMessage || 'STK Push failed. Please try again.');
+    }
+  } catch(e){
+    stkErr.textContent='❌ '+e.message;
+    stkErr.style.display='block';
+    stkBtn.disabled=false;
+    stkBtn.textContent='📱 Pay KES 150';
+  }
+};
+
+function startPolling(reference){
+  let attempts=0;
+  const maxAttempts=24; // 2 minutes
+  const creds=btoa(PAYHERO_USER+':'+PAYHERO_PASS);
+
+  pollingInterval=setInterval(async()=>{
+    attempts++;
+    if(attempts>maxAttempts){
+      clearInterval(pollingInterval);
+      document.getElementById('polling-msg').style.display='none';
+      document.getElementById('stk-err').textContent='⏱️ Payment timeout. If you paid, please use Manual Activation below with your Transaction ID.';
+      document.getElementById('stk-err').style.display='block';
+      document.getElementById('stk-btn').disabled=false;
+      document.getElementById('stk-btn').textContent='📱 Try Again';
+      return;
+    }
+
+    try{
+      const res=await fetch('https://backend.payhero.co.ke/api/v2/transaction-status?reference='+reference,{
+        headers:{'Authorization':'Basic '+creds}
+      });
+      const data=await res.json();
+      const status=(data.status||'').toLowerCase();
+
+      if(status==='success'||status==='completed'){
+        clearInterval(pollingInterval);
+        await activateUser(data.transaction_id||reference);
+      } else if(status==='failed'||status==='cancelled'){
+        clearInterval(pollingInterval);
+        document.getElementById('polling-msg').style.display='none';
+        document.getElementById('stk-err').textContent='❌ Payment failed or cancelled. Please try again.';
+        document.getElementById('stk-err').style.display='block';
+        document.getElementById('stk-btn').disabled=false;
+        document.getElementById('stk-btn').textContent='📱 Pay KES 150';
+      }
+    } catch(e){ /* keep polling */ }
+  },5000);
+}
+
+function startUserPolling(){
+  // Fallback: watch Firestore user doc for activation
+  const unsub=onSnapshot(doc(db,'users',currentUser.uid),(snap)=>{
+    if(snap.exists()&&snap.data().activated){
+      unsub();
+      clearInterval(pollingInterval);
+      window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
+    }
+  });
+  // Stop after 3 minutes
+  setTimeout(()=>unsub(),180000);
+}
+
+async function activateUser(txnId){
+  try{
+    await setDoc(doc(db,'users',currentUser.uid),{
+      activated:true,
+      activatedAt:serverTimestamp(),
+      activationTxn:txnId,
+      activationMethod:'stk'
+    },{merge:true});
+
+    document.getElementById('polling-msg').style.display='none';
+    document.getElementById('stk-ok').innerHTML='🎉 <strong>Account Activated Successfully!</strong><br>Redirecting to your dashboard...';
+    document.getElementById('stk-ok').style.display='block';
+    document.getElementById('stk-btn').textContent='✅ Activated!';
+
+    setTimeout(()=>window.location.replace('https://netlinkagencies.linkpc.net/dashboard'),2000);
+  }catch(e){
+    document.getElementById('stk-err').textContent='✅ Payment received but activation failed. Please contact admin.';
+    document.getElementById('stk-err').style.display='block';
+  }
+}
 
 window.submitTxn=async function(){
   const txn=document.getElementById('txn').value.trim().toUpperCase();
-  const ok=document.getElementById('ok'),err=document.getElementById('err'),btn=document.getElementById('btn');
+  const ok=document.getElementById('manual-ok');
+  const err=document.getElementById('manual-err');
+  const btn=document.getElementById('manual-btn');
   err.style.display='none';ok.style.display='none';
   if(!txn){err.textContent='⚠️ Please enter your Transaction ID.';err.style.display='block';return;}
   if(!currentUser){window.location.replace('/login.html');return;}
@@ -132,7 +326,7 @@ window.submitTxn=async function(){
       status:'pending',
       createdAt:serverTimestamp()
     });
-    ok.innerHTML=`✅ Dear <strong>${userData?.username||'User'}</strong>, we have received your payment request.<br>
+    ok.innerHTML=`✅ Dear <strong>${userData?.username||'User'}</strong>, your payment request has been received.<br>
     Wait <strong>2–5 minutes</strong> for activation.<br><br>
     Not activated within 5 minutes?<br>
     <button onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;">💬 WhatsApp Admin</button>`;
@@ -140,7 +334,7 @@ window.submitTxn=async function(){
     btn.disabled=true;btn.textContent='✅ Submitted — Waiting for approval';
   }catch(e){
     err.textContent='❌ '+e.message;err.style.display='block';
-    btn.disabled=false;btn.textContent='✅ Submit Transaction ID';
+    btn.disabled=false;btn.textContent='✅ Activate Account';
   }
 };
 </script>
