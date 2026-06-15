@@ -193,6 +193,15 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,"users",u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
   UD=snap.data();UD.uid=u.uid;
+  // Currency based on user country
+  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  window._CUR=_currencyMap[UD.country]||'KES';
+  window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
   if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});

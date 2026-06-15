@@ -137,7 +137,7 @@ select option{background:var(--bg3);}
 <div class="card-pink"><h3>👁️ View Ads</h3><p>Watch 5 ads per day. Each ad is 20 seconds. Earn KES 5 per ad. Money goes to Total Earnings!</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ads-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
+    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ads-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">ADS WATCHED</div><div id="ads-count" style="font-size:20px;font-weight:900;color:#fff;">0/5</div></div>
   </div>
   <div class="reward">💰 KES 5 per ad · 5 ads per day · 20 seconds each</div>
@@ -159,6 +159,15 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
+  // Currency based on user country
+  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  window._CUR=_currencyMap[UD.country]||'KES';
+  window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
   if(typeof pageReady==='function') pageReady();
 });
@@ -179,7 +188,7 @@ async function pageReady(){
   const today=new Date().toDateString();
   const watched=JSON.parse(localStorage.getItem('ads_'+U.uid+'_'+today)||'[]');
   document.getElementById('ads-count').textContent=watched.length+'/5';
-  document.getElementById('ads-earn').textContent='KES '+(watched.length*5);
+  document.getElementById('ads-earn').textContent=(window._CUR||'KES')+(watched.length*5);
   document.getElementById('ads-list').innerHTML=ADS.map((a,i)=>`
     <div class="card" id="ad-card-${i}">
       <div style="background:${a.color};border-radius:12px;padding:20px;text-align:center;margin-bottom:12px;">
@@ -209,7 +218,7 @@ async function finishAd(i,btn){
     watched.push(i);
     localStorage.setItem('ads_'+U.uid+'_'+today,JSON.stringify(watched));
     document.getElementById('ads-count').textContent=watched.length+'/5';
-    document.getElementById('ads-earn').textContent='KES '+(watched.length*5);
+    document.getElementById('ads-earn').textContent=(window._CUR||'KES')+(watched.length*5);
     btn.style.display='none';
     const card=document.getElementById('ad-card-'+i);
     const ok=document.createElement('div');ok.className='ok';ok.style.display='block';

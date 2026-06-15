@@ -156,7 +156,7 @@ select option{background:var(--bg3);}
 <div class="card">
   <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px;">
     <div style="font-size:11px;color:#fff;margin-bottom:4px;">AVAILABLE BALANCE FOR TRADING</div>
-    <div id="forex-bal" style="font-size:24px;font-weight:900;color:var(--gold);">KES 0</div>
+    <div id="forex-bal" style="font-size:24px;font-weight:900;color:var(--gold);">...</div>
   </div>
   <h3 style="margin-bottom:12px;">📊 Live Currency Pairs</h3>
   <div style="display:grid;gap:10px;" id="pairs-list"></div>
@@ -172,7 +172,7 @@ select option{background:var(--bg3);}
   <div class="fg"><label>Trade Direction</label>
     <select id="forex-dir"><option value="buy">BUY (Long)</option><option value="sell">SELL (Short)</option></select>
   </div>
-  <div class="fg"><label>Amount (KES)</label>
+  <div class="fg"><label>Amount (<span class="cur-lbl">KES</span>)</label>
     <div class="amt-w"><span class="amt-p">KES</span><input class="amt-i" id="forex-amt" type="number" placeholder="Enter amount to trade"/></div>
   </div>
   <div class="ok" id="forex-ok"></div>
@@ -198,6 +198,15 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,"users",u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
   UD=snap.data();UD.uid=u.uid;
+  // Currency based on user country
+  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  window._CUR=_currencyMap[UD.country]||'KES';
+  window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
   if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
@@ -217,7 +226,7 @@ const pairs=[
 ];
 async function pageReady(db,U,UD,F){
   window._db=db;window._U=U;window._UD=UD;window._F=F;
-  document.getElementById('forex-bal').textContent='KES '+(UD.balance||0);
+  document.getElementById('forex-bal').textContent=(window._CUR||'KES')+(UD.balance||0);
   document.getElementById('pairs-list').innerHTML=pairs.map(p=>`
     <div style="background:var(--bg3);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
       <div style="font-weight:800;color:#fff;">${p.p}</div>
@@ -231,7 +240,7 @@ window.placeTrade=async function(){
   const ok=document.getElementById('forex-ok'),err=document.getElementById('forex-err'),btn=document.getElementById('forex-btn');
   ok.style.display='none';err.style.display='none';
   if(!amt){err.textContent='⚠️ Enter amount.';err.style.display='block';return;}
-  if(amt>(_UD.balance||0)){err.textContent='❌ Insufficient balance. Your balance is KES '+(_UD.balance||0);err.style.display='block';return;}
+  if(amt>(_UD.balance||0)){err.textContent='❌ Insufficient balance. Your balance is '+(window._CUR||'KES')+' '+(_UD.balance||0);err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Placing trade...';
   await new Promise(r=>setTimeout(r,2000));
   const win=Math.random()>0.45;
@@ -250,7 +259,7 @@ window.placeTrade=async function(){
     ok.style.display='block';btn.disabled=false;btn.textContent='📈 Place Trade';
     const newBal=(_UD.balance||0)+(win?profit:-Math.floor(amt*0.05));
     _UD.balance=newBal;
-    document.getElementById('forex-bal').textContent='KES '+newBal;
+    document.getElementById('forex-bal').textContent=(window._CUR||'KES')+newBal;
   }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📈 Place Trade';}
 };
 

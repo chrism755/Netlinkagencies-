@@ -145,7 +145,7 @@ select option{background:var(--bg3);}
 </div>
 <div class="card">
   <h3>📝 Submit Deposit Details</h3>
-  <div class="fg"><label>Amount (KES)</label>
+  <div class="fg"><label>Amount (<span class="cur-lbl">KES</span>)</label>
     <div class="amt-w"><span class="amt-p">KES</span><input class="amt-i" id="dep-amount" type="number" placeholder="Enter amount you sent"/></div>
   </div>
   <div class="fg"><label>Transaction ID</label><input id="dep-txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;font-family:monospace;letter-spacing:1px;"/></div>
@@ -171,6 +171,15 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
+  // Currency based on user country
+  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  window._CUR=_currencyMap[UD.country]||'KES';
+  window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
   if(typeof pageReady==='function') pageReady();
 });

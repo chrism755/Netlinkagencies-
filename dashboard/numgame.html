@@ -138,7 +138,7 @@ select option{background:var(--bg3);}
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">GAMES TODAY</div><div id="ng-count" style="font-size:20px;font-weight:900;color:var(--gold);">0/3</div></div>
-    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ng-earn" style="font-size:20px;font-weight:900;color:var(--gold);">KES 0</div></div>
+    <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ng-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
   </div>
   <div class="reward">💰 KES 2 per correct number · KES 200 for all 100</div>
 </div>
@@ -166,6 +166,15 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
+  // Currency based on user country
+  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  window._CUR=_currencyMap[UD.country]||'KES';
+  window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
   if(typeof pageReady==='function') pageReady();
 });
@@ -180,7 +189,7 @@ async function pageReady(){
   const played=parseInt(localStorage.getItem('ng_p_'+U.uid+'_'+today)||'0');
   const earned=parseInt(localStorage.getItem('ng_e_'+U.uid+'_'+today)||'0');
   document.getElementById('ng-count').textContent=played+'/3';
-  document.getElementById('ng-earn').textContent='KES '+earned;
+  document.getElementById('ng-earn').textContent=(window._CUR||'KES')+earned;
   if(played>=3) document.getElementById('game-section').innerHTML='<div class="ok" style="display:block;">✅ You have played 3 games today! Come back tomorrow.</div>';
 }
 window.submitNums=async function(){
@@ -203,7 +212,7 @@ window.submitNums=async function(){
     localStorage.setItem('ng_p_'+U.uid+'_'+today,played+1);
     localStorage.setItem('ng_e_'+U.uid+'_'+today,prevE+reward);
     document.getElementById('ng-count').textContent=(played+1)+'/3';
-    document.getElementById('ng-earn').textContent='KES '+(prevE+reward);
+    document.getElementById('ng-earn').textContent=(window._CUR||'KES')+(prevE+reward);
     ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You entered <strong>'+correct+'/100</strong> correct numbers. You have earned <strong>KES '+reward+'</strong> from Number Game. KES '+reward+' has been instantly disbursed to your Total Earnings!';
     ok.style.display='block';
     btn.disabled=false;btn.textContent='🎲 Submit Numbers';
