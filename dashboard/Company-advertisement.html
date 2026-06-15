@@ -6,11 +6,11 @@
 <title>Company Advertisement — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--re[...]
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:220px;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
-.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-di[...]
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
@@ -29,10 +29,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
-.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4[...]
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid r[...]
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.3);}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
 .overlay.show{display:block;}
@@ -43,14 +43,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
 .card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));c[...]
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,140,.4);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
 .btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
 .btn-wa{background:#25D366!important;box-shadow:none!important;}
 .btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
 .fg{margin-bottom:14px;}
 label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;[...]
+input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
 input:focus,textarea:focus,select:focus{border-color:var(--pk);}
 input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
 select option{background:var(--bg3);}
@@ -77,7 +78,7 @@ select option{background:var(--bg3);}
 .tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
 .tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
 .day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:[...]
+.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto;}
 .prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
 .pl{font-size:11px;color:#fff;font-weight:700;}
 .pv{font-size:13px;color:#fff;font-weight:700;}
@@ -93,7 +94,7 @@ select option{background:var(--bg3);}
 .stat-value{font-size:14px;font-weight:800;color:#fff;}
 .upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
 .upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-r[...]
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
@@ -103,45 +104,45 @@ select option{background:var(--bg3);}
 <nav class="sidebar" id="sb">
 <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
 <div class="sb-nav">
-<a class="ni" href="/dashboard"><span class="ni-icon">🏠</span>Home</a>
-<a class="ni" href="/dashboard/tournaments"><span class="ni-icon">🏆</span>E-Tournaments</a>
-<a class="ni" href="/dashboard/karibu"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-<a class="ni" href="/dashboard/payclients"><span class="ni-icon">💸</span>Pay for Clients</a>
-<a class="ni" href="/dashboard/deposit"><span class="ni-icon">💰</span>Deposit</a>
-<a class="ni" href="/dashboard/mentorship"><span class="ni-icon">🎓</span>Mentorship</a>
-<a class="ni" href="/dashboard/Company-advertisement"><span class="ni-icon">📢</span>Company Advert</a>
-<a class="ni" href="/dashboard/betting"><span class="ni-icon">⚽</span>Betting Prediction</a>
-<a class="ni" href="/dashboard/cashout"><span class="ni-icon">💳</span>Cashout</a>
-<a class="ni" href="/dashboard/article"><span class="ni-icon">📰</span>Article</a>
-<a class="ni" href="/dashboard/viewads"><span class="ni-icon">👁️</span>View Ads</a>
+<a class="ni" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
+<a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
+<a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+<a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
+<a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
+<a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
+<a class="ni" href="https://netlinkagencies.linkpc.net/dashboard/company-advertisement"><span class="ni-icon">📢</span>Company Advert</a>
+<a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
+<a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
+<a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
+<a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
 <div class="ns">Videos</div>
-<a class="ni" href="/dashboard/tiktok"><span class="ni-icon">🎵</span>TikTok Videos</a>
-<a class="ni" href="/dashboard/instagram"><span class="ni-icon">📸</span>Instagram Videos</a>
-<a class="ni" href="/dashboard/youtube"><span class="ni-icon">▶️</span>YouTube Videos</a>
+<a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
+<a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
+<a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
 <div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
 <div class="sub-nav" id="sw">
-<a class="ni sub-ni" href="/dashboard/withdraw-videos">Videos</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-surveys">Surveys</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-quiz">Trivia Quiz</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-numgame">Number Game</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
 </div>
 <div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
 <div class="sub-nav" id="sd">
-<a class="ni sub-ni" href="/dashboard/downlines-1">Level 1</a>
-<a class="ni sub-ni" href="/dashboard/downlines-2">Level 2</a>
-<a class="ni sub-ni" href="/dashboard/downlines-3">Level 3</a>
+<a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
+<a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
+<a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
 </div>
 <div class="ns">More</div>
-<a class="ni" href="/dashboard/wadvert"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-<a class="ni" href="/dashboard/forex"><span class="ni-icon">📈</span>Forex Trading</a>
-<a class="ni" href="/dashboard/trivia"><span class="ni-icon">🧠</span>Trivia Quiz</a>
-<a class="ni" href="/dashboard/survey"><span class="ni-icon">📋</span>Daily Survey</a>
-<a class="ni" href="/dashboard/mathquiz"><span class="ni-icon">🔢</span>Math Quiz</a>
-<a class="ni" href="/dashboard/numgame"><span class="ni-icon">🎲</span>Number Game</a>
-<a class="ni" href="/dashboard/community"><span class="ni-icon">💬</span>Community</a>
-<a class="ni" href="/dashboard/help"><span class="ni-icon">🆘</span>Get Help</a>
-<a class="ni" href="/dashboard/timetable"><span class="ni-icon">🗓️</span>Time Table</a>
-<a class="ni" href="/dashboard/profile"><span class="ni-icon">👤</span>Profile</a>
+<a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
+<a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
+<a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+<a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
+<a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
+<a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
+<a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
+<a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
+<a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
+<a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
 <a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
@@ -152,7 +153,7 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>📢 Company Advertisement</h3><p>Get 5 companies to advertise per week. Earn <span class="kes-val" data-kes="200">KES 200</span> per company. Total <span class="kes-val" data-kes="1">KES 1</span>,000 per week goes to your total earnings!</p></div>
+<div class="card-pink"><h3>📢 Company Advertisement</h3><p>Get 5 companies to advertise per week. Earn KES 200 per company. Total KES 1,000 per week goes to your total earnings!</p></div>
 <div class="card">
   <h3>📊 This Week's Companies</h3>
   <div id="companies-list"><p style="color:#fff;">Loading this week's companies...</p></div>
@@ -163,18 +164,18 @@ select option{background:var(--bg3);}
   <div class="fg"><label>Select Company</label>
     <select id="comp-select">
       <option value="">-- Select Company --</option>
-      <option value="company1">Company 1 — <span class="kes-val" data-kes="200">KES 200</span></option>
-      <option value="company2">Company 2 — <span class="kes-val" data-kes="200">KES 200</span></option>
-      <option value="company3">Company 3 — <span class="kes-val" data-kes="200">KES 200</span></option>
-      <option value="company4">Company 4 — <span class="kes-val" data-kes="200">KES 200</span></option>
-      <option value="company5">Company 5 — <span class="kes-val" data-kes="200">KES 200</span></option>
+      <option value="company1">Company 1 — KES 200</option>
+      <option value="company2">Company 2 — KES 200</option>
+      <option value="company3">Company 3 — KES 200</option>
+      <option value="company4">Company 4 — KES 200</option>
+      <option value="company5">Company 5 — KES 200</option>
     </select>
   </div>
   <div class="fg"><label>Proof (Screenshot description)</label><textarea id="comp-proof" placeholder="Describe where you posted the advert..." rows="3"></textarea></div>
   <div class="ok" id="comp-ok"></div>
   <div class="err" id="comp-err"></div>
   <button class="btn" id="comp-btn" onclick="submitAdvert()">📢 Submit Advertisement</button>
-  <div class="reward">💰 <span class="kes-val" data-kes="200">KES 200</span> per+' company · Goes to Total Earnings</div>
+  <div class="reward">💰 KES 200 per company · Goes to Total Earnings</div>
 </div>
 
 </div>
@@ -184,39 +185,16 @@ select option{background:var(--bg3);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"123029073482",appId:"1:123029073482:web:61bccfbd2c5c8e0ad9b8d4"};
+const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"573857099635",appId:"1:573857099635:web:c2fd5938e1a1f97a8c3a5f"};
 const app=initializeApp(FB);
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login");return;}
+  if(!u){window.location.replace("/login.html");return;}
   U=u;
   const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
+  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate.html");return;}
   UD=snap.data();UD.uid=u.uid;
-  // Currency based on user country
-  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
-  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
-  window._CUR=_currencyMap[UD.country]||'KES';
-  window._FEE=_feeMap[UD.country]||150;
-  // Update KES value spans with correct currency
-  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
-  const _rate=_rates[window._CUR]||1;
-  document.querySelectorAll('.kes-val').forEach(el=>{
-    const base=parseInt(el.getAttribute('data-kes'));
-    const converted=Math.round(base*_rate);
-    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
-  });
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
-  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
   if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
@@ -224,15 +202,15 @@ onAuthStateChanged(auth,async u=>{
 window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
 window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
-window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
+window.doLogout=async()=>{await signOut(auth);window.location.replace("/login.html");};
 window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
 
 async function pageReady(db,U,UD,F){
   window._db=db;window._U=U;window._UD=UD;window._F=F;
   document.getElementById('companies-list').innerHTML=
     ['Company 1','Company 2','Company 3','Company 4','Company 5'].map((c,i)=>
-      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span style="color:#fff;font-weight:600;">'+c+'</span><span style="color:var(--gold);font-weight:800;"><span class="kes-val" data-kes="200">KES 200</span></span></div>'
-    ).join('')+'<div style="margin-top:10px;font-size:12px;color:#fff;">Total this week: <strong style="color:var(--gold);"><span class="kes-val" data-kes="1">KES 1</span>,000</strong></div>';
+      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span style="color:#fff;font-weight:600;">'+c+'</span><span style="color:var(--gold);">KES 200</span></div>'
+    ).join('')+'<div style="margin-top:10px;font-size:12px;color:#fff;">Total this week: <strong style="color:var(--gold);">KES 1,000</strong></div>';
 }
 window.submitAdvert=async function(){
   const comp=document.getElementById('comp-select').value;
@@ -245,11 +223,11 @@ window.submitAdvert=async function(){
     const {collection,addDoc,serverTimestamp,updateDoc,doc,increment}=_F;
     await addDoc(collection(_db,'advertSubmissions'),{uid:_U.uid,username:_UD.username,company:comp,proof:proof,amount:200,status:'pending',createdAt:serverTimestamp()});
     await updateDoc(doc(_db,'users',_U.uid),{totalEarnings:increment(200)});
-    ok.textContent='✅ Advertisement submitted! <span class="kes-val" data-kes="200">KES 200</span> added to your Total Earnings!';
+    ok.textContent='✅ Advertisement submitted! KES 200 added to your Total Earnings!';
     ok.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';
   }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';}
 };
 
 </script>
 </body>
-</html>
+  </html>
