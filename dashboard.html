@@ -74,7 +74,6 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .top-card-label{font-size:10px;font-weight:800;color:rgba(255,255,255,.85);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px;}
 .top-card-amount{font-size:20px;font-weight:900;color:#fff;}
 .top-card-icon{position:absolute;right:10px;bottom:10px;width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.top-card-status{font-size:11px;color:rgba(255,255,255,.9);margin-top:5px;font-weight:600;}
 
 /* STAT CARDS */
 .stat-card{border-radius:16px;padding:18px 20px;margin-bottom:12px;position:relative;overflow:hidden;}
@@ -188,9 +187,8 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- TOP 2 CARDS -->
       <div class="top-grid">
         <div class="top-card expenses">
-          <div class="top-card-label">📉 Activation Fee</div>
+          <div class="top-card-label">📉 Expenses</div>
           <div class="top-card-amount" id="expense-amount">...</div>
-          <div class="top-card-status" id="expense-status"></div>
           <div class="top-card-icon">📉</div>
         </div>
         <div class="top-card earnings">
@@ -277,20 +275,6 @@ const expenseMap={
   'Other':'KES 150'
 };
 
-// Status by country (✅ = approved, no status = pending)
-const statusMap={
-  'Kenya':'✅',
-  'Tanzania':'✅',
-  'Nigeria':'✅',
-  'Uganda':'',
-  'Rwanda':'',
-  'Ghana':'',
-  'South Africa':'',
-  'United States':'',
-  'United Kingdom':'',
-  'Other':''
-};
-
 // Format numbers with commas
 function fmt(n){return Number(n||0).toLocaleString('en-KE');}
 
@@ -316,9 +300,7 @@ onAuthStateChanged(auth,async u=>{
 
   // Set Expenses based on country
   const expense=expenseMap[UD.country]||expenseMap['Other'];
-  const status=statusMap[UD.country]||'';
   document.getElementById('expense-amount').textContent=expense;
-  document.getElementById('expense-status').textContent=status;
 
   // Stats with commas
   document.getElementById('total-earn').textContent=CUR+' '+fmt(UD.totalEarnings);
