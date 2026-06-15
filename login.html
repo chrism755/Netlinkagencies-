@@ -139,7 +139,7 @@ window.doLogin = async function(){
   btn.innerHTML='<span class="spinner"></span> Signing in...';
 
   try{
-    // Find user by username in Firestore (convert to lowercase for search)
+    // Find user by username in Firestore (search with lowercase - case insensitive)
     const q = query(collection(db, 'users'), where('username', '==', username));
     const querySnapshot = await getDocs(q);
     
