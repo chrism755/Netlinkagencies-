@@ -139,7 +139,7 @@ input::placeholder{color:#fff;opacity:.4;}
 
   <!-- BLUE NOTE BOARD -->
   <div class="blue-note">
-    <strong>Note!</strong> Minimum of withdrawing is <strong>KES 150</strong> on your account balance.
+    <strong>Note!</strong> Minimum of withdrawing is <strong><span id="min-withdraw">KES 150</span></strong> on your account balance.
     Your withdrawn amount will be disbursed to <strong id="user-phone">loading...</strong>. 
     If this is not the number to receive payment click 
     <button class="verify-btn" onclick="window.open('https://wa.me/254706494401','_blank')">Verify Me</button>
@@ -151,7 +151,7 @@ input::placeholder{color:#fff;opacity:.4;}
   <div class="card">
     <div class="bal-box">
       <div class="bal-label">Account Balance (Available to withdraw)</div>
-      <div class="bal-amount" id="bal-display">${window._CUR||'KES'} 0</div>
+      <div class="bal-amount" id="bal-display">...</div>
       <div class="bal-note">Only referral earnings, approved deposits & karibu bonus</div>
     </div>
   </div>
@@ -160,10 +160,10 @@ input::placeholder{color:#fff;opacity:.4;}
   <div class="card">
     <h3>📱 Withdraw via M-PESA</h3>
     <div class="fg">
-      <label>Amount (KES)</label>
+      <label>Amount (<span class="cur-lbl">KES</span>)</label>
       <div class="amt-wrap">
-        <span class="amt-prefix">KES</span>
-        <input class="amt-input" type="number" id="mpesa-amt" placeholder="Min KES 150" oninput="calcFee('mpesa')"/>
+        <span class="amt-prefix"><span id="cur-prefix">KES</span></span>
+        <input class="amt-input" type="number" id="mpesa-amt" placeholder="Min 150" oninput="calcFee('mpesa')"/>
       </div>
       <div class="fee-hint" id="mpesa-fee"></div>
     </div>
@@ -179,10 +179,10 @@ input::placeholder{color:#fff;opacity:.4;}
       <input type="email" id="pp-email" placeholder="your@paypal.com"/>
     </div>
     <div class="fg">
-      <label>Amount (KES)</label>
+      <label>Amount (<span class="cur-lbl">KES</span>)</label>
       <div class="amt-wrap">
-        <span class="amt-prefix">KES</span>
-        <input class="amt-input" type="number" id="pp-amt" placeholder="Min KES 150" oninput="calcFee('pp')"/>
+        <span class="amt-prefix"><span id="cur-prefix">KES</span></span>
+        <input class="amt-input" type="number" id="pp-amt" placeholder="Min 150" oninput="calcFee('pp')"/>
       </div>
       <div class="fee-hint" id="pp-fee"></div>
     </div>
@@ -237,6 +237,10 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
+  // Update static KES labels
+  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
+  const mw=document.getElementById('min-withdraw');
+  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById('un').textContent=UD.username;
   // Show masked phone in blue note
@@ -253,7 +257,7 @@ window.calcFee=function(type){
   if(amt<150){hint.textContent='';return;}
   const fee=getFee(amt);
   const receive=amt-fee;
-  hint.textContent='Fee: KES '+fmt(fee)+' | You receive: KES '+fmt(receive);
+  hint.textContent='Fee: '+(window._CUR||'KES')+' '+fmt(fee)+' | You receive: '+(window._CUR||'KES')+' '+fmt(receive);
 };
 
 window.doWithdraw=async function(method){
@@ -267,11 +271,11 @@ window.doWithdraw=async function(method){
 
   // Validate
   if(amt<150){
-    err.textContent='⚠️ Minimum withdrawal is KES 150.';
+    err.textContent='⚠️ Minimum withdrawal is '+(window._CUR||'KES')+' '+(window._FEE||150)+'.';
     err.style.display='block';return;
   }
   if(amt>(UD.balance||0)){
-    err.textContent='❌ Insufficient balance. Your balance is KES '+fmt(UD.balance||0)+'. You can only withdraw from Account Balance.';
+    err.textContent='❌ Insufficient balance. Your balance is '+(window._CUR||'KES')+' '+fmt(UD.balance||0)+'. You can only withdraw from Account Balance.';
     err.style.display='block';return;
   }
   if(method==='paypal'){
