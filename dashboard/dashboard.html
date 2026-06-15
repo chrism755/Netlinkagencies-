@@ -188,12 +188,12 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <div class="top-grid">
         <div class="top-card expenses">
           <div class="top-card-label">📉 Expenses</div>
-          <div class="top-card-amount">KES 150</div>
+          <div class="top-card-amount">ACTIVATION FEE</div>
           <div class="top-card-icon">📉</div>
         </div>
         <div class="top-card earnings">
           <div class="top-card-label">📈 Total Earnings</div>
-          <div class="top-card-amount" id="total-earn">KES 0</div>
+          <div class="top-card-amount" id="total-earn">...</div>
           <div class="top-card-icon">📈</div>
         </div>
       </div>
@@ -201,7 +201,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- ACCOUNT BALANCE -->
       <div class="stat-card blue">
         <div class="stat-label">Account Balance</div>
-        <div class="stat-amount" id="acc-balance">KES 0</div>
+        <div class="stat-amount" id="acc-balance">...</div>
         <div class="stat-pill">0% Higher</div>
         <div class="stat-icon">🛒</div>
       </div>
@@ -209,7 +209,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- WITHDRAWN -->
       <div class="stat-card red">
         <div class="stat-label">Withdrawn Amount</div>
-        <div class="stat-amount" id="withdrawn">KES 0</div>
+        <div class="stat-amount" id="withdrawn">...</div>
         <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">↑</div>
       </div>
@@ -217,7 +217,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- PENDING -->
       <div class="stat-card orange">
         <div class="stat-label">Pending Amount</div>
-        <div class="stat-amount" id="pending">KES 0</div>
+        <div class="stat-amount" id="pending">...</div>
         <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">🕐</div>
       </div>
@@ -225,7 +225,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- KARIBU BONUS -->
       <div class="stat-card purple">
         <div class="stat-label">Karibu Bonus</div>
-        <div class="stat-amount" id="karibu">KES 0</div>
+        <div class="stat-amount" id="karibu">...</div>
         <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">💵</div>
       </div>
@@ -233,7 +233,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <!-- WEEKLY BONUS -->
       <div class="stat-card teal">
         <div class="stat-label">Weekly Bonus</div>
-        <div class="stat-amount" id="weekly">KES 0</div>
+        <div class="stat-amount" id="weekly">...</div>
         <div class="stat-pill">0% Increased</div>
         <div class="stat-icon">📊</div>
       </div>
@@ -279,13 +279,18 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
   document.getElementById('greeting-num').textContent=UD.level1Count||0;
 
+  // Currency based on country
+  const currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
+  const CUR=currencyMap[UD.country]||'KES';
+  window._CUR=CUR;
+
   // Stats with commas
-  document.getElementById('total-earn').textContent='KES '+fmt(UD.totalEarnings);
-  document.getElementById('acc-balance').textContent='KES '+fmt(UD.balance);
-  document.getElementById('withdrawn').textContent='KES '+fmt(UD.withdrawn);
-  document.getElementById('pending').textContent='KES '+fmt(UD.pending);
-  document.getElementById('karibu').textContent='KES '+fmt(UD.karibu);
-  document.getElementById('weekly').textContent='KES '+fmt(UD.weeklyBonus);
+  document.getElementById('total-earn').textContent=CUR+' '+fmt(UD.totalEarnings);
+  document.getElementById('acc-balance').textContent=CUR+' '+fmt(UD.balance);
+  document.getElementById('withdrawn').textContent=CUR+' '+fmt(UD.withdrawn);
+  document.getElementById('pending').textContent=CUR+' '+fmt(UD.pending);
+  document.getElementById('karibu').textContent=CUR+' '+fmt(UD.karibu);
+  document.getElementById('weekly').textContent=CUR+' '+fmt(UD.weeklyBonus);
 
   // Referral link
   const ref='https://netlinkagencies.linkpc.net/register.html?ref='+UD.referralCode;
@@ -310,13 +315,13 @@ async function loadNotifications(uid, username){
       if(data.status==='approved'){
         notifications.push({
           type:'green',icon:'✅',
-          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>KES ${fmt(data.amount)}</strong> has been approved and disbursed to your account.`,
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> has been approved and disbursed to your account.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
-          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>KES ${fmt(data.amount)}</strong> was rejected. KES ${fmt(data.amount)} has been returned to your balance.`,
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been returned to your balance.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       }
@@ -329,13 +334,13 @@ async function loadNotifications(uid, username){
       if(data.status==='approved'){
         notifications.push({
           type:'green',icon:'💰',
-          msg:`Dear <strong>${username}</strong>, your deposit of <strong>KES ${fmt(data.amount)}</strong> has been approved and added to your Account Balance.`,
+          msg:`Dear <strong>${username}</strong>, your deposit of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> has been approved and added to your Account Balance.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
-          msg:`Dear <strong>${username}</strong>, your deposit of <strong>KES ${fmt(data.amount)}</strong> (Txn: ${data.txnId}) was rejected. Please contact admin.`,
+          msg:`Dear <strong>${username}</strong>, your deposit of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> (Txn: ${data.txnId}) was rejected. Please contact admin.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       }
