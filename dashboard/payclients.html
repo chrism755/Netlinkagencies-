@@ -190,7 +190,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -215,13 +221,13 @@ window.payForClient=async function(){
   const ok=document.getElementById('pay-ok'),err=document.getElementById('pay-err'),btn=document.getElementById('pay-btn');
   ok.style.display='none';err.style.display='none';
   if(!name||!phone||!amount){err.textContent='⚠️ Please fill all fields.';err.style.display='block';return;}
-  if(amount>(_UD.balance||0)){err.textContent='❌ Insufficient account balance. Your balance is KES '+(_UD.balance||0);err.style.display='block';return;}
+  if(amount>(_UD.balance||0)){err.textContent='❌ Insufficient account balance. Your balance is '+(window._CUR||'KES')+' '+(_UD.balance||0);err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Processing...';
   try{
     const {doc,updateDoc,increment,collection,addDoc,serverTimestamp}=_F;
     await updateDoc(doc(_db,'users',_U.uid),{balance:increment(-amount)});
     await addDoc(collection(_db,'clientPayments'),{uid:_U.uid,username:_UD.username,clientName:name,clientPhone:phone,amount:amount,status:'completed',createdAt:serverTimestamp()});
-    ok.innerHTML='✅ Payment of KES '+amount+' for '+name+' completed! Deducted from your account balance.';
+    ok.innerHTML='✅ Payment of '+(window._CUR||'KES')+' '+amount+' for '+name+' completed! Deducted from your account balance.';
     ok.style.display='block';
     _UD.balance=(_UD.balance||0)-amount;
     document.getElementById('bal-display').textContent=(window._CUR||'KES')+_UD.balance;

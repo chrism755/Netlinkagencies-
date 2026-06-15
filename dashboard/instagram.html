@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Instagram Videos</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>📸 Instagram Videos</h3><p>Watch 3 videos per day. KES 20 per video. Watch full 30 seconds then earn! Money goes to Total Earnings. Resets at midnight.</p></div>
+<div class="card-pink"><h3>📸 Instagram Videos</h3><p>Watch 3 videos per day. '+(window._CUR||'KES')+' 20 per video. Watch full 30 seconds then earn! Money goes to Total Earnings. Resets at midnight.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ig-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">WATCHED</div><div id="ig-count" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
   </div>
-  <div class="reward">💰 KES 20 per video · 3 per day · Resets midnight</div>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 20 per video · 3 per day · Resets midnight</div>
 </div>
 <div id="ig-list"></div>
 </div>
@@ -164,7 +164,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -195,8 +201,8 @@ async function pageReady(){
         Your browser does not support video.
       </video>
       ${watched.includes(i)?
-        '<div class="ok" style="display:block;">✅ You have watched this video and earned KES 20!</div>':
-        `<button class="btn" id="ig-btn-${i}" onclick="watchVideo('ig',${i},20)">▶️ Watch & Earn KES 20</button>`
+        '<div class="ok" style="display:block;">✅ You have watched this video and earned '+(window._CUR||'KES')+' 20!</div>':
+        `<button class="btn" id="ig-btn-${i}" onclick="watchVideo('ig',${i},20)">▶️ Watch & Earn '+(window._CUR||'KES')+' 20</button>`
       }
     </div>`).join('');
 }
@@ -229,9 +235,9 @@ async function completeVideo(pfx,i,reward,btn){
     const card=document.getElementById(pfx+'-card-'+i);
     const okDiv=document.createElement('div');
     okDiv.className='ok';okDiv.style.display='block';
-    okDiv.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have watched the full video and earned <strong>KES '+reward+'</strong>. KES '+reward+' has been instantly disbursed to your Total Earnings!';
+    okDiv.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have watched the full video and earned <strong>'+(window._CUR||'KES')+' '+reward+'</strong>. '+(window._CUR||'KES')+' '+reward+' has been instantly disbursed to your Total Earnings!';
     card.appendChild(okDiv);
-  }catch(e){btn.disabled=false;btn.textContent='▶️ Watch & Earn KES '+reward;}
+  }catch(e){btn.disabled=false;btn.textContent='▶️ Watch & Earn '+(window._CUR||'KES')+' '+reward;}
 }
 
 </script>

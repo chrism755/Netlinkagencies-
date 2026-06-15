@@ -176,7 +176,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -201,7 +207,7 @@ window.submitDeposit=async function(){
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
   try{
     await addDoc(collection(db,'pendingDeposits'),{uid:U.uid,username:UD.username,amount:amt,txnId:txn,phone:phone,name:name,status:'pending',createdAt:serverTimestamp()});
-    ok.textContent='✅ Deposit of KES '+amt+' (Txn: '+txn+') submitted successfully! Admin will approve within 2-5 minutes. Amount will be added to your Account Balance once approved.';
+    ok.textContent='✅ Deposit of '+(window._CUR||'KES')+' '+amt+' (Txn: '+txn+') submitted successfully! Admin will approve within 2-5 minutes. Amount will be added to your Account Balance once approved.';
     ok.style.display='block';
     btn.disabled=false;btn.textContent='💰 Submit Deposit';
     document.getElementById('dep-amount').value='';

@@ -152,7 +152,7 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>🎁 Karibu Bonus — KES 100</h3><p>Invite 20 friends using your referral link. Once all 20 register, claim your KES 100 bonus here!</p></div>
+<div class="card-pink"><h3>🎁 Karibu Bonus — <span class="kes-val" data-kes="100">KES 100</span></h3><p>Invite 20 friends using your referral link. Once all 20 register, claim your <span class="kes-val" data-kes="100">KES 100</span> bonus here!</p></div>
 <div class="card">
   <h3>📊 Your Progress</h3>
   <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:13px;color:#fff;">Referrals</span><span id="ref-count" style="font-weight:800;color:var(--gold);">Loading...</span></div>
@@ -161,10 +161,10 @@ select option{background:var(--bg3);}
 </div>
 <div class="card" id="claim-section" style="display:none;">
   <h3>🎉 Claim Your Bonus!</h3>
-  <p style="margin-bottom:12px;">You have reached 20 referrals! Click below to claim your KES 100 Karibu Bonus.</p>
+  <p style="margin-bottom:12px;">You have reached 20 referrals! Click below to claim your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus.</p>
   <div class="ok" id="claim-ok"></div>
   <div class="err" id="claim-err"></div>
-  <button class="btn btn-green" id="claim-btn" onclick="claimBonus()">🎁 Claim KES 100 Karibu Bonus</button>
+  <button class="btn btn-green" id="claim-btn" onclick="claimBonus()">🎁 Claim <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus</button>
 </div>
 
 </div>
@@ -189,7 +189,21 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Update KES value spans with correct currency
+  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
+  const _rate=_rates[window._CUR]||1;
+  document.querySelectorAll('.kes-val').forEach(el=>{
+    const base=parseInt(el.getAttribute('data-kes'));
+    const converted=Math.round(base*_rate);
+    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
+  });
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -210,7 +224,7 @@ async function pageReady(db,U,UD,F){
   if(count>=20 && !UD.karibu){
     document.getElementById('claim-section').style.display='block';
   } else if(UD.karibu){
-    document.getElementById('claim-section').innerHTML='<div class="ok" style="display:block;">✅ You have already claimed your KES 100 Karibu Bonus! It has been added to your account balance.</div>';
+    document.getElementById('claim-section').innerHTML='<div class="ok" style="display:block;">✅ You have already claimed your '+(window._CUR||'KES')+' 100 Karibu Bonus! It has been added to your account balance.</div>';
     document.getElementById('claim-section').style.display='block';
   }
 }
@@ -223,10 +237,10 @@ window.claimBonus=async function(){
     const F2=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     const db2=F2.getFirestore();
     await F2.updateDoc(F2.doc(db2,'users',U.uid),{balance:F2.increment(100),karibu:100});
-    document.getElementById('claim-ok').textContent='🎉 Congratulations! KES 100 Karibu Bonus has been added to your account balance!';
+    document.getElementById('claim-ok').textContent='🎉 Congratulations! '+(window._CUR||'KES')+' 100 Karibu Bonus has been added to your account balance!';
     document.getElementById('claim-ok').style.display='block';
     btn.style.display='none';
-  }catch(e){document.getElementById('claim-err').textContent='❌ '+e.message;document.getElementById('claim-err').style.display='block';btn.disabled=false;btn.textContent='🎁 Claim KES 100 Karibu Bonus';}
+  }catch(e){document.getElementById('claim-err').textContent='❌ '+e.message;document.getElementById('claim-err').style.display='block';btn.disabled=false;btn.textContent='🎁 Claim '+(window._CUR||'KES')+' 100 Karibu Bonus';}
 };
 
 </script>

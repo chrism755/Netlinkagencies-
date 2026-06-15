@@ -134,14 +134,14 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Level 1 Downlines</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>👥 Level 1 Downlines</h3><p>People who joined directly using your referral link. You earn KES 80 per Level 1 referral who gets activated.</p></div>
+<div class="card-pink"><h3>👥 Level 1 Downlines</h3><p>People who joined directly using your referral link. You earn '+(window._CUR||'KES')+' 80 per Level 1 referral who gets activated.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TOTAL LEVEL 1</div><div id="dl-total" style="font-size:20px;font-weight:900;color:var(--gold);">0</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">ACTIVE</div><div id="dl-active" style="font-size:20px;font-weight:900;color:var(--green);">0</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">INACTIVE</div><div id="dl-inactive" style="font-size:20px;font-weight:900;color:var(--red);">0</div></div>
   </div>
-  <div class="reward">💰 KES 80 per activated referral</div>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 80 per activated referral</div>
 </div>
 <div id="dl-list"><div style="text-align:center;padding:30px;color:#fff;">Loading downlines...</div></div>
 </div>
@@ -165,7 +165,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

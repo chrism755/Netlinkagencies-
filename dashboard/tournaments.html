@@ -152,13 +152,13 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>🏆 E-Tournaments</h3><p>Compete with other members! Top earners every week win big prizes starting from KES 10,000+</p></div>
+<div class="card-pink"><h3>🏆 E-Tournaments</h3><p>Compete with other members! Top earners every week win big prizes starting from <span class="kes-val" data-kes="10000">KES 10,000</span>+</p></div>
 <div class="card">
   <h3>🥇 Prize Leaderboard</h3>
-  <div class="stat-row"><div class="stat-label">🥇 1st Place</div><div class="stat-value" style="color:var(--gold);">KES 10,000+</div></div>
-  <div class="stat-row"><div class="stat-label">🥈 2nd Place</div><div class="stat-value" style="color:#C0C0C0;">KES 7,500</div></div>
-  <div class="stat-row"><div class="stat-label">🥉 3rd Place</div><div class="stat-value" style="color:#CD7F32;">KES 5,000</div></div>
-  <div class="stat-row"><div class="stat-label">4th–10th</div><div class="stat-value">KES 1,000+</div></div>
+  <div class="stat-row"><div class="stat-label">🥇 1st Place</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="10000">KES 10,000</span>+</div></div>
+  <div class="stat-row"><div class="stat-label">🥈 2nd Place</div><div class="stat-value" style="color:#C0C0C0;"><span class="kes-val" data-kes="7500">KES 7,500</span></div></div>
+  <div class="stat-row"><div class="stat-label">🥉 3rd Place</div><div class="stat-value" style="color:#CD7F32;"><span class="kes-val" data-kes="5000">KES 5,000</span></div></div>
+  <div class="stat-row"><div class="stat-label">4th–10th</div><div class="stat-value"><span class="kes-val" data-kes="1000">KES 1,000</span>+</div></div>
 </div>
 <div class="card"><h3>📊 Your Stats</h3><div id="my-stats"><p style="color:#fff;">Loading...</p></div></div>
 <div class="card"><h3>📋 How to Win</h3><p>• Invite more friends using your referral link<br>• Complete all daily tasks every day<br>• Watch all videos daily<br>• Submit WhatsApp advert views weekly<br>• Top 10 earners win prizes every week!</p></div>
@@ -185,7 +185,21 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Update KES value spans with correct currency
+  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
+  const _rate=_rates[window._CUR]||1;
+  document.querySelectorAll('.kes-val').forEach(el=>{
+    const base=parseInt(el.getAttribute('data-kes'));
+    const converted=Math.round(base*_rate);
+    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
+  });
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -198,7 +212,7 @@ window.closeSB=()=>{document.getElementById("sb").classList.remove("open");docum
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
 window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
 window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
-async function pageReady(db,U,UD,F){document.getElementById('my-stats').innerHTML='<div class="stat-row"><div class="stat-label">Total Earnings</div><div class="stat-value" style="color:var(--gold);">KES '+(UD.totalEarnings||0)+'</div></div><div class="stat-row"><div class="stat-label">Level 1 Referrals</div><div class="stat-value">'+(UD.level1Count||0)+'</div></div><div class="stat-row"><div class="stat-label">Account Status</div><div class="stat-value" style="color:var(--green);">Active ✅</div></div>';}
+async function pageReady(db,U,UD,F){document.getElementById('my-stats').innerHTML='<div class="stat-row"><div class="stat-label">Total Earnings</div><div class="stat-value" style="color:var(--gold);">'+(window._CUR||'KES')+' '+(UD.totalEarnings||0)+'</div></div><div class="stat-row"><div class="stat-label">Level 1 Referrals</div><div class="stat-value">'+(UD.level1Count||0)+'</div></div><div class="stat-row"><div class="stat-label">Account Status</div><div class="stat-value" style="color:var(--green);">Active ✅</div></div>';}
 </script>
 </body>
 </html>

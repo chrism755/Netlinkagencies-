@@ -203,7 +203,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -249,12 +255,12 @@ window.placeTrade=async function(){
     const {updateDoc,doc,increment,collection,addDoc,serverTimestamp}=_F;
     if(win){
       await updateDoc(doc(_db,'users',_U.uid),{balance:increment(profit)});
-      ok.innerHTML='🎉 Trade Won! You bought <strong>'+pair+'</strong> ('+dir.toUpperCase()+') with KES '+amt+'. Profit: <strong style="color:var(--green);">+KES '+profit+'</strong> added to your account balance!';
+      ok.innerHTML='🎉 Trade Won! You bought <strong>'+pair+'</strong> ('+dir.toUpperCase()+') with '+(window._CUR||'KES')+' '+amt+'. Profit: <strong style="color:var(--green);">+'+(window._CUR||'KES')+' '+profit+'</strong> added to your account balance!';
     } else {
       const loss=Math.floor(amt*0.05);
       await updateDoc(doc(_db,'users',_U.uid),{balance:increment(-loss)});
       ok.style.background='rgba(255,82,82,.1)';ok.style.borderColor='var(--red)';ok.style.color='#FF8A80';
-      ok.innerHTML='📉 Trade closed. Small loss of <strong>KES '+loss+'</strong>. The market moved against your position. Try again!';
+      ok.innerHTML='📉 Trade closed. Small loss of <strong>'+(window._CUR||'KES')+' '+loss+'</strong>. The market moved against your position. Try again!';
     }
     ok.style.display='block';btn.disabled=false;btn.textContent='📈 Place Trade';
     const newBal=(_UD.balance||0)+(win?profit:-Math.floor(amt*0.05));

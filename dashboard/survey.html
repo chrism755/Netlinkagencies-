@@ -95,8 +95,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 
 <div class="card-pink">
   <h3>📋 Daily Survey</h3>
-  <p>Answer all 3 questions then tap Submit. KES 50 per correct answer. Money goes to Total Earnings!</p>
-  <div class="reward">💰 KES 50 per correct answer · 3 questions daily</div>
+  <p>Answer all 3 questions then tap Submit. '+(window._CUR||'KES')+' 50 per correct answer. Money goes to Total Earnings!</p>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 50 per correct answer · 3 questions daily</div>
 </div>
 
 <div class="card">
@@ -161,7 +161,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -190,7 +196,7 @@ function checkDone(){
     document.getElementById('earn-display').textContent = (window._CUR||'KES')+saved.earned;
     document.getElementById('score-display').textContent = saved.score+'/'+TOTAL;
     const ok = document.getElementById('quiz-ok');
-    ok.innerHTML = '🎉 You already completed today\'s Daily Survey!<br>You got <strong>'+saved.score+'/'+TOTAL+'</strong> correct answers and earned <strong>KES '+saved.earned+'</strong>.<br>Come back tomorrow for new questions!';
+    ok.innerHTML = '🎉 You already completed today\'s Daily Survey!<br>You got <strong>'+saved.score+'/'+TOTAL+'</strong> correct answers and earned <strong>'+(window._CUR||'KES')+' '+saved.earned+'</strong>.<br>Come back tomorrow for new questions!';
     ok.style.display = 'block';
   }
 }

@@ -82,7 +82,7 @@ input::placeholder{color:#fff;opacity:.5;}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">WhatsApp Adverts</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-  <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. KES 1 per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
+  <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. '+(window._CUR||'KES')+' 1 per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
   <div class="card">
     <h3>📸 This Week's Advert Picture</h3>
     <div style="background:#000;border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
@@ -137,7 +137,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -150,7 +156,7 @@ onAuthStateChanged(auth,async u=>{
   if(!existing.empty){
     const data=existing.docs[0].data();
     document.getElementById('submit-section').innerHTML=
-      '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you have already uploaded this week ('+data.views+' views = KES '+data.views+'). Come again on Thursday. Thank you!</div>';
+      '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you have already uploaded this week ('+data.views+' views = '+(window._CUR||'KES')+' '+data.views+'). Come again on Thursday. Thank you!</div>';
   }
 });
 
@@ -192,7 +198,7 @@ window.submitWA=async function(){
     // Credit total earnings
     await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(views)});
 
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong> for submitting your WhatsApp viewers! You had <strong>'+views+' views</strong>. You have earned <strong>KES '+views+'</strong>. KES '+views+' has been instantly disbursed to your Total Earnings. Come back next Thursday for a new advert picture!';
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong> for submitting your WhatsApp viewers! You had <strong>'+views+' views</strong>. You have earned <strong>'+(window._CUR||'KES')+' '+views+'</strong>. '+(window._CUR||'KES')+' '+views+' has been instantly disbursed to your Total Earnings. Come back next Thursday for a new advert picture!';
     ok.style.display='block';
     document.getElementById('submit-section').querySelector('.fg').style.display='none';
     document.getElementById('wa-views').style.display='none';

@@ -152,7 +152,7 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>📤 Withdraw Surveys Earnings</h3><p>Minimum withdrawal for this category is KES 20,000. All surveys earnings appear in Total Earnings.</p></div>
+<div class="card-pink"><h3>📤 Withdraw Surveys Earnings</h3><p>Minimum withdrawal for this category is <span class="kes-val" data-kes="20000">KES 20,000</span>. All surveys earnings appear in Total Earnings.</p></div>
 <div class="card">
   <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:14px;">
     <div style="font-size:11px;color:#fff;margin-bottom:4px;">SURVEYS EARNINGS (TOTAL)</div>
@@ -183,7 +183,21 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Update KES value spans with correct currency
+  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
+  const _rate=_rates[window._CUR]||1;
+  document.querySelectorAll('.kes-val').forEach(el=>{
+    const base=parseInt(el.getAttribute('data-kes'));
+    const converted=Math.round(base*_rate);
+    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
+  });
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -209,17 +223,17 @@ async function pageReady(db,U,UD,F){
       <div class="err" id="tw-err"></div>
       <button class="btn" onclick="submitTaskWithdraw()">📤 Request Withdrawal</button>`;
   } else {
-    document.getElementById('withdraw-section').innerHTML='<div style="text-align:center;padding:20px;"><p style="color:#fff;">Minimum KES '+minW.toLocaleString()+' needed to withdraw surveys earnings.</p><p style="color:#fff;margin-top:8px;">Keep completing tasks to reach the minimum!</p></div>';
+    document.getElementById('withdraw-section').innerHTML='<div style="text-align:center;padding:20px;"><p style="color:#fff;">Minimum '+(window._CUR||'KES')+' '+minW.toLocaleString()+' needed to withdraw surveys earnings.</p><p style="color:#fff;margin-top:8px;">Keep completing tasks to reach the minimum!</p></div>';
   }
 }
 window.submitTaskWithdraw=async function(){
   const amt=parseInt(document.getElementById('tw-amt').value)||0;
   const ok=document.getElementById('tw-ok'),err=document.getElementById('tw-err');
-  if(amt<20000){err.textContent='⚠️ Minimum withdrawal is KES 20,000.';err.style.display='block';return;}
+  if(amt<20000){err.textContent='⚠️ Minimum withdrawal is '+(window._CUR||'KES')+' 20,000.';err.style.display='block';return;}
   try{
     const {collection,addDoc,serverTimestamp}=_F;
     await addDoc(collection(_db,'pendingWithdrawals'),{uid:_U.uid,username:_UD.username,amount:amt,method:'task_surveys',phone:_UD.phone||'',status:'pending',createdAt:serverTimestamp()});
-    ok.textContent='✅ Withdrawal request of KES '+amt+' submitted! Awaiting admin approval.';
+    ok.textContent='✅ Withdrawal request of '+(window._CUR||'KES')+' '+amt+' submitted! Awaiting admin approval.';
     ok.style.display='block';
   }catch(e){err.textContent='❌ '+e.message;err.style.display='block';}
 };

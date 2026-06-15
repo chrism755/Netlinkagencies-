@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">View Ads</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>👁️ View Ads</h3><p>Watch 5 ads per day. Each ad is 20 seconds. Earn KES 5 per ad. Money goes to Total Earnings!</p></div>
+<div class="card-pink"><h3>👁️ View Ads</h3><p>Watch 5 ads per day. Each ad is 20 seconds. Earn '+(window._CUR||'KES')+' 5 per ad. Money goes to Total Earnings!</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ads-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">ADS WATCHED</div><div id="ads-count" style="font-size:20px;font-weight:900;color:#fff;">0/5</div></div>
   </div>
-  <div class="reward">💰 KES 5 per ad · 5 ads per day · 20 seconds each</div>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 5 per ad · 5 ads per day · 20 seconds each</div>
 </div>
 <div id="ads-list"></div>
 </div>
@@ -164,7 +164,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -179,7 +185,7 @@ window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');
 
 const ADS=[
   {t:'Safaricom M-PESA',d:'New features available now!',color:'#E91E8C'},
-  {t:'KCB Bank Kenya',d:'Get a loan from KES 1,000',color:'#1565C0'},
+  {t:'KCB Bank Kenya',d:'Get a loan from '+(window._CUR||'KES')+' 1,000',color:'#1565C0'},
   {t:'Jumia Kenya',d:'Up to 70% off on electronics!',color:'#FF6B35'},
   {t:'Equity Bank',d:'Download Equity Mobile today',color:'#1B5E20'},
   {t:'Airtel Money',d:'Send money for free this weekend',color:'#B0156A'},
@@ -196,8 +202,8 @@ async function pageReady(){
         <div style="font-size:13px;color:rgba(255,255,255,.85);margin-top:4px;">${a.d}</div>
       </div>
       ${watched.includes(i)?
-        '<div class="ok" style="display:block;">✅ Ad watched — KES 5 earned!</div>':
-        `<button class="btn" id="ad-btn-${i}" onclick="watchAd(${i})">👁️ Watch Ad & Earn KES 5</button>`
+        '<div class="ok" style="display:block;">✅ Ad watched — '+(window._CUR||'KES')+' 5 earned!</div>':
+        `<button class="btn" id="ad-btn-${i}" onclick="watchAd(${i})">👁️ Watch Ad & Earn '+(window._CUR||'KES')+' 5+'</button>`
       }
     </div>`).join('');
 }
@@ -222,9 +228,9 @@ async function finishAd(i,btn){
     btn.style.display='none';
     const card=document.getElementById('ad-card-'+i);
     const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have watched the full ad and earned <strong>KES 5</strong>. KES 5 has been instantly disbursed to your Total Earnings!';
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have watched the full ad and earned <strong>'+(window._CUR||'KES')+' 5</strong>. '+(window._CUR||'KES')+' 5 has been instantly disbursed to your Total Earnings!';
     card.appendChild(ok);
-  }catch(e){btn.disabled=false;btn.textContent='👁️ Watch Ad & Earn KES 5';}
+  }catch(e){btn.disabled=false;btn.textContent='👁️ Watch Ad & Earn '+(window._CUR||'KES')+' 5';}
 }
 
 </script>

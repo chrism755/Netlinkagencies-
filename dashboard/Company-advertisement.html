@@ -152,7 +152,7 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>📢 Company Advertisement</h3><p>Get 5 companies to advertise per week. Earn KES 200 per company. Total KES 1,000 per week goes to your total earnings!</p></div>
+<div class="card-pink"><h3>📢 Company Advertisement</h3><p>Get 5 companies to advertise per week. Earn '+(window._CUR||'KES')+' 200 per company. Total '+(window._CUR||'KES')+' 1,000 per week goes to your total earnings!</p></div>
 <div class="card">
   <h3>📊 This Week's Companies</h3>
   <div id="companies-list"><p style="color:#fff;">Loading this week's companies...</p></div>
@@ -163,18 +163,18 @@ select option{background:var(--bg3);}
   <div class="fg"><label>Select Company</label>
     <select id="comp-select">
       <option value="">-- Select Company --</option>
-      <option value="company1">Company 1 — KES 200</option>
-      <option value="company2">Company 2 — KES 200</option>
-      <option value="company3">Company 3 — KES 200</option>
-      <option value="company4">Company 4 — KES 200</option>
-      <option value="company5">Company 5 — KES 200</option>
+      <option value="company1">Company 1 — <span class="kes-val" data-kes="200">KES 200</span></option>
+      <option value="company2">Company 2 — <span class="kes-val" data-kes="200">KES 200</span></option>
+      <option value="company3">Company 3 — <span class="kes-val" data-kes="200">KES 200</span></option>
+      <option value="company4">Company 4 — <span class="kes-val" data-kes="200">KES 200</span></option>
+      <option value="company5">Company 5 — <span class="kes-val" data-kes="200">KES 200</span></option>
     </select>
   </div>
   <div class="fg"><label>Proof (Screenshot description)</label><textarea id="comp-proof" placeholder="Describe where you posted the advert..." rows="3"></textarea></div>
   <div class="ok" id="comp-ok"></div>
   <div class="err" id="comp-err"></div>
   <button class="btn" id="comp-btn" onclick="submitAdvert()">📢 Submit Advertisement</button>
-  <div class="reward">💰 KES 200 per company · Goes to Total Earnings</div>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 200 per+' company · Goes to Total Earnings</div>
 </div>
 
 </div>
@@ -199,7 +199,21 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Update KES value spans with correct currency
+  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
+  const _rate=_rates[window._CUR]||1;
+  document.querySelectorAll('.kes-val').forEach(el=>{
+    const base=parseInt(el.getAttribute('data-kes'));
+    const converted=Math.round(base*_rate);
+    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
+  });
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -217,8 +231,8 @@ async function pageReady(db,U,UD,F){
   window._db=db;window._U=U;window._UD=UD;window._F=F;
   document.getElementById('companies-list').innerHTML=
     ['Company 1','Company 2','Company 3','Company 4','Company 5'].map((c,i)=>
-      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span style="color:#fff;font-weight:600;">'+c+'</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>'
-    ).join('')+'<div style="margin-top:10px;font-size:12px;color:#fff;">Total this week: <strong style="color:var(--gold);">KES 1,000</strong></div>';
+      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span style="color:#fff;font-weight:600;">'+c+'</span><span style="color:var(--gold);font-weight:800;">'+(window._CUR||'KES')+' 200</span></div>'
+    ).join('')+'<div style="margin-top:10px;font-size:12px;color:#fff;">Total this week: <strong style="color:var(--gold);">'+(window._CUR||'KES')+' 1,000</strong></div>';
 }
 window.submitAdvert=async function(){
   const comp=document.getElementById('comp-select').value;
@@ -231,7 +245,7 @@ window.submitAdvert=async function(){
     const {collection,addDoc,serverTimestamp,updateDoc,doc,increment}=_F;
     await addDoc(collection(_db,'advertSubmissions'),{uid:_U.uid,username:_UD.username,company:comp,proof:proof,amount:200,status:'pending',createdAt:serverTimestamp()});
     await updateDoc(doc(_db,'users',_U.uid),{totalEarnings:increment(200)});
-    ok.textContent='✅ Advertisement submitted! KES 200 added to your Total Earnings!';
+    ok.textContent='✅ Advertisement submitted! '+(window._CUR||'KES')+' 200 added to your Total Earnings!';
     ok.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';
   }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';}
 };

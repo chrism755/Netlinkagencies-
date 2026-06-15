@@ -153,10 +153,10 @@ select option{background:var(--bg3);}
 <div class="content">
 
 <div class="card-pink"><h3>🎓 NETLINK Mentorship</h3><p>Learn how to maximize your earnings on NETLINK AGENCIES. Follow these tips from our top earners!</p></div>
-<div class="card"><h3>📌 Tip 1 — Build Your Referral Network</h3><p>The fastest way to earn on NETLINK is through referrals. Every person you invite earns you KES 80 (Level 1), KES 20 (Level 2), and KES 10 (Level 3). Share your link daily on WhatsApp, Facebook, and Telegram to grow your network fast!</p></div>
-<div class="card"><h3>📌 Tip 2 — Complete Daily Tasks</h3><p>Watch all 3 TikTok, Instagram, and YouTube videos every single day. That's KES 45+60+75 = KES 180 per day just from videos. Consistency is key — do this every day without fail!</p></div>
-<div class="card"><h3>📌 Tip 3 — WhatsApp Advert</h3><p>Every week, post the company advert on your WhatsApp status. The more contacts you have, the more views you get. Each view = KES 1. If you have 500 contacts, that's KES 500 per week from just one picture!</p></div>
-<div class="card"><h3>📌 Tip 4 — Answer All Quizzes</h3><p>Trivia Quiz, Math Quiz, and Daily Surveys give you KES 50 per correct answer. Answer all 6 questions correctly = KES 300 per week per quiz type. Never skip a quiz!</p></div>
+<div class="card"><h3>📌 Tip 1 — Build Your Referral Network</h3><p>The fastest way to earn on NETLINK is through referrals. Every person you invite earns you '+(window._CUR||'KES')+' 80 (Level 1), '+(window._CUR||'KES')+' 20 (Level 2), and '+(window._CUR||'KES')+' 10 (Level 3). Share your link daily on WhatsApp, Facebook, and Telegram to grow your network fast!</p></div>
+<div class="card"><h3>📌 Tip 2 — Complete Daily Tasks</h3><p>Watch all 3 TikTok, Instagram, and YouTube videos every single day. That's KES 45+60+75 = '+(window._CUR||'KES')+' 180 per+' day just from videos. Consistency is key — do this every day without fail!</p></div>
+<div class="card"><h3>📌 Tip 3 — WhatsApp Advert</h3><p>Every week, post the company advert on your WhatsApp status. The more contacts you have, the more views you get. Each view = KES 1. If you have 500 contacts, that's '+(window._CUR||'KES')+' 500 per week from just one picture!</p></div>
+<div class="card"><h3>📌 Tip 4 — Answer All Quizzes</h3><p>Trivia Quiz, Math Quiz, and Daily Surveys give you '+(window._CUR||'KES')+' 50 per correct answer. Answer all 6 questions correctly = '+(window._CUR||'KES')+' 300 per week per quiz type. Never skip a quiz!</p></div>
 <div class="card"><h3>📌 Tip 5 — Deposit and Grow</h3><p>The more you deposit, the more you can pay for clients and earn commissions. Use Forex Trading with your account balance to multiply your earnings!</p></div>
 <div class="card"><h3>💬 Need Personal Mentorship?</h3><p>Contact our mentor directly for personalized guidance on growing your NETLINK business.</p>
 <button class="btn btn-wa" onclick="window.open('https://wa.me/254706494401','_blank')">💬 WhatsApp Mentor</button>
@@ -185,7 +185,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

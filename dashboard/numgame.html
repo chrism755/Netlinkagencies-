@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Number Game</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>🎲 Number Game</h3><p>Enter numbers from 1 to 100. Each correct number earns KES 2. Get all 100 = KES 200! 3 games per day.</p></div>
+<div class="card-pink"><h3>🎲 Number Game</h3><p>Enter numbers from 1 to 100. Each correct number earns '+(window._CUR||'KES')+' 2. Get all 100 = '+(window._CUR||'KES')+' 200! 3 games per day.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">GAMES TODAY</div><div id="ng-count" style="font-size:20px;font-weight:900;color:var(--gold);">0/3</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ng-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
   </div>
-  <div class="reward">💰 KES 2 per correct number · KES 200 for all 100</div>
+  <div class="reward">💰 '+(window._CUR||'KES')+' 2 per correct number · '+(window._CUR||'KES')+' 200 for all 100</div>
 </div>
 <div class="card" id="game-section">
   <h3>🎯 Enter Numbers 1–100</h3>
@@ -171,7 +171,13 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update static KES labels
+  // Fix all static KES text in HTML
+  document.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
+      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
+    }
+  });
+  // Update static '+(window._CUR||'KES')+' labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -213,7 +219,7 @@ window.submitNums=async function(){
     localStorage.setItem('ng_e_'+U.uid+'_'+today,prevE+reward);
     document.getElementById('ng-count').textContent=(played+1)+'/3';
     document.getElementById('ng-earn').textContent=(window._CUR||'KES')+(prevE+reward);
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You entered <strong>'+correct+'/100</strong> correct numbers. You have earned <strong>KES '+reward+'</strong> from Number Game. KES '+reward+' has been instantly disbursed to your Total Earnings!';
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You entered <strong>'+correct+'/100</strong> correct numbers. You have earned <strong>'+(window._CUR||'KES')+' '+reward+'</strong> from Number Game. '+(window._CUR||'KES')+' '+reward+' has been instantly disbursed to your Total Earnings!';
     ok.style.display='block';
     btn.disabled=false;btn.textContent='🎲 Submit Numbers';
     document.getElementById('num-input').value='';
