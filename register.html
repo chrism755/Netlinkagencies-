@@ -19,7 +19,7 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E91E63,#
 .network-outer{position:absolute;width:100%;height:100%;border:2px solid rgba(255,20,147,.4);border-radius:50%;animation:pulse 3s ease-in-out infinite;}
 .network-middle{position:absolute;width:85%;height:85%;border:1.5px solid rgba(255,20,147,.5);border-radius:50%;animation:pulse 3s ease-in-out infinite .3s;}
 /* Center circle with profile picture */
-.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:32px;color:#fff;overflow:hidden;cursor:pointer;transition:all .3s;}
+.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;}
 .network-center img{width:100%;height:100%;object-fit:cover;}
 .network-center.default-logo{background:linear-gradient(135deg,#FF1493,#E91E63);}
 /* Nodes around the circle */
@@ -43,12 +43,12 @@ h1{font-family:'Nunito',sans-serif;font-size:24px;font-weight:800;color:var(--wh
 .stitle{display:none;}
 .fg{margin-bottom:16px;}
 label{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:.5px;text-transform:none;}
-input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:all .3s;}
+input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:.2s;}
 input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
 input::placeholder{color:var(--text2);opacity:.7;}
 select option{background:var(--bg3);color:var(--text);}
 .profile-pic-input{display:none;}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);z-index:10;position:relative;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:.2s;box-shadow:0 4px 15px rgba(233,30,99,.3);}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF3B3B;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
@@ -86,7 +86,7 @@ select option{background:var(--bg3);color:var(--text);}
         <div class="node"></div>
         <div class="node"></div>
         <div class="network-center default-logo" id="network-center">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron,monospace;font-weight:900;font-size:28px%7D.node%7Bfill:%23FF1493;filter:drop-shadow(0 0 8px rgba(255,20,147,0.8))%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' fill='%231a0a2e' opacity='0.9'/%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='rgba(255,20,147,0.4)' stroke-width='2'/%3E%3Ccircle cx='100' cy='100' r='75' fill='none' stroke='rgba(255,20,147,0.3)' stroke-width='1.5'/%3E%3Ccircle cx='100' cy='30' r='6' class='node'/%3E%3Ccircle cx='156' cy='45' r='6' class='node'/%3E%3Ccircle cx='170' cy='100' r='6' class='node'/%3E%3Ccircle cx='156' cy='155' r='6' class='node'/%3E%3Ccircle cx='100' cy='170' r='6' class='node'/%3E%3Ccircle cx='44' cy='155' r='6' class='node'/%3E%3Ccircle cx='30' cy='100' r='6' class='node'/%3E%3Ccircle cx='44' cy='45' r='6' class='node'/%3E%3Cline x1='100' y1='100' x2='100' y2='30' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='170' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='156' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='100' y2='170' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='155' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='30' y2='100' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Cline x1='100' y1='100' x2='44' y2='45' stroke='rgba(255,20,147,0.3)' stroke-width='1'/%3E%3Ccircle cx='100' cy='100' r='35' class='logo-center'/%3E%3Ctext x='100' y='115' text-anchor='middle' class='logo-text'%3EN%3C/text%3E%3C/svg%3E" alt="NETLINK Logo"/>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron;font-size:80px;font-weight:900%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' class='logo-center'/%3E%3Ctext x='100' y='130' text-anchor='middle' class='logo-text'%3E%F0%9F%94%97%3C/text%3E%3C/svg%3E" alt="Logo"/>
         </div>
       </div>
     </div>
@@ -99,7 +99,7 @@ select option{background:var(--bg3);color:var(--text);}
     <div class="fg"><label>Username</label><input id="username" type="text" placeholder="Enter username"/></div>
     <div class="fg"><label>Email Address</label><input id="email" type="email" placeholder="e.g. john@gmail.com"/></div>
     <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="e.g. 0712345678"/></div>
-    <div class="fg"><label>WhatsApp Number</label><input id="whatsapp" type="tel" placeholder="+254712345678"/></div>
+    <div class="fg"><label>WhatsApp Number</label><input id="whatsapp" type="tel" placeholder="+254712345678" title="Must start with country code (e.g., +254)"/></div>
     <div class="fg"><label>Country</label>
       <select id="country">
         <option value="">Select your country</option>
@@ -165,6 +165,10 @@ profilePicInput.addEventListener('change', function(e) {
 });
 
 function isValidWhatsApp(number) {
+  // Must start with + and contain 10-15 digits
+  if(!number.startsWith('+')){
+    return false;
+  }
   const cleaned = number.replace(/[\s\-\+]/g, '');
   return /^\d{10,15}$/.test(cleaned);
 }
@@ -238,7 +242,7 @@ window.doRegister = async function(){
   }
 
   if(!isValidWhatsApp(wa)){
-    err.textContent='⚠️ WhatsApp number must start with country code (e.g., +254712345678).';
+    err.textContent='⚠️ WhatsApp number must start with + and country code (e.g., +254712345678).';
     err.style.display='block';
     return;
   }
