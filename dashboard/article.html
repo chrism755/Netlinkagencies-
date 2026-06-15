@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Article</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>📰 Daily Articles</h3><p>Read 3 articles per day. '+(window._CUR||'KES')+' 20 per article. Money goes to Total Earnings!</p></div>
+<div class="card-pink"><h3>📰 Daily Articles</h3><p>Read 3 articles per day. <span class="kes-val" data-kes="20">KES 20</span> per article. Money goes to Total Earnings!</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="art-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">ARTICLES READ</div><div id="art-count" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
   </div>
-  <div class="reward">💰 '+(window._CUR||'KES')+' 20 per article · 3 per day</div>
+  <div class="reward">💰 <span class="kes-val" data-kes="20">KES 20</span> per article · 3 per day</div>
 </div>
 <div id="articles-list"></div>
 </div>
@@ -170,7 +170,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -198,8 +198,8 @@ async function pageReady(){
       <h3>📄 ${a.t}</h3>
       <p id="art-body-${i}" style="display:none;margin:12px 0;">${a.body}</p>
       ${read.includes(i)?
-        '<div class="ok" style="display:block;">✅ Article read — '+(window._CUR||'KES')+' 20 earned!</div>':
-        `<button class="btn" id="art-btn-${i}" onclick="readArticle(${i})">📖 Read Article & Earn '+(window._CUR||'KES')+' 20+'</button>`
+        '<div class="ok" style="display:block;">✅ Article read — <span class="kes-val" data-kes="20">KES 20</span> earned!</div>':
+        `<button class="btn" id="art-btn-${i}" onclick="readArticle(${i})">📖 Read Article & Earn <span class="kes-val" data-kes="20">KES 20</span>+'</button>`
       }
     </div>`).join('');
 }
@@ -222,9 +222,9 @@ async function finishArticle(i,btn){
     btn.style.display='none';
     const card=document.getElementById('art-card-'+i);
     const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have earned <strong>'+(window._CUR||'KES')+' 20</strong> from this article. '+(window._CUR||'KES')+' 20 has been instantly disbursed to your Total Earnings!';
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have earned <strong><span class="kes-val" data-kes="20">KES 20</span></strong> from this article. <span class="kes-val" data-kes="20">KES 20</span> has been instantly disbursed to your Total Earnings!';
     card.appendChild(ok);
-  }catch(e){btn.disabled=false;btn.textContent='📖 Read Article & Earn '+(window._CUR||'KES')+' 20';}
+  }catch(e){btn.disabled=false;btn.textContent='📖 Read Article & Earn <span class="kes-val" data-kes="20">KES 20</span>';}
 }
 
 </script>

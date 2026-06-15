@@ -203,7 +203,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -224,7 +224,7 @@ async function pageReady(db,U,UD,F){
   if(count>=20 && !UD.karibu){
     document.getElementById('claim-section').style.display='block';
   } else if(UD.karibu){
-    document.getElementById('claim-section').innerHTML='<div class="ok" style="display:block;">✅ You have already claimed your '+(window._CUR||'KES')+' 100 Karibu Bonus! It has been added to your account balance.</div>';
+    document.getElementById('claim-section').innerHTML='<div class="ok" style="display:block;">✅ You have already claimed your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus! It has been added to your account balance.</div>';
     document.getElementById('claim-section').style.display='block';
   }
 }
@@ -237,10 +237,10 @@ window.claimBonus=async function(){
     const F2=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
     const db2=F2.getFirestore();
     await F2.updateDoc(F2.doc(db2,'users',U.uid),{balance:F2.increment(100),karibu:100});
-    document.getElementById('claim-ok').textContent='🎉 Congratulations! '+(window._CUR||'KES')+' 100 Karibu Bonus has been added to your account balance!';
+    document.getElementById('claim-ok').textContent='🎉 Congratulations! <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus has been added to your account balance!';
     document.getElementById('claim-ok').style.display='block';
     btn.style.display='none';
-  }catch(e){document.getElementById('claim-err').textContent='❌ '+e.message;document.getElementById('claim-err').style.display='block';btn.disabled=false;btn.textContent='🎁 Claim '+(window._CUR||'KES')+' 100 Karibu Bonus';}
+  }catch(e){document.getElementById('claim-err').textContent='❌ '+e.message;document.getElementById('claim-err').style.display='block';btn.disabled=false;btn.textContent='🎁 Claim <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus';}
 };
 
 </script>

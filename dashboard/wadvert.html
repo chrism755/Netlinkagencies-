@@ -82,7 +82,7 @@ input::placeholder{color:#fff;opacity:.5;}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">WhatsApp Adverts</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-  <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. '+(window._CUR||'KES')+' 1 per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
+  <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. <span class="kes-val" data-kes="1">KES 1</span> per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
   <div class="card">
     <h3>📸 This Week's Advert Picture</h3>
     <div style="background:#000;border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
@@ -143,7 +143,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

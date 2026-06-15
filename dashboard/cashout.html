@@ -139,7 +139,7 @@ input::placeholder{color:#fff;opacity:.4;}
 
   <!-- BLUE NOTE BOARD -->
   <div class="blue-note">
-    <strong>Note!</strong> Minimum of withdrawing is <strong><span id="min-withdraw">'+(window._CUR||'KES')+' 150</span></strong> on your account balance.
+    <strong>Note!</strong> Minimum of withdrawing is <strong><span id="min-withdraw"><span class="kes-val" data-kes="150">KES 150</span></span></strong> on your account balance.
     Your withdrawn amount will be disbursed to <strong id="user-phone">loading...</strong>. 
     If this is not the number to receive payment click 
     <button class="verify-btn" onclick="window.open('https://wa.me/254706494401','_blank')">Verify Me</button>
@@ -243,7 +243,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

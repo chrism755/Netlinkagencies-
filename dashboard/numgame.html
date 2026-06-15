@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Number Game</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>🎲 Number Game</h3><p>Enter numbers from 1 to 100. Each correct number earns '+(window._CUR||'KES')+' 2. Get all 100 = '+(window._CUR||'KES')+' 200! 3 games per day.</p></div>
+<div class="card-pink"><h3>🎲 Number Game</h3><p>Enter numbers from 1 to 100. Each correct number earns <span class="kes-val" data-kes="2">KES 2</span>. Get all 100 = <span class="kes-val" data-kes="200">KES 200</span>! 3 games per day.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">GAMES TODAY</div><div id="ng-count" style="font-size:20px;font-weight:900;color:var(--gold);">0/3</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="ng-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
   </div>
-  <div class="reward">💰 '+(window._CUR||'KES')+' 2 per correct number · '+(window._CUR||'KES')+' 200 for all 100</div>
+  <div class="reward">💰 <span class="kes-val" data-kes="2">KES 2</span> per correct number · <span class="kes-val" data-kes="200">KES 200</span> for all 100</div>
 </div>
 <div class="card" id="game-section">
   <h3>🎯 Enter Numbers 1–100</h3>
@@ -177,7 +177,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

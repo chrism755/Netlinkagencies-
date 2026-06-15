@@ -155,11 +155,11 @@ select option{background:var(--bg3);}
 <div class="card-pink"><h3>🗓️ Weekly Task Schedule</h3><p>Follow this schedule every day to maximize your NETLINK earnings!</p></div>
 <div style="overflow-x:auto;"><table class="tt">
   <tr><th>Day</th><th>Main Task</th><th>Reward</th></tr>
-  <tr><td><span class="day">Monday</span></td><td>TikTok Videos ×3 + Trivia Quiz ×6</td><td style="color:var(--gold);">'+(window._CUR||'KES')+' 345+'</td></tr>
-  <tr><td><span class="day">Tuesday</span></td><td>Instagram Videos ×3 + Math Quiz ×6</td><td style="color:var(--gold);">'+(window._CUR||'KES')+' 360+'</td></tr>
-  <tr><td><span class="day">Wednesday</span></td><td>YouTube Videos ×3 + Daily Survey ×3</td><td style="color:var(--gold);">'+(window._CUR||'KES')+' 225+'</td></tr>
-  <tr><td><span class="day">Thursday</span></td><td>Articles ×3 + View Ads ×5</td><td style="color:var(--gold);">'+(window._CUR||'KES')+' 85+'</td></tr>
-  <tr><td><span class="day">Friday</span></td><td>All Videos ×9 + Company Adverts</td><td style="color:var(--gold);">'+(window._CUR||'KES')+' 460+'</td></tr>
+  <tr><td><span class="day">Monday</span></td><td>TikTok Videos ×3 + Trivia Quiz ×6</td><td style="color:var(--gold);"><span class="kes-val" data-kes="345">KES 345</span>+'</td></tr>
+  <tr><td><span class="day">Tuesday</span></td><td>Instagram Videos ×3 + Math Quiz ×6</td><td style="color:var(--gold);"><span class="kes-val" data-kes="360">KES 360</span>+'</td></tr>
+  <tr><td><span class="day">Wednesday</span></td><td>YouTube Videos ×3 + Daily Survey ×3</td><td style="color:var(--gold);"><span class="kes-val" data-kes="225">KES 225</span>+'</td></tr>
+  <tr><td><span class="day">Thursday</span></td><td>Articles ×3 + View Ads ×5</td><td style="color:var(--gold);"><span class="kes-val" data-kes="85">KES 85</span>+'</td></tr>
+  <tr><td><span class="day">Friday</span></td><td>All Videos ×9 + Company Adverts</td><td style="color:var(--gold);"><span class="kes-val" data-kes="460">KES 460</span>+'</td></tr>
   <tr><td><span class="day">Saturday</span></td><td>WhatsApp Advert + Number Game ×5</td><td style="color:var(--gold);"><span class="kes-val" data-kes="100">KES 100</span>+</td></tr>
   <tr><td><span class="day">Sunday</span></td><td>Forex Trading + Share Referral Link</td><td style="color:var(--gold);">Varies</td></tr>
 </table></div>
@@ -169,10 +169,10 @@ select option{background:var(--bg3);}
 </div>
 <div class="card">
   <h3>💰 Maximum Daily Earnings</h3>
-  <div class="stat-row"><div class="stat-label">Videos (9 × avg KES 20)</div><div class="stat-value" style="color:var(--gold);">'+(window._CUR||'KES')+' 180+'</div></div>
-  <div class="stat-row"><div class="stat-label">Quiz (6 × KES 50)</div><div class="stat-value" style="color:var(--gold);">'+(window._CUR||'KES')+' 300+'</div></div>
-  <div class="stat-row"><div class="stat-label">Articles (3 × KES 20)</div><div class="stat-value" style="color:var(--gold);">'+(window._CUR||'KES')+' 60+'</div></div>
-  <div class="stat-row"><div class="stat-label">View Ads (5 × KES 5)</div><div class="stat-value" style="color:var(--gold);">'+(window._CUR||'KES')+' 25+'</div></div>
+  <div class="stat-row"><div class="stat-label">Videos (9 × avg KES 20)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="180">KES 180</span>+'</div></div>
+  <div class="stat-row"><div class="stat-label">Quiz (6 × KES 50)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="300">KES 300</span>+'</div></div>
+  <div class="stat-row"><div class="stat-label">Articles (3 × KES 20)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="60">KES 60</span>+'</div></div>
+  <div class="stat-row"><div class="stat-label">View Ads (5 × KES 5)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="25">KES 25</span>+'</div></div>
   <div class="stat-row"><div class="stat-label" style="color:#fff;font-weight:800;">Total per day</div><div class="stat-value" style="color:var(--pk3);font-size:18px;"><span class="kes-val" data-kes="565">KES 565</span>+</div></div>
 </div>
 
@@ -212,7 +212,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);

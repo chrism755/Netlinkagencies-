@@ -134,13 +134,13 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">TikTok Videos</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>🎵 TikTok Videos</h3><p>Watch 3 videos per day. '+(window._CUR||'KES')+' 15 per video. Watch full 30 seconds then earn! Money goes to Total Earnings. Resets at midnight.</p></div>
+<div class="card-pink"><h3>🎵 TikTok Videos</h3><p>Watch 3 videos per day. <span class="kes-val" data-kes="15">KES 15</span> per video. Watch full 30 seconds then earn! Money goes to Total Earnings. Resets at midnight.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="tt-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">WATCHED</div><div id="tt-count" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
   </div>
-  <div class="reward">💰 '+(window._CUR||'KES')+' 15 per video · 3 per day · Resets midnight</div>
+  <div class="reward">💰 <span class="kes-val" data-kes="15">KES 15</span> per video · 3 per day · Resets midnight</div>
 </div>
 <div id="tt-list"></div>
 </div>
@@ -170,7 +170,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
@@ -201,8 +201,8 @@ async function pageReady(){
         Your browser does not support video.
       </video>
       ${watched.includes(i)?
-        '<div class="ok" style="display:block;">✅ You have watched this video and earned '+(window._CUR||'KES')+' 15!</div>':
-        `<button class="btn" id="tt-btn-${i}" onclick="watchVideo('tt',${i},15)">▶️ Watch & Earn '+(window._CUR||'KES')+' 15</button>`
+        '<div class="ok" style="display:block;">✅ You have watched this video and earned <span class="kes-val" data-kes="15">KES 15</span>!</div>':
+        `<button class="btn" id="tt-btn-${i}" onclick="watchVideo('tt',${i},15)">▶️ Watch & Earn <span class="kes-val" data-kes="15">KES 15</span></button>`
       }
     </div>`).join('');
 }

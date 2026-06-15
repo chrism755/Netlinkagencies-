@@ -95,8 +95,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 
 <div class="card-pink">
   <h3>🔢 Math Quiz</h3>
-  <p>Answer all 6 questions then tap Submit. '+(window._CUR||'KES')+' 50 per correct answer. Money goes to Total Earnings!</p>
-  <div class="reward">💰 '+(window._CUR||'KES')+' 50 per correct answer · 6 questions daily</div>
+  <p>Answer all 6 questions then tap Submit. <span class="kes-val" data-kes="50">KES 50</span> per correct answer. Money goes to Total Earnings!</p>
+  <div class="reward">💰 <span class="kes-val" data-kes="50">KES 50</span> per correct answer · 6 questions daily</div>
 </div>
 
 <div class="card">
@@ -191,7 +191,7 @@ onAuthStateChanged(auth,async u=>{
       el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
     }
   });
-  // Update static '+(window._CUR||'KES')+' labels
+  // Update static currency labels
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
   const mw=document.getElementById('min-withdraw');
   if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
