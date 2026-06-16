@@ -1,13 +1,19 @@
-const sgMail = require("@sendgrid/mail");
+const nodemailer = require("nodemailer");
 
-// Set your SendGrid API key from environment variables
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// Configure Gmail with your email
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER || "netlinkagencies254@gmail.com",
+    pass: process.env.GMAIL_PASSWORD || "", // Use App Password from Google
+  },
+});
 
 // Email templates
 const emailTemplates = {
   accountActivated: (username, email) => ({
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
+    from: "netlinkagencies254@gmail.com",
     subject: "Account Activated Successfully! 🎉",
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -42,7 +48,7 @@ const emailTemplates = {
 
   taskEarnings: (username, email, amount, taskName) => ({
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
+    from: "netlinkagencies254@gmail.com",
     subject: `You earned $${amount} from a task! 💰`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -74,7 +80,7 @@ const emailTemplates = {
 
   newReferral: (username, email, referralName, bonus) => ({
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
+    from: "netlinkagencies254@gmail.com",
     subject: `New Referral Bonus! 🚀 +$${bonus}`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -106,7 +112,7 @@ const emailTemplates = {
 
   withdrawalProcessed: (username, email, amount, method) => ({
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
+    from: "netlinkagencies254@gmail.com",
     subject: `Withdrawal Processed Successfully ✅`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -140,7 +146,7 @@ const emailTemplates = {
 
   levelBonus: (username, email, level, amount) => ({
     to: email,
-    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
+    from: "netlinkagencies254@gmail.com",
     subject: `Level ${level} Referral Bonus! 🎁 +$${amount}`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -223,14 +229,11 @@ async function sendEmail(type, userData, additionalData = {}) {
         return false;
     }
 
-    await sgMail.send(emailConfig);
+    await transporter.sendMail(emailConfig);
     console.log(`✅ Email sent: ${type} to ${userData.email}`);
     return true;
   } catch (error) {
     console.error("❌ Error sending email:", error);
-    if (error.response) {
-      console.error("SendGrid Error Details:", error.response.body);
-    }
     return false;
   }
 }
