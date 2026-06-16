@@ -343,8 +343,8 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('karibu').textContent=CUR+' '+fmt(UD.karibu);
   document.getElementById('weekly').textContent=CUR+' '+fmt(UD.weeklyBonus);
 
-  // Referral link
-  const ref='https://netlinkagencies.linkpc.net/register.html?ref='+UD.referralCode;
+  // Referral link - Updated format without .html extension
+  const ref='https://netlinkagencies.linkpc.net/register?ref='+UD.username;
   document.getElementById('reflink').textContent=ref;
   document.getElementById('wa-share').onclick=()=>window.open('https://wa.me/?text=Join NETLINK AGENCIES and earn daily! '+encodeURIComponent(ref),'_blank');
   document.getElementById('fb-share').onclick=()=>window.open('https://facebook.com/sharer/sharer.php?u='+encodeURIComponent(ref),'_blank');
