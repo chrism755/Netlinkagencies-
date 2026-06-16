@@ -3,5 +3,5 @@
 
 module.exports = {
   email: "your-nentlinkagencies254@gmail.com",        // Replace with your Gmail address
-  password: "iblk cwna kjup zlqd" // Replace with your 16-char app password from Google
+  password: "iblkcwnakjupzlqd" // Replace with your 16-char app password from Google
 };
