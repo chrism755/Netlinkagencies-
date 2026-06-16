@@ -1,0 +1,12 @@
+{
+  "name": "Email Setup Helper",
+  "version": "1.0.0",
+  "description": "Helper scripts to set up email notifications",
+  "scripts": {
+    "setup": "node setup-helper.js",
+    "install-deps": "npm install @sendgrid/mail firebase-admin firebase-functions",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log --limit 50",
+    "config:show": "firebase functions:config:get"
+  }
+}
