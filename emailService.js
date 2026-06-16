@@ -1,20 +1,13 @@
-const nodemailer = require("nodemailer");
-const config = require("./config");
+const sgMail = require("@sendgrid/mail");
 
-// Configure Gmail with your credentials from config.js
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: config.email,
-    pass: config.password,
-  },
-});
+// Set your SendGrid API key from environment variables
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Email templates
 const emailTemplates = {
   accountActivated: (username, email) => ({
     to: email,
-    from: config.email,
+    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
     subject: "Account Activated Successfully! 🎉",
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -34,7 +27,7 @@ const emailTemplates = {
           </ul>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Go to Dashboard</a>
+            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Go to Dashboard</a>
           </div>
           
           <p style="font-size: 14px; color: #666; margin-top: 20px;">If you didn't create this account, please contact our support team immediately.</p>
@@ -49,7 +42,7 @@ const emailTemplates = {
 
   taskEarnings: (username, email, amount, taskName) => ({
     to: email,
-    from: config.email,
+    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
     subject: `You earned $${amount} from a task! 💰`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -67,7 +60,7 @@ const emailTemplates = {
           <p style="font-size: 16px;">Your new balance has been updated and is available in your dashboard.</p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #28a745; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">View Your Earnings</a>
+            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #28a745; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Earnings</a>
           </div>
           
           <p style="font-size: 16px; margin-top: 20px;">Keep completing tasks to earn more! 🚀</p>
@@ -81,7 +74,7 @@ const emailTemplates = {
 
   newReferral: (username, email, referralName, bonus) => ({
     to: email,
-    from: config.email,
+    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
     subject: `New Referral Bonus! 🚀 +$${bonus}`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -99,7 +92,7 @@ const emailTemplates = {
           <p style="font-size: 16px;">Keep referring friends and family to earn even more commissions!</p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #ffc107; color: black; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">Share Your Link</a>
+            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #ffc107; color: black; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Share Your Link</a>
           </div>
           
           <p style="font-size: 14px; color: #666; margin-top: 20px;">📊 Track your referrals and earnings in your dashboard!</p>
@@ -113,7 +106,7 @@ const emailTemplates = {
 
   withdrawalProcessed: (username, email, amount, method) => ({
     to: email,
-    from: config.email,
+    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
     subject: `Withdrawal Processed Successfully ✅`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -133,7 +126,7 @@ const emailTemplates = {
           <p style="font-size: 16px; margin-top: 20px;">⏱️ The funds should appear in your account within <strong>1-3 business days</strong> depending on your payment method.</p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #17a2b8; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">View Transaction</a>
+            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #17a2b8; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Dashboard</a>
           </div>
           
           <p style="font-size: 14px; color: #666; margin-top: 20px;">If you have any questions about your withdrawal, please contact our support team.</p>
@@ -147,7 +140,7 @@ const emailTemplates = {
 
   levelBonus: (username, email, level, amount) => ({
     to: email,
-    from: config.email,
+    from: process.env.SENDGRID_FROM_EMAIL || "noreply@netlinkagencies.com",
     subject: `Level ${level} Referral Bonus! 🎁 +$${amount}`,
     html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -173,7 +166,7 @@ const emailTemplates = {
           <p style="font-size: 16px; margin-top: 20px;">Keep building your network to earn more commissions! 🌟</p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #dc3545; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">View Your Referrals</a>
+            <a href="https://netlinkagencies.vercel.app/dashboard" style="background-color: #dc3545; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Referrals</a>
           </div>
         </div>
         <div style="border-top: 2px solid #f0f0f0; padding-top: 20px; text-align: center; color: #666; font-size: 12px;">
@@ -226,15 +219,18 @@ async function sendEmail(type, userData, additionalData = {}) {
         );
         break;
       default:
-        console.log("Unknown email type");
+        console.log("❌ Unknown email type:", type);
         return false;
     }
 
-    await transporter.sendMail(emailConfig);
+    await sgMail.send(emailConfig);
     console.log(`✅ Email sent: ${type} to ${userData.email}`);
     return true;
   } catch (error) {
     console.error("❌ Error sending email:", error);
+    if (error.response) {
+      console.error("SendGrid Error Details:", error.response.body);
+    }
     return false;
   }
 }
