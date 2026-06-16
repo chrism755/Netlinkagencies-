@@ -108,10 +108,10 @@ exports.onUserActivated = functions.firestore
         }
       }
 
-      console.log(`Referral paid and emails sent for ${userId}`);
+      console.log(`✅ Referral paid and emails sent for ${userId}`);
       return null;
     } catch (e) {
-      console.error(e);
+      console.error("❌ Error in onUserActivated:", e);
       return null;
     }
   });
@@ -153,10 +153,10 @@ exports.onTaskCompleted = functions.firestore
         taskName: taskName,
       });
 
-      console.log(`Task completed and email sent for user ${userId}`);
+      console.log(`✅ Task completed and email sent for user ${userId}`);
       return null;
     } catch (e) {
-      console.error(e);
+      console.error("❌ Error in onTaskCompleted:", e);
       return null;
     }
   });
@@ -191,10 +191,10 @@ exports.onWithdrawalProcessed = functions.firestore
         method: withdrawalMethod,
       });
 
-      console.log(`Withdrawal processed and email sent for user ${userId}`);
+      console.log(`✅ Withdrawal processed and email sent for user ${userId}`);
       return null;
     } catch (e) {
-      console.error(e);
+      console.error("❌ Error in onWithdrawalProcessed:", e);
       return null;
     }
   });
