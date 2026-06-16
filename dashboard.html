@@ -11,7 +11,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .layout{display:flex;min-height:100vh;}
 
 /* SIDEBAR */
-.sidebar{width:var(--sw);background:#1a0a2e;border-right:1px solid #2d1a4e;position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;overflow:hidden;}
+.sidebar{width:var(--sw);background:#1a0a2e;border-right:1px solid #2d1a4e;position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid #2d1a4e;background:linear-gradient(135deg,#E91E8C,#FF4DB8);}
 .logo{display:flex;align-items:center;gap:10px;}
@@ -97,6 +97,15 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .rb.wa{background:#25D366;}
 .rb.fb{background:#1877F2;}
 .rb.tg{background:#2CA5E0;}
+
+/* FOOTER */
+.footer{background:#fff;border-top:1px solid #e0e0e0;padding:20px 16px;margin-top:20px;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
+.footer-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:14px;}
+.footer-link{font-size:11px;font-weight:600;color:#E91E8C;text-decoration:none;cursor:pointer;}
+.footer-link:hover{text-decoration:underline;}
+.footer-divider{width:1px;height:14px;background:#ddd;}
+.footer-bottom{text-align:center;font-size:11px;color:#888;line-height:1.6;}
+.footer-bottom strong{color:#222;font-weight:700;}
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
@@ -249,6 +258,30 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
           <button class="rb tg" id="tg-share">Telegram</button>
         </div>
       </div>
+
+      <!-- FOOTER -->
+      <div class="footer">
+        <div class="footer-links">
+          <a class="footer-link" href="#">Terms</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Privacy</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Security</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Status</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Community</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Docs</a>
+          <div class="footer-divider"></div>
+          <a class="footer-link" href="#">Contact</a>
+        </div>
+        <div class="footer-bottom">
+          <div>All rights reserved.</div>
+          <div><a class="footer-link" href="#">Manage cookies</a> • <a class="footer-link" href="#">Do not share my personal information</a></div>
+          <div style="margin-top:8px;"><strong>©2026 NETLINK AGENCIES inc</strong></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -258,7 +291,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.appspot.com",messagingSenderId:"570194844844",appId:"1:570194844844:web:0f5f1e9e4c7c1a2d3f4g5h6i"});
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.appspot.com",messagingSenderId:"862193916799",appId:"1:862193916799:web:db038c83f1f7906cd3b3e9"});
 const auth=getAuth(app),db=getFirestore(app);
 
 // Expenses by country
@@ -339,7 +372,7 @@ async function loadNotifications(uid, username){
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
-          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been refunded.`,
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been refunded to your balance.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       }
