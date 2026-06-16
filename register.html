@@ -19,7 +19,7 @@ body{font-family:'Nunito',sans-serif;background:linear-gradient(135deg,#E91E63,#
 .network-outer{position:absolute;width:100%;height:100%;border:2px solid rgba(255,20,147,.4);border-radius:50%;animation:pulse 3s ease-in-out infinite;}
 .network-middle{position:absolute;width:85%;height:85%;border:1.5px solid rgba(255,20,147,.5);border-radius:50%;animation:pulse 3s ease-in-out infinite .3s;}
 /* Center circle with profile picture */
-.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.network-center{position:relative;width:50px;height:50px;background:linear-gradient(135deg,#FF1493,#E91E63);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:#fff;cursor:pointer;overflow:hidden;border:2px solid rgba(255,255,255,.3);}
 .network-center img{width:100%;height:100%;object-fit:cover;}
 .network-center.default-logo{background:linear-gradient(135deg,#FF1493,#E91E63);}
 /* Nodes around the circle */
@@ -48,14 +48,15 @@ input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(2
 input::placeholder{color:var(--text2);opacity:.7;}
 select option{background:var(--bg3);color:var(--text);}
 .profile-pic-input{display:none;}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:var(--white);transition:.2s;box-shadow:0 4px 15px rgba(233,30,99,.3);}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:white;transition:.2s;}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(233,30,99,.4);}
 .btn:disabled{opacity:.6;cursor:not-allowed;}
 .err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF3B3B;border-radius:10px;padding:12px 15px;font-size:13px;font-weight:600;margin:10px 0;display:none;}
 .link{text-align:center;margin-top:18px;font-size:13px;color:var(--text2);}
 .link a{color:var(--primary);font-weight:700;text-decoration:none;}
-.ref-box{background:rgba(233,30,99,.1);border:1px solid var(--primary);border-radius:8px;padding:10px;font-size:12px;color:var(--primary);margin-bottom:12px;display:none;font-weight:600;}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+.ref-box{background:linear-gradient(135deg,#00C853,#00A651);border:2px solid #00C853;border-radius:12px;padding:14px 16px;font-size:14px;color:#fff;margin-bottom:16px;display:none;font-weight:700;text-align:center;box-shadow:0 4px 15px rgba(0,200,83,.3);}
+.ref-box strong{font-size:16px;display:block;margin-top:6px;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
@@ -86,7 +87,7 @@ select option{background:var(--bg3);color:var(--text);}
         <div class="node"></div>
         <div class="node"></div>
         <div class="network-center default-logo" id="network-center">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron;font-size:80px;font-weight:900%7D%3C/style%3E%3C/defs%3E%3Ccircle cx='100' cy='100' r='100' class='logo-center'/%3E%3Ctext x='100' y='130' text-anchor='middle' class='logo-text'%3E%F0%9F%94%97%3C/text%3E%3C/svg%3E" alt="Logo"/>
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cdefs%3E%3Cstyle%3E.logo-center%7Bfill:%23FF1493%7D.logo-text%7Bfill:%23fff;font-family:Orbitron;font-weight:bold;font-size:80px%7D%3C/style%3E%3C/defs%3E%3Ccircle class='logo-center' cx='100' cy='100' r='100'/%3E%3Ctext class='logo-text' x='50%' y='50%' text-anchor='middle' dominant-baseline='central'%3E🔗%3C/text%3E%3C/svg%3E" alt="Logo"/>
         </div>
       </div>
     </div>
@@ -95,7 +96,7 @@ select option{background:var(--bg3);color:var(--text);}
   <h1>Create Account</h1>
   <p class="sub">Linking You to Financial Solutions</p>
   <div class="card">
-    <div class="ref-box" id="ref-box">🔗 Referred by: <strong id="ref-by"></strong></div>
+    <div class="ref-box" id="ref-box">🎉 You were invited by <strong id="ref-by"></strong></div>
     <div class="fg"><label>Username</label><input id="username" type="text" placeholder="Enter username"/></div>
     <div class="fg"><label>Email Address</label><input id="email" type="email" placeholder="e.g. john@gmail.com"/></div>
     <div class="fg"><label>Phone Number</label><input id="phone" type="tel" placeholder="e.g. 0712345678"/></div>
