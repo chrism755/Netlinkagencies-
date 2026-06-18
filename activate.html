@@ -59,6 +59,8 @@ input:read-only{opacity:.6;cursor:not-allowed;}
 .modal-close{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;}
 .polling-bar{text-align:center;color:var(--pk2);font-size:13px;margin:10px 0;display:none;}
 </style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init("sWcWAwf7xObpwgORP");</script>
 </head>
 <body>
 <div class="bg"></div>
@@ -326,42 +328,19 @@ async function activateUser(txnId){
       activationMethod:'stk'
     },{merge:true});
 
-    // Send activation email via Resend
+    // Send activation email via EmailJS
     try{
-      await fetch('https://api.resend.com/emails',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer re_RD4PDutN_HQzRmLQzU981oPaDszRsSFbP'
-        },
-        body:JSON.stringify({
-          from:'NETLINK AGENCIES <hello@netlinkagencies.linkpc.net>',
-          to:[currentUser.email],
-          reply_to:'nentlinkagencies254@gmail.com',
-          subject:'Your NETLINK AGENCIES account is now active',
-          html:`
-            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f9f9f9;">
-              <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:30px;border-radius:12px 12px 0 0;text-align:center;">
-                <h1 style="color:#fff;margin:0;font-size:24px;">🔗 NETLINK AGENCIES</h1>
-              </div>
-              <div style="background:#fff;padding:30px;border-radius:0 0 12px 12px;">
-                <h2 style="color:#222;">Account Activated Successfully!</h2>
-                <p style="color:#555;">Hi <strong>${userData?.username||'User'}</strong>,</p>
-                <p style="color:#555;">Your NETLINK AGENCIES account has been activated. You can now access your dashboard and start earning.</p>
-                <div style="background:#f0f0f0;border-radius:8px;padding:16px;margin:20px 0;">
-                  <p style="margin:4px 0;color:#333;"><strong>Username:</strong> ${userData?.username||''}</p>
-                  <p style="margin:4px 0;color:#333;"><strong>Email:</strong> ${currentUser.email}</p>
-                  <p style="margin:4px 0;color:#333;"><strong>Country:</strong> ${userData?.country||''}</p>
-                  <p style="margin:4px 0;color:#333;"><strong>Transaction ID:</strong> ${txnId}</p>
-                </div>
-                <a href="https://netlinkagencies.linkpc.net/dashboard" style="display:inline-block;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:bold;margin:10px 0;">Login to Dashboard</a>
-                <p style="color:#888;font-size:12px;margin-top:20px;">If this email is in spam, please mark it as Not Spam and add hello@netlinkagencies.linkpc.net to your contacts.</p>
-                <p style="color:#888;font-size:12px;">Happy networking!<br/><strong>NETLINK AGENCIES</strong></p>
-              </div>
-            </div>
-          `
-        })
+      await emailjs.send('service_r4orntm','template_u7k97ig',{
+        to_email: currentUser.email,
+        to_name: userData?.username||'User',
+        username: userData?.username||'User',
+        email: currentUser.email,
+        country: userData?.country||'',
+        transaction_id: txnId,
+        date: new Date().toLocaleString(),
+        dashboard_link: 'https://netlinkagencies.linkpc.net/dashboard'
       });
+      console.log('Activation email sent!');
     } catch(emailErr){
       console.log('Email error:',emailErr);
     }
