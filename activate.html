@@ -328,18 +328,35 @@ async function activateUser(txnId){
       activationMethod:'stk'
     },{merge:true});
 
-    // Send activation email via Vercel API
+    // Send activation email via Resend API
     try{
-      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      await fetch('https://api.resend.com/emails',{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer re_LdC2uHp2_9eaVnQR87qDRmCgEsc1ApTVM'
+        },
         body:JSON.stringify({
-          type:'activation',
+          from:'NETLINK Agencies <onboarding@resend.dev>',
           to: currentUser.email,
-          username: userData?.username||'User',
-          country: userData?.country||'',
-          txnId: txnId,
-          date: new Date().toLocaleString()
+          subject:'Your NETLINK Account Has Been Activated',
+          html:`<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px;">
+            <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:28px;text-align:center;border-radius:16px 16px 0 0;">
+              <h1 style="color:#fff;margin:0;font-size:22px;">NETLINK AGENCIES</h1>
+              <p style="color:rgba(255,255,255,0.85);margin:6px 0 0;font-size:13px;">Account Activation Confirmation</p>
+            </div>
+            <div style="background:#fff;padding:28px;border-radius:0 0 16px 16px;border:1px solid #eee;">
+              <h2 style="color:#222;">Hello, ${userData?.username||'User'}!</h2>
+              <p style="color:#555;line-height:1.7;">Your NETLINK Agencies account has been <strong>successfully activated</strong>. You can now access your full dashboard!</p>
+              <div style="background:#fdf0f7;border:1px solid #f5b8df;border-radius:10px;padding:16px;margin:16px 0;">
+                <p style="margin:4px 0;font-size:13px;">Name: <strong style="color:#B0156A;">${userData?.username||'User'}</strong></p>
+                <p style="margin:4px 0;font-size:13px;">Transaction ID: <strong style="color:#B0156A;">${txnId}</strong></p>
+                <p style="margin:4px 0;font-size:13px;">Date: <strong style="color:#B0156A;">${new Date().toLocaleString()}</strong></p>
+              </div>
+              <a href="https://netlinkagencies.linkpc.net/dashboard" style="display:block;text-align:center;padding:13px;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;margin:20px 0;">Go to Dashboard</a>
+              <p style="font-size:12px;color:#aaa;text-align:center;">Need help? WhatsApp: <a href="https://wa.me/254103470585" style="color:#E91E8C;">+254 103 470 585</a></p>
+            </div>
+          </div>`
         })
       });
       console.log('Activation email sent!');
