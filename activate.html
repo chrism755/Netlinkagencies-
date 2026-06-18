@@ -156,11 +156,7 @@ input:read-only{opacity:.6;cursor:not-allowed;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-// EmailJS
-const _ejs = document.createElement('script');
-_ejs.src = 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-_ejs.onload = () => emailjs.init("sWcWAwf7xObpwgORP");
-document.head.appendChild(_ejs);
+
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -332,17 +328,19 @@ async function activateUser(txnId){
       activationMethod:'stk'
     },{merge:true});
 
-    // Send activation email via EmailJS
+    // Send activation email via Vercel API
     try{
-      await window.emailjs.send('service_r4orntm','template_u7k97ig',{
-        to_email: currentUser.email,
-        to_name: userData?.username||'User',
-        username: userData?.username||'User',
-        email: currentUser.email,
-        country: userData?.country||'',
-        transaction_id: txnId,
-        date: new Date().toLocaleString(),
-        dashboard_link: 'https://netlinkagencies.linkpc.net/dashboard'
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'activation',
+          to: currentUser.email,
+          username: userData?.username||'User',
+          country: userData?.country||'',
+          txnId: txnId,
+          date: new Date().toLocaleString()
+        })
       });
       console.log('Activation email sent!');
     } catch(emailErr){
