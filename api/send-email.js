@@ -1,5 +1,3 @@
-import nodemailer from 'nodemailer';
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -10,12 +8,12 @@ export default async function handler(req, res) {
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
   const subjects = {
-    activation: 'Your NETLINK AGENCIES account is now active',
-    activation_pending: 'Payment Received - Awaiting Activation',
-    withdrawal_submitted: 'Withdrawal Request Received - NETLINK AGENCIES',
-    withdrawal_approved: 'Your Withdrawal Has Been Processed - NETLINK AGENCIES',
-    new_referral: 'New Referral - NETLINK AGENCIES',
-    karibu_bonus: 'Karibu Bonus Credited - NETLINK AGENCIES'
+    activation: 'Account Activation Confirmed',
+    activation_pending: 'Payment Confirmation',
+    withdrawal_submitted: 'Withdrawal Request Received',
+    withdrawal_approved: 'Withdrawal Processed',
+    new_referral: 'New Referral Alert',
+    karibu_bonus: 'Bonus Credited to Your Account'
   };
 
   const bodies = {
@@ -30,38 +28,43 @@ export default async function handler(req, res) {
   if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'nentlinkagencies254@gmail.com',
-        pass: 'iblk cwna kjup zlqd'
-      }
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer re_RD4PDutN_HQzRmLQzU981oPaDszRsSFbP'
+      },
+      body: JSON.stringify({
+        from: 'NETLINK AGENCIES <hello@netlinkagencies.linkpc.net>',
+        to: [to],
+        reply_to: 'nentlinkagencies254@gmail.com',
+        subject: subjects[type],
+        text: subjects[type] + ' - NETLINK AGENCIES',
+        headers: {
+          'List-Unsubscribe': '<mailto:nentlinkagencies254@gmail.com?subject=unsubscribe>',
+          'X-Priority': '3',
+          'X-Mailer': 'NETLINK AGENCIES Mailer'
+        },
+        html: `
+          <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
+            <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
+              <h1 style="color:#fff;margin:0;">🔗 NETLINK AGENCIES</h1>
+            </div>
+            <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
+              ${bodies[type]}
+              <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
+              <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES — <a href="https://netlinkagencies.linkpc.net">netlinkagencies.linkpc.net</a></p>
+            </div>
+          </div>`
+      })
     });
 
-    const html = `
-      <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
-        <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
-          <h1 style="color:#fff;margin:0;">🔗 NETLINK AGENCIES</h1>
-        </div>
-        <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
-          ${bodies[type]}
-          <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
-          <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES — <a href="https://netlinkagencies.linkpc.net">netlinkagencies.linkpc.net</a></p>
-        </div>
-      </div>`;
+    const data = await response.json();
+    if (data.id) return res.status(200).json({ success: true, id: data.id });
+    else return res.status(500).json({ error: data.message || 'Failed' });
 
-    await transporter.sendMail({
-      from: '"NETLINK AGENCIES" <nentlinkagencies254@gmail.com>',
-      to: to,
-      subject: subjects[type],
-      html: html
-    });
-
-    return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-      }
+    }
