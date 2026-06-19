@@ -9,6 +9,7 @@ export default async function handler(req, res) {
 
   const subjects = {
     activation: 'Your NETLINK AGENCIES account is now active',
+    activation_pending: 'Payment Received - Awaiting Activation',
     withdrawal_submitted: 'Withdrawal Request Received - NETLINK AGENCIES',
     withdrawal_approved: 'Your Withdrawal Has Been Processed - NETLINK AGENCIES',
     new_referral: 'New Referral - NETLINK AGENCIES',
@@ -16,6 +17,7 @@ export default async function handler(req, res) {
   };
 
   const bodies = {
+    activation_pending: `<p>Hi <strong>${username}</strong>,</p><p>We have received your payment with Transaction ID: <strong>${txnId}</strong>.</p><p>Your account will be activated within <strong>2-5 minutes</strong>.</p><p>If not activated within 5 minutes please contact admin on WhatsApp.</p>`,
     activation: `<p>Hi <strong>${username}</strong>,</p><p>Your account has been activated! Login here: <a href="https://netlinkagencies.linkpc.net/dashboard">Dashboard</a></p><p>Username: ${username}<br/>Country: ${country}<br/>Transaction ID: ${txnId}<br/>Date: ${date}</p>`,
     withdrawal_submitted: `<p>Hi <strong>${username}</strong>,</p><p>Your withdrawal request has been received.<br/>Amount: ${amount}<br/>Method: ${method}<br/>Date: ${date}</p><p>Please wait 24-48 hours.</p>`,
     withdrawal_approved: `<p>Hi <strong>${username}</strong>,</p><p>Your withdrawal of <strong>${amount}</strong> has been processed via ${method}.</p>`,
@@ -65,4 +67,4 @@ export default async function handler(req, res) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-      }
+}
