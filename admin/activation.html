@@ -141,7 +141,27 @@ window.approve=async function(docId,uid,referredBy){
   try{
     // 1. Activate user account
     await updateDoc(doc(db,'pendingActivations',docId),{status:'approved'});
-    if(uid) await updateDoc(doc(db,'users',uid),{activated:true});
+    if(uid) await updateDoc(doc(db,'users',uid),{activated:true, activationMethod:'manual'});
+
+    // Send activation email
+    try{
+      const userSnap = await getDoc(doc(db,'users',uid));
+      const userData = userSnap.exists() ? userSnap.data() : {};
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'activation',
+          to: userData.email||'',
+          username: userData.username||'User',
+          country: userData.country||'',
+          txnId: '',
+          date: new Date().toLocaleString()
+        })
+      });
+    } catch(emailErr){
+      console.log('Email error:',emailErr);
+    }
 
     // 2. Pay Level 1 referrer (KES 80 to account balance)
     if(referredBy){
