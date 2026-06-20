@@ -28,44 +28,34 @@ export default async function handler(req, res) {
   if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
 
   try {
-    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer re_RD4PDutN_HQzRmLQzU981oPaDszRsSFbP'
       },
       body: JSON.stringify({
-        personalizations: [{ to: [{ email: to }] }],
-        from: { email: 'cmuchui534@gmail.com', name: 'NETLINK AGENCIES' },
-        reply_to: { email: 'nentlinkagencies254@gmail.com' },
+        from: 'NETLINK AGENCIES <hello@netlinkagencies.linkpc.net>',
+        to: [to],
+        reply_to: 'nentlinkagencies254@gmail.com',
         subject: subjects[type],
-        content: [
-          {
-            type: 'text/html',
-            value: `
-              <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
-                <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
-                  <h1 style="color:#fff;margin:0;">NETLINK AGENCIES</h1>
-                </div>
-                <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
-                  ${bodies[type]}
-                  <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
-                  <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES</p>
-                </div>
-              </div>`
-          }
-        ]
+        html: `
+          <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
+            <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
+              <h1 style="color:#fff;margin:0;">NETLINK AGENCIES</h1>
+            </div>
+            <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
+              ${bodies[type]}
+              <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
+              <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES — <a href="https://netlinkagencies.linkpc.net">netlinkagencies.linkpc.net</a></p>
+            </div>
+          </div>`
       })
     });
 
-    console.log('SendGrid status:', response.status);
-    if (response.status === 202) {
-      return res.status(200).json({ success: true });
-    } else {
-      const data = await response.json();
-      console.log('SendGrid error:', data);
-      return res.status(500).json({ error: data.errors?.[0]?.message || 'Failed' });
-    }
+    const data = await response.json();
+    if (data.id) return res.status(200).json({ success: true, id: data.id });
+    else return res.status(500).json({ error: data.message || 'Failed' });
 
   } catch (err) {
     console.error('Error:', err.message);
