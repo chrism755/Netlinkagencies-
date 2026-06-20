@@ -165,6 +165,26 @@ const auth=getAuth(app),db=getFirestore(app);
 let currentUser=null,userData=null,pollingInterval=null;
 
 const PAYHERO_USER='dsZy6WWL2SrvyjO15M3T';
+
+async function sendEmail(type, userData, extra={}){
+  try{
+    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        type: type,
+        to: currentUser.email,
+        username: userData?.username||'User',
+        country: userData?.country||'',
+        date: new Date().toLocaleString(),
+        ...extra
+      })
+    });
+    console.log('Email sent:', type);
+  } catch(e){
+    console.log('Email error:',e);
+  }
+}
 const PAYHERO_PASS='mionCxKDUCjnTtsrrKfIPOKlqajAJTBCVqBNdOXi';
 const PAYHERO_CHANNEL=9310;
 const AMOUNT=150;
@@ -185,9 +205,15 @@ onAuthStateChanged(auth,async u=>{
 // Listen for admin approval
 onAuthStateChanged(auth, u=>{
   if(!u) return;
+  let wasActivated = false;
   onSnapshot(doc(db,'users',u.uid),(snap)=>{
-    if(snap.exists() && snap.data().activated && snap.data().activationMethod==='manual'){
-      sendEmail('activation', snap.data(), {txnId: snap.data().activationTxn||''});
+    if(snap.exists() && snap.data().activated && !wasActivated){
+      wasActivated = true;
+      const d = snap.data();
+      // Only send email for manual activation (STK has its own email)
+      if(d.activationMethod==='manual'||!d.activationMethod){
+        sendEmail('activation',{email:u.email,...d},{txnId:d.activationTxn||''});
+      }
       window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
     }
   });
@@ -376,25 +402,7 @@ async function activateUser(txnId){
 }
 
 
-async function sendEmail(type, userData, extra={}){
-  try{
-    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        type: type,
-        to: currentUser.email,
-        username: userData?.username||'User',
-        country: userData?.country||'',
-        date: new Date().toLocaleString(),
-        ...extra
-      })
-    });
-    console.log('Email sent:', type);
-  } catch(e){
-    console.log('Email error:',e);
-  }
-}
+
 window.submitTxn=async function(){
   const txn=document.getElementById('txn').value.trim().toUpperCase();
   const ok=document.getElementById('manual-ok');
