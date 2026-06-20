@@ -341,14 +341,18 @@ async function activateUser(txnId){
 
     // Send activation email via Vercel + Resend
     try{
+      // Reload user data fresh from Firestore to ensure it's available
+      const freshSnap = await getDoc(doc(db,'users',currentUser.uid));
+      const freshData = freshSnap.exists() ? freshSnap.data() : {};
+      
       const emailRes = await fetch('https://netlinkagencies.vercel.app/api/send-email',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           type:'activation',
           to: currentUser.email,
-          username: userData?.username||'User',
-          country: userData?.country||'',
+          username: freshData.username||userData?.username||'User',
+          country: freshData.country||userData?.country||'',
           txnId: txnId,
           date: new Date().toLocaleString()
         })
