@@ -32,10 +32,10 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer re_RD4PDutN_HQzRmLQzU981oPaDszRsSFbP'
+        'Authorization': 'Bearer re_iQpayyRH_39ByPZ7MbAjdBPsdTWQaQj3d'
       },
       body: JSON.stringify({
-        from: 'NETLINK AGENCIES <hello@netlinkagencies.linkpc.net>',
+        from: 'check <support@bundlesmwitu.linkpc.net>',
         to: [to],
         reply_to: 'nentlinkagencies254@gmail.com',
         subject: subjects[type],
