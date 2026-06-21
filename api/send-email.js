@@ -26,12 +26,10 @@ export default async function handler(req, res) {
 
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
-  const isActivation = type === 'activation';
-  const senderName = isActivation ? 'Courtney Tech' : 'NETLINK AGENCIES';
-  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies.linkpc.net';
+  const senderName = 'NETLINK AGENCIES';
 
   const subjects = {
-    activation: 'Welcome to Courtney Tech!',
+    activation: 'Your account is now active ✅',
     activation_pending: `🚀 Hello ${username} 🎉`,
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
@@ -45,13 +43,13 @@ export default async function handler(req, res) {
   const emails = {
     activation_pending: renderEmail(
       `🚀 Hello ${username} 🎉`,
-      `Dear ${username}, we have received your request, we will notify you once your account is activated.`,
+      `Dear ${username}, we will notify you once your account is activated.`,
       replyFooter
     ),
 
     activation: renderEmail(
-      `Welcome, ${username}! 🎉`,
-      `Your Courtneytech account is ready. You can accept M-Pesa payments via your DTB/PayBill account, create shareable payment links, track all transactions in real time, and set up your digital storefront. Next step: complete your KYC verification to unlock full payment capabilities. Visit ${siteLink} anytime.`,
+      'Your account is active! ✅',
+      `Hi ${username}, great news — your account has been reviewed and activated. You can now log in and enjoy full access.`,
       replyFooter
     ),
 
@@ -97,4 +95,4 @@ export default async function handler(req, res) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-  }
+}
