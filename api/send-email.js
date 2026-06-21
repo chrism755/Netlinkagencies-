@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const subjects = {
     activation: 'Welcome to Courtney Tech!',
-    activation_pending: '🎉 Hello user 🚀',
+    activation_pending: '🎉 Hello ${username}, 🚀',
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
     new_referral: 'New Referral Alert',
