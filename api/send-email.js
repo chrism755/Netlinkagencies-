@@ -1,3 +1,13 @@
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,        // your full gmail address
+    pass: process.env.GMAIL_APP_PASSWORD // 16-char app password (no spaces)
+  }
+});
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -27,38 +37,31 @@ export default async function handler(req, res) {
 
   if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
 
+  const html = `
+    <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
+      <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
+        <h1 style="color:#fff;margin:0;">NETLINK AGENCIES</h1>
+      </div>
+      <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
+        ${bodies[type]}
+        <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
+        <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES — <a href="https://netlinkagencies.linkpc.net">netlinkagencies.linkpc.net</a></p>
+      </div>
+    </div>`;
+
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer re_RD4PDutN_HQzRmLQzU981oPaDszRsSFbP'
-      },
-      body: JSON.stringify({
-        from: 'NETLINK AGENCIES <hello@netlinkagencies.linkpc.net>',
-        to: [to],
-        reply_to: 'nentlinkagencies254@gmail.com',
-        subject: subjects[type],
-        html: `
-          <div style="max-width:600px;margin:0 auto;font-family:Arial,sans-serif;">
-            <div style="background:linear-gradient(135deg,#B0156A,#FF4DB8);padding:24px;border-radius:12px 12px 0 0;text-align:center;">
-              <h1 style="color:#fff;margin:0;">NETLINK AGENCIES</h1>
-            </div>
-            <div style="background:#fff;padding:24px;border-radius:0 0 12px 12px;border:1px solid #eee;">
-              ${bodies[type]}
-              <hr style="border:none;border-top:1px solid #eee;margin:20px 0;"/>
-              <p style="color:#aaa;font-size:12px;">NETLINK AGENCIES — <a href="https://netlinkagencies.linkpc.net">netlinkagencies.linkpc.net</a></p>
-            </div>
-          </div>`
-      })
+    const info = await transporter.sendMail({
+      from: `"NETLINK AGENCIES" <${process.env.GMAIL_USER}>`,
+      to,
+      replyTo: 'nentlinkagencies254@gmail.com',
+      subject: subjects[type],
+      html
     });
 
-    const data = await response.json();
-    if (data.id) return res.status(200).json({ success: true, id: data.id });
-    else return res.status(500).json({ error: data.message || 'Failed' });
+    return res.status(200).json({ success: true, id: info.messageId });
 
   } catch (err) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-}
+    }
