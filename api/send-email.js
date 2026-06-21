@@ -18,12 +18,12 @@ export default async function handler(req, res) {
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
   const isActivation = type === 'activation';
-  const senderName = isActivation ? 'Courtney ' : 'Netlink agencies';
-  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies';
+  const senderName = isActivation ? 'Courtney Tech' : 'NETLINK AGENCIES';
+  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies.linkpc.net';
 
   const subjects = {
     activation: 'Welcome to Courtney Tech!',
-    activation_pending: 'hallo',
+    activation_pending: 'Payment Received',
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
     new_referral: 'New Referral Alert',
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     activation_pending:
 `Dear ${username},
 
-hello your Transaction ID submitted successfully we will notify you once you're account is activated'
+Your transaction ID is being processed. We will notify you once your account is activated.
 
 — ${senderName}`,
 
@@ -50,7 +50,7 @@ Your Courtneytech account is ready. You can now:
 
 Next step: Complete your KYC verification to unlock full payment capabilities.
 
-If you have any questions, reply to this email or visit.
+If you have any questions, reply to this email or visit ${siteLink}.
 
 — ${senderName}`,
 
