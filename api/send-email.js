@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   const emails = {
     activation_pending: renderEmail(
       `🚀 Hello ${username} 🎉`,
-      `Dear ${username}, we will notify you once your account is activated.`,
+      `Dear ${username}, we have received your request, we will notify you once your account is activated.`,
       replyFooter
     ),
 
