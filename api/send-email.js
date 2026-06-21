@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     activation_pending:
 `Dear ${username},
 
-Your transaction ID is being processed. We will notify you once your account is activated.
+hello'
 
 — ${senderName}`,
 
