@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { URL } from 'url';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -10,16 +11,29 @@ const transporter = nodemailer.createTransport({
 
 function textToHtml(text) {
   if (!text) return '';
-  // Escape basic HTML characters
   const escaped = text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-  // Convert double newlines to paragraphs and single newlines to <br>
   return escaped
     .split(/\n\n+/)
     .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
     .join('\n');
+}
+
+function buildUnsubscribeHeaders(to) {
+  const headers = [];
+  if (process.env.UNSUBSCRIBE_EMAIL) {
+    headers.push(`<mailto:${process.env.UNSUBSCRIBE_EMAIL}>`);
+  }
+  if (process.env.SITE_URL) {
+    // include a one-click unsubscribe URL with an email query param placeholder
+    const base = process.env.SITE_URL.replace(/\/$/, '');
+    // If we have the recipient, include it in the URL so clients can pre-fill
+    const url = to ? `${base}/unsubscribe?email=${encodeURIComponent(to)}` : `${base}/unsubscribe`;
+    headers.push(`<${url}>`);
+  }
+  return headers.join(', ');
 }
 
 export default async function handler(req, res) {
@@ -120,19 +134,24 @@ Your Karibu bonus of ${amount || 'N/A'} has been credited to your account.
 
   // Build message
   const textBody = texts[type];
+  const unsubscribeLink = process.env.SITE_URL ? `${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?email=${encodeURIComponent(to)}` : null;
   const htmlBody = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;line-height:1.4;margin:0;padding:16px;">` +
     ` <div style="max-width:600px;margin:0 auto;padding:12px;">` +
     ` <h2 style="color:#0b5cff">${subjects[type]}</h2>` +
     textToHtml(textBody) +
+    (unsubscribeLink ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${unsubscribeLink}">click here to unsubscribe</a>.</p>` : '') +
     ` <hr style="border:none;border-top:1px solid #eee;margin:18px 0;"/>` +
     ` <p style="font-size:12px;color:#666;">This message was sent from ${siteLink}. If you did not expect this email, you can ignore it or contact support.</p>` +
     ` </div></body></html>`;
 
   try {
-    // Add a List-Unsubscribe header if available
-    const listUnsubscribe = process.env.UNSUBSCRIBE_EMAIL
-      ? `<mailto:${process.env.UNSUBSCRIBE_EMAIL}>`
-      : `<mailto:${process.env.GMAIL_USER}>`;
+    // Build List-Unsubscribe header
+    const listUnsubscribe = buildUnsubscribeHeaders(to);
+
+    const headers = {};
+    if (listUnsubscribe) headers['List-Unsubscribe'] = listUnsubscribe;
+    // If we provided a one-click URL, advertise support for List-Unsubscribe-Post
+    if (process.env.SITE_URL) headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
 
     // Ensure the From uses the authenticated Gmail user to avoid SPF/DKIM mismatches
     const fromAddress = `"${senderName}" <${process.env.GMAIL_USER}>`;
@@ -144,9 +163,7 @@ Your Karibu bonus of ${amount || 'N/A'} has been credited to your account.
       subject: subjects[type],
       text: textBody,
       html: htmlBody,
-      headers: {
-        'List-Unsubscribe': listUnsubscribe
-      }
+      headers
     });
 
     console.info('Email sent', { to, type, messageId: info.messageId });
