@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
   const isActivation = type === 'activation';
-  const senderName = isActivation ? 'Courtney ' : 'Chris Muchui';
+  const senderName = isActivation ? 'Courtney ' : 'Netlink agencies';
   const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies';
 
   const subjects = {
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     activation_pending:
 `Dear ${username},
 
-hello'
+hello your Transaction ID submitted successfully we will notify you once you're account is activated'
 
 — ${senderName}`,
 
