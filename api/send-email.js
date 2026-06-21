@@ -17,7 +17,7 @@ function textToHtml(text) {
     .replace(/>/g, '&gt;');
   return escaped
     .split(/\n\n+/)
-    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+    .map(p => `<p style="margin:0 0 12px">${p.replace(/\n/g, '<br>')}</p>`)
     .join('\n');
 }
 
@@ -43,17 +43,23 @@ function createSignedToken(email) {
   return `${payload}.${h}`;
 }
 
-function verifySignedToken(token) {
-  if (!token || typeof token !== 'string') return null;
-  const [payload, sig] = token.split('.');
-  if (!payload || !sig) return null;
-  const secret = process.env.UNSUBSCRIBE_SECRET || process.env.GMAIL_APP_PASSWORD || 'fallback-secret';
-  const expected = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
-  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) return null;
-  try {
-    return Buffer.from(payload, 'base64url').toString('utf8');
-  } catch (e) {
-    return null;
+function generateSubject(type, username) {
+  const name = username ? `${username}` : '';
+  switch (type) {
+    case 'activation':
+      return name ? `${name}, welcome to Netlink Agencies` : 'Welcome to Netlink Agencies';
+    case 'activation_pending':
+      return name ? `${name}, we received your payment` : 'Payment received';
+    case 'withdrawal_submitted':
+      return 'Withdrawal request received';
+    case 'withdrawal_approved':
+      return 'Your withdrawal has been processed';
+    case 'new_referral':
+      return 'Someone joined using your referral';
+    case 'karibu_bonus':
+      return 'Your Karibu bonus has been credited';
+    default:
+      return 'Notification from Netlink Agencies';
   }
 }
 
@@ -80,50 +86,53 @@ export default async function handler(req, res) {
   const senderName = isActivation ? 'Courtney Tech' : 'NETLINK AGENCIES';
   const siteLink = isActivation ? 'https://courtneytech.xyz' : (process.env.SITE_URL || 'https://netlinkagencies.linkpc.net');
 
-  const subjects = {
-    activation: 'Welcome to Courtney Tech!',
-    activation_pending: 'Payment Received',
-    withdrawal_submitted: 'Withdrawal Request Received',
-    withdrawal_approved: 'Withdrawal Processed',
-    new_referral: 'New Referral Alert',
-    karibu_bonus: 'Bonus Credited to Your Account'
-  };
-
+  // Plain text templates (kept concise and transactional)
   const texts = {
     activation_pending:
-`Dear ${username || 'user'},\n\nYour transaction ID is being processed. We will notify you once your account is activated.\n\n— ${senderName}`,
+`Hi ${username || 'there'},\n\nWe have received your payment and are processing it. We'll update your account status shortly.\n\nTransaction ID: ${txnId || 'N/A'}\nAmount: ${amount || 'N/A'}\n\nIf you have questions, reply to this email or contact support at ${process.env.UNSUBSCRIBE_EMAIL || process.env.GMAIL_USER}.\n\n— ${senderName}`,
 
     activation:
-`Welcome, ${username || 'user'}!\n\nYour Courtneytech account is ready. You can now:\n\n- Accept M-Pesa payments via your DTB/PayBill account\n- Create shareable payment links\n- Track all transactions in real time\n- Set up your digital storefront\n\nNext step: Complete your KYC verification to unlock full payment capabilities.\n\nIf you have any questions, reply to this email or visit ${siteLink}.\n\n— ${senderName}`,
+`Hi ${username || 'there'},\n\nWelcome to Netlink Agencies — your account is ready. To get started, log in at ${siteLink}.\n\nIf you need help, reply to this email.\n\n— ${senderName}`,
 
     withdrawal_submitted:
-`Hi ${username || 'user'},\n\nYour withdrawal request has been received.\n\nAmount: ${amount || 'N/A'}\nMethod: ${method || 'N/A'}\nDate: ${date || 'N/A'}\n\nPlease allow 24-48 hours for processing.\n\n— ${senderName}`,
+`Hi ${username || 'there'},\n\nWe received your withdrawal request.\n\nAmount: ${amount || 'N/A'}\nMethod: ${method || 'N/A'}\nDate: ${date || 'N/A'}\n\nWe'll process it within 24-48 hours.\n\n— ${senderName}`,
 
     withdrawal_approved:
-`Hi ${username || 'user'},\n\nYour withdrawal of ${amount || 'N/A'} has been processed via ${method || 'N/A'}.\n\n— ${senderName}`,
+`Hi ${username || 'there'},\n\nYour withdrawal of ${amount || 'N/A'} has been processed via ${method || 'N/A'}.\n\n— ${senderName}`,
 
     new_referral:
-`Hi ${username || 'user'},\n\nSomeone just joined using your referral link.\n\nNew member: ${referredBy || 'N/A'}\nDate: ${date || 'N/A'}\n\n— ${senderName}`,
+`Hi ${username || 'there'},\n\nA new user joined using your referral link.\n\nNew member: ${referredBy || 'N/A'}\nDate: ${date || 'N/A'}\n\n— ${senderName}`,
 
     karibu_bonus:
-`Hi ${username || 'user'},\n\nYour Karibu bonus of ${amount || 'N/A'} has been credited to your account.\n\n— ${senderName}`
+`Hi ${username || 'there'},\n\nYour Karibu bonus of ${amount || 'N/A'} has been credited to your account.\n\n— ${senderName}`
   };
 
-  if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
+  if (!texts[type]) return res.status(400).json({ error: 'Invalid type' });
 
-  // Build message
   const textBody = texts[type];
+  const preheader = textBody.split('\n')[0].slice(0, 120); // first line as preheader
+
   // create signed token for one-click unsubscribe
   const token = createSignedToken(to);
   const tokenUrl = process.env.SITE_URL ? `${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?token=${encodeURIComponent(token)}` : null;
-  const htmlBody = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;line-height:1.4;margin:0;padding:16px;">` +
-    ` <div style="max-width:600px;margin:0 auto;padding:12px;">` +
-    ` <h2 style="color:#0b5cff">${subjects[type]}</h2>` +
+
+  const companyAddress = process.env.COMPANY_ADDRESS || '';
+  const supportEmail = process.env.SUPPORT_EMAIL || process.env.UNSUBSCRIBE_EMAIL || process.env.GMAIL_USER;
+
+  const htmlBody = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="font-family:Inter,Arial,Helvetica,sans-serif;color:#111;background:#ffffff;margin:0;padding:24px;">` +
+    ` <span style="display:none!important;max-height:0;overflow:hidden;">${preheader}</span>` +
+    ` <div style="max-width:680px;margin:0 auto;border:1px solid #f0f0f0;padding:20px;border-radius:6px;">` +
+    ` <header style="text-align:left;margin-bottom:18px;"><img src="${process.env.SITE_URL ? process.env.SITE_URL.replace(/\/$/, '') + '/logo.png' : ''}" alt="" style="height:28px;object-fit:contain;display:block;margin-bottom:8px;" onerror="this.style.display='none'"/>` +
+    ` <h1 style="font-size:18px;margin:0 0 6px;color:#0b5cff;font-weight:600">${generateSubject(type, username)}</h1>` +
+    ` <p style="margin:0;color:#6b7280;font-size:13px">${preheader}</p></header>` +
+    ` <main style="padding:6px 0 12px;color:#111;font-size:15px;">` +
     textToHtml(textBody) +
-    (tokenUrl ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${tokenUrl}">click here to unsubscribe</a>.</p>` : (process.env.SITE_URL ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?email=${encodeURIComponent(to)}">click here to unsubscribe</a>.</p>` : '')) +
-    ` <hr style="border:none;border-top:1px solid #eee;margin:18px 0;"/>` +
-    ` <p style="font-size:12px;color:#666;">This message was sent from ${siteLink}. If you did not expect this email, you can ignore it or contact support.</p>` +
-    ` </div></body></html>`;
+    ` </main>` +
+    ` <footer style="border-top:1px solid #eef2f7;padding-top:14px;color:#6b7280;font-size:13px;">` +
+    (companyAddress ? `<div style="margin-bottom:8px">${companyAddress}</div>` : '') +
+    `<div>If you need help, contact <a href="mailto:${supportEmail}" style="color:#0b5cff">${supportEmail}</a>.</div>` +
+    (tokenUrl ? `<div style="margin-top:8px;font-size:13px;color:#6b7280">To stop receiving these emails, <a href="${tokenUrl}" style="color:#0b5cff">unsubscribe</a>.</div>` : '') +
+    `</footer></div></body></html>`;
 
   try {
     // Build List-Unsubscribe header
@@ -142,15 +151,18 @@ export default async function handler(req, res) {
       }
     }
     headers['Sender'] = process.env.GMAIL_USER;
+    headers['X-Mailer'] = 'NetlinkAgencies Mailer';
 
     // Ensure the From uses the authenticated Gmail user to avoid SPF/DKIM mismatches
     const fromAddress = `"${senderName}" <${process.env.GMAIL_USER}>`;
 
+    const subject = generateSubject(type, username);
+
     const info = await transporter.sendMail({
       from: fromAddress,
       to,
-      replyTo: process.env.GMAIL_USER,
-      subject: subjects[type],
+      replyTo: supportEmail,
+      subject,
       text: textBody,
       html: htmlBody,
       headers
