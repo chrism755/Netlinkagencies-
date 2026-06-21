@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { URL } from 'url';
+import crypto from 'crypto';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -21,19 +21,40 @@ function textToHtml(text) {
     .join('\n');
 }
 
-function buildUnsubscribeHeaders(to) {
+function buildUnsubscribeHeaders(to, tokenUrl) {
   const headers = [];
   if (process.env.UNSUBSCRIBE_EMAIL) {
     headers.push(`<mailto:${process.env.UNSUBSCRIBE_EMAIL}>`);
   }
-  if (process.env.SITE_URL) {
-    // include a one-click unsubscribe URL with an email query param placeholder
+  if (tokenUrl) {
+    headers.push(`<${tokenUrl}>`);
+  } else if (process.env.SITE_URL) {
     const base = process.env.SITE_URL.replace(/\/$/, '');
-    // If we have the recipient, include it in the URL so clients can pre-fill
     const url = to ? `${base}/unsubscribe?email=${encodeURIComponent(to)}` : `${base}/unsubscribe`;
     headers.push(`<${url}>`);
   }
   return headers.join(', ');
+}
+
+function createSignedToken(email) {
+  const secret = process.env.UNSUBSCRIBE_SECRET || process.env.GMAIL_APP_PASSWORD || 'fallback-secret';
+  const payload = Buffer.from(email, 'utf8').toString('base64url');
+  const h = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  return `${payload}.${h}`;
+}
+
+function verifySignedToken(token) {
+  if (!token || typeof token !== 'string') return null;
+  const [payload, sig] = token.split('.');
+  if (!payload || !sig) return null;
+  const secret = process.env.UNSUBSCRIBE_SECRET || process.env.GMAIL_APP_PASSWORD || 'fallback-secret';
+  const expected = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sig))) return null;
+  try {
+    return Buffer.from(payload, 'base64url').toString('utf8');
+  } catch (e) {
+    return null;
+  }
 }
 
 export default async function handler(req, res) {
@@ -70,88 +91,57 @@ export default async function handler(req, res) {
 
   const texts = {
     activation_pending:
-`Dear ${username || 'user'},
-
-Your transaction ID is being processed. We will notify you once your account is activated.
-
-— ${senderName}`,
+`Dear ${username || 'user'},\n\nYour transaction ID is being processed. We will notify you once your account is activated.\n\n— ${senderName}`,
 
     activation:
-`Welcome, ${username || 'user'}!
-
-Your Courtneytech account is ready. You can now:
-
-- Accept M-Pesa payments via your DTB/PayBill account
-- Create shareable payment links
-- Track all transactions in real time
-- Set up your digital storefront
-
-Next step: Complete your KYC verification to unlock full payment capabilities.
-
-If you have any questions, reply to this email or visit ${siteLink}.
-
-— ${senderName}`,
+`Welcome, ${username || 'user'}!\n\nYour Courtneytech account is ready. You can now:\n\n- Accept M-Pesa payments via your DTB/PayBill account\n- Create shareable payment links\n- Track all transactions in real time\n- Set up your digital storefront\n\nNext step: Complete your KYC verification to unlock full payment capabilities.\n\nIf you have any questions, reply to this email or visit ${siteLink}.\n\n— ${senderName}`,
 
     withdrawal_submitted:
-`Hi ${username || 'user'},
-
-Your withdrawal request has been received.
-
-Amount: ${amount || 'N/A'}
-Method: ${method || 'N/A'}
-Date: ${date || 'N/A'}
-
-Please allow 24-48 hours for processing.
-
-— ${senderName}`,
+`Hi ${username || 'user'},\n\nYour withdrawal request has been received.\n\nAmount: ${amount || 'N/A'}\nMethod: ${method || 'N/A'}\nDate: ${date || 'N/A'}\n\nPlease allow 24-48 hours for processing.\n\n— ${senderName}`,
 
     withdrawal_approved:
-`Hi ${username || 'user'},
-
-Your withdrawal of ${amount || 'N/A'} has been processed via ${method || 'N/A'}.
-
-— ${senderName}`,
+`Hi ${username || 'user'},\n\nYour withdrawal of ${amount || 'N/A'} has been processed via ${method || 'N/A'}.\n\n— ${senderName}`,
 
     new_referral:
-`Hi ${username || 'user'},
-
-Someone just joined using your referral link.
-
-New member: ${referredBy || 'N/A'}
-Date: ${date || 'N/A'}
-
-— ${senderName}`,
+`Hi ${username || 'user'},\n\nSomeone just joined using your referral link.\n\nNew member: ${referredBy || 'N/A'}\nDate: ${date || 'N/A'}\n\n— ${senderName}`,
 
     karibu_bonus:
-`Hi ${username || 'user'},
-
-Your Karibu bonus of ${amount || 'N/A'} has been credited to your account.
-
-— ${senderName}`
+`Hi ${username || 'user'},\n\nYour Karibu bonus of ${amount || 'N/A'} has been credited to your account.\n\n— ${senderName}`
   };
 
   if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
 
   // Build message
   const textBody = texts[type];
-  const unsubscribeLink = process.env.SITE_URL ? `${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?email=${encodeURIComponent(to)}` : null;
+  // create signed token for one-click unsubscribe
+  const token = createSignedToken(to);
+  const tokenUrl = process.env.SITE_URL ? `${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?token=${encodeURIComponent(token)}` : null;
   const htmlBody = `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;line-height:1.4;margin:0;padding:16px;">` +
     ` <div style="max-width:600px;margin:0 auto;padding:12px;">` +
     ` <h2 style="color:#0b5cff">${subjects[type]}</h2>` +
     textToHtml(textBody) +
-    (unsubscribeLink ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${unsubscribeLink}">click here to unsubscribe</a>.</p>` : '') +
+    (tokenUrl ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${tokenUrl}">click here to unsubscribe</a>.</p>` : (process.env.SITE_URL ? ` <p style="font-size:13px;color:#666;">If you no longer wish to receive these emails, <a href="${process.env.SITE_URL.replace(/\/$/, '')}/unsubscribe?email=${encodeURIComponent(to)}">click here to unsubscribe</a>.</p>` : '')) +
     ` <hr style="border:none;border-top:1px solid #eee;margin:18px 0;"/>` +
     ` <p style="font-size:12px;color:#666;">This message was sent from ${siteLink}. If you did not expect this email, you can ignore it or contact support.</p>` +
     ` </div></body></html>`;
 
   try {
     // Build List-Unsubscribe header
-    const listUnsubscribe = buildUnsubscribeHeaders(to);
+    const listUnsubscribe = buildUnsubscribeHeaders(to, tokenUrl);
 
     const headers = {};
     if (listUnsubscribe) headers['List-Unsubscribe'] = listUnsubscribe;
-    // If we provided a one-click URL, advertise support for List-Unsubscribe-Post
-    if (process.env.SITE_URL) headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
+    if (tokenUrl) headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
+    // Add List-ID and Sender headers to improve classification
+    if (process.env.SITE_URL) {
+      try {
+        const domain = new URL(process.env.SITE_URL).hostname;
+        headers['List-ID'] = `${domain}`;
+      } catch (e) {
+        headers['List-ID'] = process.env.SITE_URL;
+      }
+    }
+    headers['Sender'] = process.env.GMAIL_USER;
 
     // Ensure the From uses the authenticated Gmail user to avoid SPF/DKIM mismatches
     const fromAddress = `"${senderName}" <${process.env.GMAIL_USER}>`;
