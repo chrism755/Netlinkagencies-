@@ -8,6 +8,15 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+function renderEmail(heading, body, footer) {
+  return `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
+    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;">${heading}</h2>
+    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#333;">${body}</p>
+    <p style="margin:0;font-size:12px;color:#999;">${footer}</p>
+  </div>`;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -30,66 +39,45 @@ export default async function handler(req, res) {
     karibu_bonus: 'Bonus Credited to Your Account'
   };
 
-  const texts = {
-    activation_pending:
-`Dear ${username},
+  const ignoreFooter = "If you didn't request this, you can ignore this email.";
+  const replyFooter = "If you have any questions, just reply to this email.";
 
-Your transaction ID is being processed. We will notify you once your account is activated.
+  const emails = {
+    activation_pending: renderEmail(
+      'Payment Received ⏳',
+      `Dear ${username}, your transaction ID is being processed. We will notify you once your account is activated.`,
+      replyFooter
+    ),
 
-— ${senderName}`,
+    activation: renderEmail(
+      `Welcome, ${username}! 🎉`,
+      `Your Courtneytech account is ready. You can accept M-Pesa payments via your DTB/PayBill account, create shareable payment links, track all transactions in real time, and set up your digital storefront. Next step: complete your KYC verification to unlock full payment capabilities. Visit ${siteLink} anytime.`,
+      replyFooter
+    ),
 
-    activation:
-`Welcome, ${username}!
+    withdrawal_submitted: renderEmail(
+      'Withdrawal Request Received',
+      `Hi ${username}, your withdrawal request for ${amount} via ${method} has been received on ${date}. Please allow 24-48 hours for processing.`,
+      replyFooter
+    ),
 
-Your Courtneytech account is ready. You can now:
+    withdrawal_approved: renderEmail(
+      'Withdrawal Processed ✅',
+      `Hi ${username}, your withdrawal of ${amount} has been processed via ${method}.`,
+      replyFooter
+    ),
 
-- Accept M-Pesa payments via your DTB/PayBill account
-- Create shareable payment links
-- Track all transactions in real time
-- Set up your digital storefront
+    new_referral: renderEmail(
+      'New Referral! 🎉',
+      `Hi ${username}, someone just joined using your referral link. New member: ${referredBy}, on ${date}.`,
+      replyFooter
+    ),
 
-Next step: Complete your KYC verification to unlock full payment capabilities.
-
-If you have any questions, reply to this email or visit ${siteLink}.
-
-— ${senderName}`,
-
-    withdrawal_submitted:
-`Hi ${username},
-
-Your withdrawal request has been received.
-
-Amount: ${amount}
-Method: ${method}
-Date: ${date}
-
-Please allow 24-48 hours for processing.
-
-— ${senderName}`,
-
-    withdrawal_approved:
-`Hi ${username},
-
-Your withdrawal of ${amount} has been processed via ${method}.
-
-— ${senderName}`,
-
-    new_referral:
-`Hi ${username},
-
-Someone just joined using your referral link.
-
-New member: ${referredBy}
-Date: ${date}
-
-— ${senderName}`,
-
-    karibu_bonus:
-`Hi ${username},
-
-Your Karibu bonus of ${amount} has been credited to your account.
-
-— ${senderName}`
+    karibu_bonus: renderEmail(
+      'Bonus Credited! 🎁',
+      `Hi ${username}, your Karibu bonus of ${amount} has been credited to your account.`,
+      replyFooter
+    )
   };
 
   if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
@@ -100,7 +88,7 @@ Your Karibu bonus of ${amount} has been credited to your account.
       to,
       replyTo: process.env.GMAIL_USER,
       subject: subjects[type],
-      text: texts[type]
+      html: emails[type]
     });
 
     return res.status(200).json({ success: true, id: info.messageId });
@@ -109,4 +97,4 @@ Your Karibu bonus of ${amount} has been credited to your account.
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-}
+      }
