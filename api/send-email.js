@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const subjects = {
     activation: 'Welcome to Courtney Tech!',
-    activation_pending: 'Payment Received',
+    activation_pending: '🎉 Hello user 🚀',
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
     new_referral: 'New Referral Alert',
@@ -44,8 +44,8 @@ export default async function handler(req, res) {
 
   const emails = {
     activation_pending: renderEmail(
-      'Test user ⏳',
-      `Dear ${username}, your  is being processed. We will notify you once your account is activated.`,
+      '🎉 Hello user 🚀',
+      `Dear ${username}, we will notify you once your account is activated.`,
       replyFooter
     ),
 
@@ -97,4 +97,4 @@ export default async function handler(req, res) {
     console.error('Error:', err.message);
     return res.status(500).json({ error: err.message });
   }
-      }
+                }
