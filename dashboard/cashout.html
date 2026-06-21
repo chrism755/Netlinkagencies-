@@ -373,24 +373,6 @@ window.doWithdraw=async function(method, methodName){
     UD.pending=currentPending+amt;
     document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance);
 
-    // Send withdrawal submitted email
-    try{
-      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          type:'withdrawal_submitted',
-          to: U.email,
-          username: UD.username,
-          amount: (window._CUR||'KES')+' '+fmt(amt),
-          method: methodName||method,
-          date: new Date().toLocaleString()
-        })
-      });
-    } catch(emailErr){
-      console.log('Email error:',emailErr);
-    }
-
     // Show GREEN TOAST
     showToast('Your withdrawal request of <strong>'+(window._CUR||'KES')+' '+fmt(amt)+'</strong> has been submitted successfully. Wait verification and timely disbursement to your account.');
 
