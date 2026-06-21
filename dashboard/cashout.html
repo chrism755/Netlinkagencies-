@@ -156,22 +156,10 @@ input::placeholder{color:#fff;opacity:.4;}
     </div>
   </div>
 
-  <!-- MPESA WITHDRAW -->
-  <div class="card">
-    <h3>📱 Withdraw via M-PESA</h3>
-    <div class="fg">
-      <label>Amount (<span class="cur-lbl">KES</span>)</label>
-      <div class="amt-wrap">
-        <span class="amt-prefix"><span id="cur-prefix">KES</span></span>
-        <input class="amt-input" type="number" id="mpesa-amt" placeholder="Min 150" oninput="calcFee('mpesa')"/>
-      </div>
-      <div class="fee-hint" id="mpesa-fee"></div>
-    </div>
-    <div class="err" id="mpesa-err"></div>
-    <button class="btn" id="mpesa-btn" onclick="doWithdraw('mpesa')">📱 Submit M-PESA Withdrawal</button>
-  </div>
+  <!-- DYNAMIC WITHDRAW METHODS -->
+  <div id="withdraw-methods"></div>
 
-  <!-- PAYPAL WITHDRAW -->
+  <!-- PAYPAL WITHDRAW (always shown) -->
   <div class="card">
     <h3>💳 Withdraw via PayPal</h3>
     <div class="fg">
@@ -237,6 +225,68 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
+
+  // Build withdrawal methods based on country
+  const methodsMap = {
+    'Kenya': [
+      {id:'mpesa', icon:'📱', name:'M-PESA', label:'M-PESA Phone Number'}
+    ],
+    'Tanzania': [
+      {id:'vodacom', icon:'📱', name:'Vodacom M-Pesa', label:'Vodacom Phone Number'},
+      {id:'airtel_tz', icon:'📱', name:'Airtel Money', label:'Airtel Phone Number'}
+    ],
+    'Uganda': [
+      {id:'mtn_ug', icon:'📱', name:'MTN Mobile Money', label:'MTN Phone Number'},
+      {id:'airtel_ug', icon:'📱', name:'Airtel Money', label:'Airtel Phone Number'}
+    ],
+    'Nigeria': [
+      {id:'bank_ng', icon:'🏦', name:'Bank Transfer', label:'Bank Account Number'},
+    ],
+    'Rwanda': [
+      {id:'mtn_rw', icon:'📱', name:'MTN Mobile Money', label:'MTN Phone Number'},
+      {id:'airtel_rw', icon:'📱', name:'Airtel Money', label:'Airtel Phone Number'}
+    ],
+    'Ghana': [
+      {id:'mtn_gh', icon:'📱', name:'MTN Mobile Money', label:'MTN Phone Number'},
+      {id:'airtel_gh', icon:'📱', name:'Airtel Money', label:'Airtel Phone Number'}
+    ],
+    'South Africa': [
+      {id:'bank_sa', icon:'🏦', name:'Bank Transfer', label:'Bank Account Number'}
+    ],
+    'United States': [
+      {id:'bank_us', icon:'🏦', name:'Bank Transfer', label:'Bank Account Number'}
+    ],
+    'United Kingdom': [
+      {id:'bank_uk', icon:'🏦', name:'Bank Transfer', label:'Bank Account Number'}
+    ],
+    'Other': [
+      {id:'bank_other', icon:'🏦', name:'Bank Transfer', label:'Bank Account Number'}
+    ]
+  };
+
+  const methods = methodsMap[UD.country] || methodsMap['Kenya'];
+  const container = document.getElementById('withdraw-methods');
+  container.innerHTML = methods.map(m => `
+    <div class="card">
+      <h3>${m.icon} Withdraw via ${m.name}</h3>
+      <div class="fg">
+        <label>${m.label}</label>
+        <input type="text" id="${m.id}-phone" placeholder="Enter ${m.label}"/>
+      </div>
+      <div class="fg">
+        <label>Amount (${CUR})</label>
+        <div class="amt-wrap">
+          <span class="amt-prefix">${CUR}</span>
+          <input class="amt-input" type="number" id="${m.id}-amt" placeholder="Min ${window._FEE}" oninput="calcFee('${m.id}')"/>
+        </div>
+        <div class="fee-hint" id="${m.id}-fee"></div>
+      </div>
+      <div class="err" id="${m.id}-err"></div>
+      <button class="btn" id="${m.id}-btn" onclick="doWithdraw('${m.id}','${m.name}')">
+        ${m.icon} Submit ${m.name} Withdrawal
+      </button>
+    </div>
+  `).join('');
   // Fix all static KES text in HTML
   document.querySelectorAll('*').forEach(el=>{
     if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
@@ -266,10 +316,11 @@ window.calcFee=function(type){
   hint.textContent='Fee: '+(window._CUR||'KES')+' '+fmt(fee)+' | You receive: '+(window._CUR||'KES')+' '+fmt(receive);
 };
 
-window.doWithdraw=async function(method){
-  const amtId=method==='mpesa'?'mpesa-amt':'pp-amt';
-  const errId=method==='mpesa'?'mpesa-err':'pp-err';
-  const btnId=method==='mpesa'?'mpesa-btn':'pp-btn';
+window.doWithdraw=async function(method, methodName){
+  methodName = methodName || (method==='paypal'?'PayPal':'M-PESA');
+  const amtId=method==='paypal'?'pp-amt':method+'-amt';
+  const errId=method==='paypal'?'pp-err':method+'-err';
+  const btnId=method==='paypal'?'pp-btn':method+'-btn';
   const amt=parseInt(document.getElementById(amtId).value)||0;
   const err=document.getElementById(errId);
   const btn=document.getElementById(btnId);
@@ -305,7 +356,7 @@ window.doWithdraw=async function(method){
       amount:amt,
       fee:fee,
       receive:amt-fee,
-      method:method,
+      method:methodName||method,
       phone:UD.phone||'',
       paypalEmail:method==='paypal'?document.getElementById('pp-email').value.trim():'',
       status:'pending',
@@ -322,6 +373,24 @@ window.doWithdraw=async function(method){
     UD.pending=currentPending+amt;
     document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance);
 
+    // Send withdrawal submitted email
+    try{
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'withdrawal_submitted',
+          to: U.email,
+          username: UD.username,
+          amount: (window._CUR||'KES')+' '+fmt(amt),
+          method: methodName||method,
+          date: new Date().toLocaleString()
+        })
+      });
+    } catch(emailErr){
+      console.log('Email error:',emailErr);
+    }
+
     // Show GREEN TOAST
     showToast('Your withdrawal request of <strong>'+(window._CUR||'KES')+' '+fmt(amt)+'</strong> has been submitted successfully. Wait verification and timely disbursement to your account.');
 
@@ -332,13 +401,13 @@ window.doWithdraw=async function(method){
 
     // Re-enable button
     btn.disabled=false;
-    btn.innerHTML=method==='mpesa'?'📱 Submit M-PESA Withdrawal':'💳 Submit PayPal Withdrawal';
+    btn.innerHTML=`${methodName} Withdrawal`;
 
   }catch(e){
     err.textContent='❌ Error: '+e.message;
     err.style.display='block';
     btn.disabled=false;
-    btn.innerHTML=method==='mpesa'?'📱 Submit M-PESA Withdrawal':'💳 Submit PayPal Withdrawal';
+    btn.innerHTML=`${methodName} Withdrawal`;
   }
 };
 
