@@ -44,8 +44,8 @@ export default async function handler(req, res) {
 
   const emails = {
     activation_pending: renderEmail(
-      'Payment Received ⏳',
-      `Dear ${username}, your transaction ID is being processed. We will notify you once your account is activated.`,
+      'Test user ⏳',
+      `Dear ${username}, your  is being processed. We will notify you once your account is activated.`,
       replyFooter
     ),
 
