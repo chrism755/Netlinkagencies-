@@ -18,12 +18,12 @@ export default async function handler(req, res) {
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
   const isActivation = type === 'activation';
-  const senderName = isActivation ? 'Courtney Tech' : 'NETLINK AGENCIES';
-  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies.linkpc.net';
+  const senderName = isActivation ? 'Courtney ' : 'chrsi';
+  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies';
 
   const subjects = {
     activation: 'Welcome to Courtney Tech!',
-    activation_pending: 'Payment Received',
+    activation_pending: 'hallo',
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
     new_referral: 'New Referral Alert',
