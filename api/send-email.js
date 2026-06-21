@@ -3,57 +3,110 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
+    user: process.env.GMAIL_USER,        // your full gmail address
+    pass: process.env.GMAIL_APP_PASSWORD // 16-char app password (no spaces)
   }
 });
 
 export default async function handler(req, res) {
-  // Basic CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    console.error('Missing GMAIL_USER or GMAIL_APP_PASSWORD environment variables');
-    return res.status(500).json({ error: 'Email configuration not set' });
-  }
+  const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
-  const { to } = req.body || {};
-  if (!to) return res.status(400).json({ error: 'Missing recipient (to)' });
+  const isActivation = type === 'activation';
+  const senderName = isActivation ? 'Courtney Tech' : 'NETLINK AGENCIES';
+  const siteLink = isActivation ? 'courtneytech.xyz' : 'netlinkagencies.linkpc.net';
 
-  // Minimal, link-free transactional message
-  const subject = 'Payment received';
-  const textBody = 'We have received your payment to account. Processing.';
-  const htmlBody = `<!doctype html><html><head><meta charset="utf-8"/></head><body style="font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;margin:0;padding:16px;">` +
-    `<div style="max-width:680px;margin:0 auto;padding:18px;border-radius:6px;">` +
-    `<p style="font-size:15px;margin:0">We have received your payment to account. Processing.</p>` +
-    `</div></body></html>`;
+  const subjects = {
+    activation: 'Welcome to Courtney Tech!',
+    activation_pending: 'Payment Received',
+    withdrawal_submitted: 'Withdrawal Request Received',
+    withdrawal_approved: 'Withdrawal Processed',
+    new_referral: 'New Referral Alert',
+    karibu_bonus: 'Bonus Credited to Your Account'
+  };
+
+  const texts = {
+    activation_pending:
+`Dear ${username},
+
+Your transaction ID is being processed. We will notify you once your account is activated.
+
+— ${senderName}`,
+
+    activation:
+`Welcome, ${username}!
+
+Your Courtneytech account is ready. You can now:
+
+- Accept M-Pesa payments via your DTB/PayBill account
+- Create shareable payment links
+- Track all transactions in real time
+- Set up your digital storefront
+
+Next step: Complete your KYC verification to unlock full payment capabilities.
+
+If you have any questions, reply to this email or visit ${siteLink}.
+
+— ${senderName}`,
+
+    withdrawal_submitted:
+`Hi ${username},
+
+Your withdrawal request has been received.
+
+Amount: ${amount}
+Method: ${method}
+Date: ${date}
+
+Please allow 24-48 hours for processing.
+
+— ${senderName}`,
+
+    withdrawal_approved:
+`Hi ${username},
+
+Your withdrawal of ${amount} has been processed via ${method}.
+
+— ${senderName}`,
+
+    new_referral:
+`Hi ${username},
+
+Someone just joined using your referral link.
+
+New member: ${referredBy}
+Date: ${date}
+
+— ${senderName}`,
+
+    karibu_bonus:
+`Hi ${username},
+
+Your Karibu bonus of ${amount} has been credited to your account.
+
+— ${senderName}`
+  };
+
+  if (!subjects[type]) return res.status(400).json({ error: 'Invalid type' });
 
   try {
-    // Use the real sender name to avoid display-name mismatch
-    const senderName = process.env.SENDER_NAME || 'Chris Muchui';
-    const fromAddress = `"${senderName}" <${process.env.GMAIL_USER}>`;
-
     const info = await transporter.sendMail({
-      from: fromAddress,
+      from: `"${senderName}" <${process.env.GMAIL_USER}>`,
       to,
       replyTo: process.env.GMAIL_USER,
-      subject,
-      text: textBody,
-      html: htmlBody,
-      headers: {
-        'Sender': process.env.GMAIL_USER,
-        'X-Mailer': 'NetlinkAgencies Mailer'
-      }
+      subject: subjects[type],
+      text: texts[type]
     });
 
-    console.info('Email sent', { to, messageId: info.messageId });
     return res.status(200).json({ success: true, id: info.messageId });
+
   } catch (err) {
-    console.error('Error sending email:', err && (err.message || err));
-    return res.status(500).json({ error: err && (err.message || 'Unknown error') });
+    console.error('Error:', err.message);
+    return res.status(500).json({ error: err.message });
   }
 }
