@@ -33,8 +33,9 @@ export default async function handler(req, res) {
     `</div></body></html>`;
 
   try {
-    // Keep From aligned to authenticated sender
-    const fromAddress = `"NETLINK AGENCIES" <${process.env.GMAIL_USER}>`;
+    // Use the real sender name to avoid display-name mismatch
+    const senderName = process.env.SENDER_NAME || 'Chris Muchui';
+    const fromAddress = `"${senderName}" <${process.env.GMAIL_USER}>`;
 
     const info = await transporter.sendMail({
       from: fromAddress,
