@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const subjects = {
     activation: 'Welcome to Courtney Tech!',
-    activation_pending: '🎉 Hello ${username} 🚀',
+    activation_pending: '🎉 Hello ${username}, 🚀',
     withdrawal_submitted: 'Withdrawal Request Received',
     withdrawal_approved: 'Withdrawal Processed',
     new_referral: 'New Referral Alert',
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
   const emails = {
     activation_pending: renderEmail(
-      '🎉 Hello ${username} 🚀',
+      '🎉 Hello ${username}, 🚀',
       `Dear ${username}, we have received your request,we will notify you once your account is activated.`,
       replyFooter
     ),
