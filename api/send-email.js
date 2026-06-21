@@ -50,7 +50,7 @@ Your Courtneytech account is ready. You can now:
 
 Next step: Complete your KYC verification to unlock full payment capabilities.
 
-If you have any questions, reply to this email or visit ${siteLink}.
+If you have any questions, reply to this email or visit.
 
 — ${senderName}`,
 
