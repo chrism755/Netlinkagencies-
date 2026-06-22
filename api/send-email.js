@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
+  const { type, to, username, country, amount, method, txnId, referredBy, date, referralUsername, level } = req.body;
 
   const subjects = {
     activation_pending: `🚀 Hello ${username} 🎉`,
@@ -47,6 +47,9 @@ export default async function handler(req, res) {
     withdrawal_submitted: 'Withdraw Request 💵',
     withdrawal_approved: '🚀 Withdraw Processed 💵',
     withdrawal_rejected: 'Withdraw Request Update ❌',
+    referral_level1: '🎉 you Earned a Referral Bonus 💲',
+    referral_level2: '🎉 you Earned a Referral Bonus 💲',
+    referral_level3: '🎉 you Earned a Referral Bonus 💲',
     new_referral: 'New Referral Alert',
     karibu_bonus: 'Bonus Credited to Your Account'
   };
@@ -106,6 +109,42 @@ export default async function handler(req, res) {
     withdrawal_rejected: renderEmail(
       'Withdraw Request Update',
       p(`Dear ${username}, your withdraw was rejected. The amount has been returned to your account balance.`),
+      replyFooter
+    ),
+
+    referral_level1: renderEmail(
+      'You Earned a Referral Bonus 🎉',
+      p(`Hi ${username}, you've earned a referral commission!`) +
+      receiptTable([
+        ['Referral Username', referralUsername],
+        ['Referral Commission', amount],
+        ['Level', level],
+        ['Activated On', date]
+      ]),
+      replyFooter
+    ),
+
+    referral_level2: renderEmail(
+      'You Earned a Referral Bonus 🎉',
+      p(`Hi ${username}, you've earned a referral commission!`) +
+      receiptTable([
+        ['Referral Username', referralUsername],
+        ['Referral Commission', amount],
+        ['Level', level],
+        ['Activated On', date]
+      ]),
+      replyFooter
+    ),
+
+    referral_level3: renderEmail(
+      'You Earned a Referral Bonus 🎉',
+      p(`Hi ${username}, you've earned a referral commission!`) +
+      receiptTable([
+        ['Referral Username', referralUsername],
+        ['Referral Commission', amount],
+        ['Level', level],
+        ['Activated On', date]
+      ]),
       replyFooter
     ),
 
