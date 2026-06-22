@@ -184,11 +184,30 @@ window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList
 window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
 
 
+async function getUsersReferredByCodes(codes){
+  if(!codes.length) return [];
+  const chunks=[];
+  for(let i=0;i<codes.length;i+=30) chunks.push(codes.slice(i,i+30));
+  const results=[];
+  for(const chunk of chunks){
+    const q=query(collection(db,'users'),where('referredBy','in',chunk));
+    const snap=await getDocs(q);
+    snap.docs.forEach(d=>results.push(d.data()));
+  }
+  return results;
+}
+
 async function pageReady(){
-  const q=query(collection(db,'users'),where('referredBy2','==',UD.referralCode));
-  const snap=await getDocs(q);
+  // Level 1: people directly referred by current user
+  const q1=query(collection(db,'users'),where('referredBy','==',UD.referralCode));
+  const snap1=await getDocs(q1);
+  const level1=snap1.docs.map(d=>d.data());
+  const level1Codes=level1.map(u=>u.referralCode).filter(Boolean);
+
+  // Level 2: people referred by any Level 1 downline
+  const all=await getUsersReferredByCodes(level1Codes);
+
   const list=document.getElementById('dl-list');
-  const all=snap.docs.map(d=>d.data());
   const active=all.filter(u=>u.activated).length;
   const inactive=all.filter(u=>!u.activated).length;
   document.getElementById('dl-total').textContent=all.length;
