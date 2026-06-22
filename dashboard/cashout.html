@@ -274,9 +274,9 @@ onAuthStateChanged(auth,async u=>{
         <input type="text" id="${m.id}-phone" placeholder="Enter ${m.label}"/>
       </div>
       <div class="fg">
-        <label>Amount (${CUR})</label>
+        <label>Amount (${window._CUR||'KES'})</label>
         <div class="amt-wrap">
-          <span class="amt-prefix">${CUR}</span>
+          <span class="amt-prefix">${window._CUR||'KES'}</span>
           <input class="amt-input" type="number" id="${m.id}-amt" placeholder="Min ${window._FEE}" oninput="calcFee('${m.id}')"/>
         </div>
         <div class="fee-hint" id="${m.id}-fee"></div>
@@ -372,6 +372,24 @@ window.doWithdraw=async function(method, methodName){
     UD.balance=currentBal-amt;
     UD.pending=currentPending+amt;
     document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance);
+
+    // Send withdrawal submitted email
+    try{
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'withdrawal_submitted',
+          to: U.email,
+          username: UD.username,
+          amount: (window._CUR||'KES')+' '+fmt(amt),
+          method: methodName||method,
+          date: new Date().toLocaleString()
+        })
+      });
+    } catch(emailErr){
+      console.log('Email error:',emailErr);
+    }
 
     // Show GREEN TOAST
     showToast('Your withdrawal request of <strong>'+(window._CUR||'KES')+' '+fmt(amt)+'</strong> has been submitted successfully. Wait verification and timely disbursement to your account.');
