@@ -115,7 +115,7 @@ function render(){
       <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
       ${d.status==='pending'?`<div class="btns">
         <button class="ab ap" onclick="approve('${d.id}','${d.uid}','${d.referredBy||''}')">✅ Approve & Pay Commissions</button>
-        <button class="ab rj" onclick="reject('${d.id}')">❌ Reject</button>
+        <button class="ab rj" onclick="reject('${d.id}','${d.email||''}','${d.username||''}')">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
 }
@@ -219,9 +219,25 @@ window.approve=async function(docId,uid,referredBy){
   }
 };
 
-window.reject=async function(docId){
+window.reject=async function(docId,email,username){
   await updateDoc(doc(db,'pendingActivations',docId),{status:'rejected'});
   allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
+
+  // Send activation rejected email
+  try{
+    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        type:'activation_rejected',
+        to: email,
+        username: username||'User'
+      })
+    });
+  } catch(emailErr){
+    console.log('Email error:',emailErr);
+  }
+
   showMsg('❌ Activation rejected.','err');render();
 };
 

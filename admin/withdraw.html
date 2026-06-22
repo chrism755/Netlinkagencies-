@@ -141,7 +141,7 @@ function render(){
       <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
       ${d.status==='pending'?`<div class="btns">
         <button class="ab ap" onclick="approve(this,'${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}','${d.method||'M-PESA'}')">✅ Approve</button>
-        <button class="ab rj" onclick="reject('${d.id}','${d.uid||''}',${d.amount||0})">❌ Reject</button>
+        <button class="ab rj" onclick="reject(this,'${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}')">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
 }
@@ -205,8 +205,10 @@ window.approve=async function(btnEl,docId,uid,amount,username,method){
   }
 };
 
-window.reject=async function(docId,uid,amount){
-  document.getElementById('loader').classList.add('show');
+window.reject=async function(btnEl,docId,uid,amount,username){
+  const originalHTML=btnEl.innerHTML;
+  btnEl.disabled=true;
+  btnEl.innerHTML='<span class="spinner"></span>Rejecting...';
   try{
     // Mark as rejected
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected'});
@@ -224,15 +226,30 @@ window.reject=async function(docId,uid,amount){
           pending: Math.max(0, currentPending - amount),
           balance: currentBalance + amount
         });
+
+        // Send withdrawal rejected email
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'withdrawal_rejected',
+              to: userData.email||'',
+              username: username
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
       }
     }
 
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
-    document.getElementById('loader').classList.remove('show');
     showMsg('❌ Withdrawal rejected. KES '+amount+' returned to user Account Balance.','err');
     updateStats();render();
   }catch(e){
-    document.getElementById('loader').classList.remove('show');
+    btnEl.disabled=false;
+    btnEl.innerHTML=originalHTML;
     showMsg('❌ Error: '+e.message,'err');
   }
 };
