@@ -67,7 +67,7 @@ select option{background:var(--bg3);}
 .du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
 .sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
 .si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
+.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;justify-content:center;}
 .upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3);margin:10px 0;}
 .upload-box:hover{border-color:var(--pk);}
 .prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
@@ -203,12 +203,12 @@ async function pageReady(){
     return `<div class="du">
       <div>
         <div style="font-size:13px;font-weight:800;color:#fff;">${u.username||''}</div>
-        <div style="font-size:11px;color:#fff;margin-top:2px;">${u.phone||''}</div>
-        <div style="font-size:10px;color:#fff;margin-top:2px;">${u.email||''}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="${u.activated?'sa':'si'}">${u.activated?'✅ Active':'❌ Inactive'}</span>
-        <button class="wa-sm" onclick="window.open('https://wa.me/${wa}','_blank')">💬</button>
+        <button class="wa-sm" onclick="window.open('https://wa.me/${wa}','_blank')" aria-label="Message on WhatsApp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle;"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.85.5 3.58 1.36 5.06L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91A9.86 9.86 0 0 0 12.04 2zm5.78 14.07c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.13.11-1.82-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.93-4.36-.14-.19-1.18-1.57-1.18-2.99 0-1.42.74-2.12 1-2.41.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.14.07.14.12.31.02.5-.1.19-.15.31-.29.48-.14.17-.3.38-.43.51-.14.13-.28.27-.12.54.16.27.71 1.17 1.52 1.89 1.05.93 1.93 1.22 2.2 1.36.27.14.43.12.59-.05.16-.17.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.14.45.2.51.32.07.12.07.69-.17 1.36z"/></svg>
+        </button>
       </div>
     </div>`;
   }).join('');
