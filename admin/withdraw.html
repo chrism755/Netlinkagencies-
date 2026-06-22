@@ -56,6 +56,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .amount-big{font-size:18px;font-weight:900;color:var(--gold);}
 .msg-ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
 .msg-err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 </style>
 </head>
 <body>
@@ -139,7 +140,7 @@ function render(){
       ${d.paypalEmail?`<div class="rrow"><div class="rl">PayPal</div><div class="rv">${d.paypalEmail}</div></div>`:''}
       <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
       ${d.status==='pending'?`<div class="btns">
-        <button class="ab ap" onclick="approve('${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}','${d.method||'M-PESA'}')">✅ Approve</button>
+        <button class="ab ap" onclick="approve(this,'${d.id}','${d.uid||''}',${d.amount||0},'${d.username||''}','${d.method||'M-PESA'}')">✅ Approve</button>
         <button class="ab rj" onclick="reject('${d.id}','${d.uid||''}',${d.amount||0})">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
@@ -151,9 +152,10 @@ window.filterTab=function(f,el){
   el.classList.add('active');render();
 };
 
-window.approve=async function(docId,uid,amount,username,method){
-  document.getElementById('loader').classList.add('show');
-  document.getElementById('loader').querySelector('.loader-text').textContent='Approving withdrawal...';
+window.approve=async function(btnEl,docId,uid,amount,username,method){
+  const originalHTML=btnEl.innerHTML;
+  btnEl.disabled=true;
+  btnEl.innerHTML='<span class="spinner"></span>Approving...';
   try{
     // Mark withdrawal as approved
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
@@ -194,11 +196,11 @@ window.approve=async function(docId,uid,amount,username,method){
     }
 
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
-    document.getElementById('loader').classList.remove('show');
     showMsg('✅ Withdrawal of KES '+amount+' for '+username+' approved! Amount moved from Pending to Withdrawn.','ok');
     updateStats();render();
   }catch(e){
-    document.getElementById('loader').classList.remove('show');
+    btnEl.disabled=false;
+    btnEl.innerHTML=originalHTML;
     showMsg('❌ Error: '+e.message,'err');
   }
 };
