@@ -114,7 +114,7 @@ function render(){
       <div class="rrow"><div class="rl">Referred By</div><div class="rv" style="color:var(--pk2);">${d.referredBy||'Direct'}</div></div>
       <div class="rrow"><div class="rl">Time</div><div class="rv">${d.createdAt?new Date(d.createdAt.seconds*1000).toLocaleString():''}</div></div>
       ${d.status==='pending'?`<div class="btns">
-        <button class="ab ap" onclick="approve('${d.id}','${d.uid}','${d.referredBy||''}')">✅ Approve & Pay Commissions</button>
+        <button class="ab ap" onclick="approve('${d.id}','${d.uid}','${d.referredBy||''}','${d.username||''}')">✅ Approve & Pay Commissions</button>
         <button class="ab rj" onclick="reject('${d.id}','${d.email||''}','${d.username||''}')">❌ Reject</button>
       </div>`:''}
     </div>`).join('');
@@ -135,7 +135,7 @@ window.filterTab=function(f,el){
 };
 
 // ── APPROVE AND PAY REFERRAL COMMISSIONS ──
-window.approve=async function(docId,uid,referredBy){
+window.approve=async function(docId,uid,referredBy,newMemberUsername){
   document.getElementById('loader').classList.add('show');
   document.getElementById('loader').querySelector('.loader-text').textContent='Activating account & paying commissions...';
   try{
@@ -177,6 +177,25 @@ window.approve=async function(docId,uid,referredBy){
           level1Count:increment(1)
         });
 
+        // Send Level 1 referral bonus email
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'referral_level1',
+              to: ref1Data.email||'',
+              username: ref1Data.username||'User',
+              amount: 'KES 80',
+              referralUsername: newMemberUsername||'',
+              level: '1',
+              date: new Date().toLocaleString()
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
+
         // 3. Pay Level 2 referrer (KES 20 to account balance)
         if(ref1Data.referredBy){
           const q2=query(collection(db,'users'),where('referralCode','==',ref1Data.referredBy));
@@ -191,17 +210,57 @@ window.approve=async function(docId,uid,referredBy){
               level2Count:increment(1)
             });
 
+            // Send Level 2 referral bonus email
+            try{
+              await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({
+                  type:'referral_level2',
+                  to: ref2Data.email||'',
+                  username: ref2Data.username||'User',
+                  amount: 'KES 20',
+                  referralUsername: newMemberUsername||'',
+                  level: '2',
+                  date: new Date().toLocaleString()
+                })
+              });
+            } catch(emailErr){
+              console.log('Email error:',emailErr);
+            }
+
             // 4. Pay Level 3 referrer (KES 10 to account balance)
             if(ref2Data.referredBy){
               const q3=query(collection(db,'users'),where('referralCode','==',ref2Data.referredBy));
               const snap3=await getDocs(q3);
               if(!snap3.empty){
+                const ref3Doc=snap3.docs[0];
+                const ref3Data=ref3Doc.data();
                 // Pay Level 3 = KES 10 to balance
-                await updateDoc(doc(db,'users',snap3.docs[0].id),{
+                await updateDoc(doc(db,'users',ref3Doc.id),{
                   balance:increment(10),
                   totalEarnings:increment(10),
                   level3Count:increment(1)
                 });
+
+                // Send Level 3 referral bonus email
+                try{
+                  await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                      type:'referral_level3',
+                      to: ref3Data.email||'',
+                      username: ref3Data.username||'User',
+                      amount: 'KES 10',
+                      referralUsername: newMemberUsername||'',
+                      level: '3',
+                      date: new Date().toLocaleString()
+                    })
+                  });
+                } catch(emailErr){
+                  console.log('Email error:',emailErr);
+                }
               }
             }
           }
