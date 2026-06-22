@@ -266,13 +266,20 @@ onAuthStateChanged(auth,async u=>{
 
   const methods = methodsMap[UD.country] || methodsMap['Kenya'];
   const container = document.getElementById('withdraw-methods');
-  container.innerHTML = methods.map(m => `
+  container.innerHTML = methods.map(m => {
+    const isMpesaKenya = m.id === 'mpesa';
+    return `
     <div class="card">
       <h3>${m.icon} Withdraw via ${m.name}</h3>
+      ${isMpesaKenya ? `
+      <div class="fg">
+        <label>${m.label}</label>
+        <div style="background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-size:15px;">${maskPhone(UD.phone||'')}</div>
+      </div>` : `
       <div class="fg">
         <label>${m.label}</label>
         <input type="text" id="${m.id}-phone" placeholder="Enter ${m.label}"/>
-      </div>
+      </div>`}
       <div class="fg">
         <label>Amount (${window._CUR||'KES'})</label>
         <div class="amt-wrap">
@@ -286,7 +293,8 @@ onAuthStateChanged(auth,async u=>{
         ${m.icon} Submit ${m.name} Withdrawal
       </button>
     </div>
-  `).join('');
+  `;
+  }).join('');
   // Fix all static KES text in HTML
   document.querySelectorAll('*').forEach(el=>{
     if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
