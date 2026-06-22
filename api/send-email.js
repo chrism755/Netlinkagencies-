@@ -8,13 +8,26 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-function renderEmail(heading, body, footer) {
+const senderName = 'NETLINK AGENCIES';
+const replyFooter = "If you have any questions, just reply to this email.";
+
+function renderEmail(heading, bodyHtml, footer, headingColor) {
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
-    <h2 style="margin:0 0 16px;font-size:20px;font-weight:700;">${heading}</h2>
-    <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#333;">${body}</p>
-    <p style="margin:0;font-size:12px;color:#999;">${footer}</p>
+    <h2 style="margin:0 0 16px;font-size:${headingColor ? '24px' : '20px'};font-weight:800;color:${headingColor || '#1a1a1a'};">${heading}</h2>
+    ${bodyHtml}
+    <p style="margin:20px 0 0;font-size:12px;color:#999;">${footer}</p>
   </div>`;
+}
+
+function p(text) {
+  return `<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">${text}</p>`;
+}
+
+function receiptTable(rows) {
+  return `<table style="width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px;">
+    ${rows.map(([k, v]) => `<tr><td style="padding:6px 0;color:#888;border-bottom:1px solid #eee;">${k}</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#1a1a1a;border-bottom:1px solid #eee;">${v}</td></tr>`).join('')}
+  </table>`;
 }
 
 export default async function handler(req, res) {
@@ -26,54 +39,85 @@ export default async function handler(req, res) {
 
   const { type, to, username, country, amount, method, txnId, referredBy, date } = req.body;
 
-  const senderName = 'NETLINK AGENCIES';
-
   const subjects = {
-    activation: 'Your account is now active ✅',
     activation_pending: `🚀 Hello ${username} 🎉`,
-    withdrawal_submitted: 'Withdrawal Request Received',
-    withdrawal_approved: 'Withdrawal Processed',
+    activation: 'Your account is now activated ✅',
+    activation_rejected: `Hello ${username}.`,
+    stk_failed: `Hello ${username}.`,
+    withdrawal_submitted: 'Withdraw Request 💵',
+    withdrawal_approved: '🚀 Withdraw Processed 💵',
+    withdrawal_rejected: 'Withdraw Request Update ❌',
     new_referral: 'New Referral Alert',
     karibu_bonus: 'Bonus Credited to Your Account'
   };
 
-  const ignoreFooter = "If you didn't request this, you can ignore this email.";
-  const replyFooter = "If you have any questions, just reply to this email.";
-
   const emails = {
     activation_pending: renderEmail(
       `🚀 Hello ${username} 🎉`,
-      `Dear ${username}, we will notify you once your account is activated.`,
+      p(`Dear ${username}, your transaction ID of "${txnId}" was successfully sent to admin. We will notify you once your account is activated.`),
       replyFooter
     ),
 
     activation: renderEmail(
-      'Your account is active! ✅',
-      `Hi ${username}, great news — your account has been reviewed and activated. You can now log in and enjoy full access.`,
+      'Your account is activated ✅',
+      p(`Hi ${username}, great news — your account has been reviewed and activated. You can now log in and start doing tasks. NETLINK AGENCIES 🎉`),
+      replyFooter,
+      '#00C853'
+    ),
+
+    activation_rejected: renderEmail(
+      `Hello ${username}.`,
+      p(`Dear ${username}, we weren't able to verify your payment. Please try again.`),
+      replyFooter
+    ),
+
+    stk_failed: renderEmail(
+      `Hello ${username}.`,
+      p(`Dear ${username}, it looks like the M-PESA prompt was canceled and your account was not activated. Please try again or use manual activation.`),
       replyFooter
     ),
 
     withdrawal_submitted: renderEmail(
-      'Withdrawal Request Received',
-      `Hi ${username}, your withdrawal request for ${amount} via ${method} has been received on ${date}. Please allow 24-48 hours for processing.`,
+      'Withdraw Request 💵',
+      p(`Dear ${username}, your withdraw request of ${amount} has been received.`) +
+      receiptTable([
+        ['Username', username],
+        ['Amount Requested', amount],
+        ['Date', date],
+        ['Method', method],
+        ['Estimated Time', '5-10 minutes'],
+        ['Status', 'Pending']
+      ]),
       replyFooter
     ),
 
     withdrawal_approved: renderEmail(
-      'Withdrawal Processed ✅',
-      `Hi ${username}, your withdrawal of ${amount} has been processed via ${method}.`,
+      '🚀 Withdraw Processed 💵',
+      p(`Hi ${username}, your withdrawal was successfully approved.`) +
+      receiptTable([
+        ['Amount', amount],
+        ['Method', method],
+        ['Date', date],
+        ['Time Taken', 'Processed instantly']
+      ]),
+      replyFooter
+    ),
+
+    withdrawal_rejected: renderEmail(
+      'Withdraw Request Update',
+      p(`Dear ${username}, your withdraw was rejected. The amount has been returned to your account balance.`),
       replyFooter
     ),
 
     new_referral: renderEmail(
       'New Referral! 🎉',
-      `Hi ${username}, someone just joined using your referral link. New member: ${referredBy}, on ${date}.`,
+      p(`Hi ${username}, someone just joined using your referral link. New member: ${referredBy}, on ${date}.`),
       replyFooter
     ),
 
     karibu_bonus: renderEmail(
       'Bonus Credited! 🎁',
-      `Hi ${username}, your Karibu bonus of ${amount} has been credited to your account.`,
+      p(`Hi ${username}, your Karibu bonus of ${amount} has been credited to your account.`),
       replyFooter
     )
   };
