@@ -209,6 +209,7 @@ window.render=function(){
     <div class="rc">
       <div class="rn">${u.username||''} <span class="${u.activated?'active-badge':'inactive-badge'}">${u.activated?'✅ Active':'❌ Inactive'}</span></div>
       <div class="re">${u.email||''}</div>
+      <div class="rrow"><div class="rl">👤 Referred By</div><div class="rv" style="color:var(--pk2);">${referrerLabel(u)}</div></div>
       <div class="rrow"><div class="rl">Phone</div><div class="rv">${u.phone||'—'}</div></div>
       <div class="rrow"><div class="rl">WhatsApp</div><div class="rv">${u.whatsapp||'—'}</div></div>
       <div class="rrow"><div class="rl">Country</div><div class="rv">${u.country||'—'}</div></div>
@@ -228,10 +229,55 @@ window.render=function(){
     </div>`).join('');
 };
 
+function referrerLabel(u){
+  if(!u.referredBy) return 'Direct signup';
+  const ref=allUsers.find(x=>x.referralCode===u.referredBy);
+  return ref ? ref.username : u.referredBy;
+}
+
+const MONEY_FIELDS={
+  balance:'Balance', totalEarnings:'Total Earnings', withdrawn:'Withdrawn',
+  pending:'Pending', karibu:'Karibu Bonus', weeklyBonus:'Weekly Bonus'
+};
+const TEXT_FIELDS={ username:'Username', email:'Email', phone:'Phone', whatsapp:'WhatsApp' };
+
+function buildChangeList(orig, updated){
+  const changes=[];
+  Object.entries(TEXT_FIELDS).forEach(([key,label])=>{
+    const o=orig[key]||'', n=updated[key]||'';
+    if(String(o)!==String(n)) changes.push([label, `${o||'—'} → ${n||'—'}`]);
+  });
+  Object.entries(MONEY_FIELDS).forEach(([key,label])=>{
+    const o=orig[key]||0, n=updated[key]||0;
+    if(Number(o)!==Number(n)) changes.push([label, `KES ${o} → KES ${n}`]);
+  });
+  return changes;
+}
+
+async function sendUserEmail(type,payload){
+  try{
+    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type,...payload})
+    });
+  }catch(e){
+    console.log('Email send failed (non-blocking):',e.message);
+  }
+}
+
 window.setActive=async function(id,val){
+  const u=allUsers.find(x=>x.id===id);
   await updateDoc(doc(db,'users',id),{activated:val});
-  allUsers=allUsers.map(u=>u.id===id?{...u,activated:val}:u);
+  allUsers=allUsers.map(x=>x.id===id?{...x,activated:val}:x);
   render();
+  if(u && u.email){
+    if(val){
+      sendUserEmail('activation',{to:u.email,username:u.username});
+    }else{
+      sendUserEmail('account_deactivated',{to:u.email,username:u.username});
+    }
+  }
 };
 
 // EDIT MODAL
@@ -301,15 +347,22 @@ window.saveEdit=async function(){
     }
 
     setLoader(true,'Saving changes...');
-    await updateDoc(doc(db,'users',editUid),{
-      username,email,phone,whatsapp,
-      balance,totalEarnings,withdrawn,pending,karibu,weeklyBonus
-    });
+    const updatedFields={username,email,phone,whatsapp,balance,totalEarnings,withdrawn,pending,karibu,weeklyBonus};
+    await updateDoc(doc(db,'users',editUid),updatedFields);
 
-    allUsers=allUsers.map(u=>u.id===editUid?{...u,username,email,phone,whatsapp,balance,totalEarnings,withdrawn,pending,karibu,weeklyBonus}:u);
+    allUsers=allUsers.map(u=>u.id===editUid?{...u,...updatedFields}:u);
     setLoader(false);
     okEl.style.display='block';
     render();
+
+    // Notify the user by email — non-blocking, doesn't affect the saved UI state above.
+    const changeList = orig ? buildChangeList(orig, updatedFields) : [];
+    if(changeList.length>0){
+      sendUserEmail('account_updated',{to:email,username,changes:changeList});
+    }
+    if(newPw){
+      sendUserEmail('password_reset_by_admin',{to:email,username,newPassword:newPw});
+    }
   }catch(e){
     setLoader(false);
     errEl.textContent='❌ '+e.message;
