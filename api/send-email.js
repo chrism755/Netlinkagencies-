@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, to, username, country, amount, method, txnId, referredBy, date, referralUsername, level } = req.body;
+  const { type, to, username, country, amount, method, txnId, referredBy, date, referralUsername, level, changes, newPassword, reason } = req.body;
 
   const subjects = {
     activation_pending: `🚀 Hello ${username} 🎉`,
@@ -51,7 +51,10 @@ export default async function handler(req, res) {
     referral_level2: '🎉 you Earned a Referral Bonus 💲',
     referral_level3: '🎉 you Earned a Referral Bonus 💲',
     new_referral: 'New Referral Alert',
-    karibu_bonus: 'Bonus Credited to Your Account'
+    karibu_bonus: 'Bonus Credited to Your Account',
+    account_deactivated: '⛔ Your Account Has Been Deactivated',
+    account_updated: '🔧 Your Account Details Were Updated',
+    password_reset_by_admin: '🔐 Your Password Has Been Reset'
   };
 
   const emails = {
@@ -157,6 +160,30 @@ export default async function handler(req, res) {
     karibu_bonus: renderEmail(
       'Bonus Credited! 🎁',
       p(`Hi ${username}, your Karibu bonus of ${amount} has been credited to your account.`),
+      replyFooter
+    ),
+
+    account_deactivated: renderEmail(
+      'Account Deactivated ⛔',
+      p(`Hi ${username}, your account has been deactivated by an administrator.`) +
+      (reason ? receiptTable([['Reason', reason]]) : '') +
+      p(`You will not be able to access your dashboard until it is reactivated. If you believe this was a mistake, please contact support by replying to this email.`),
+      replyFooter,
+      '#FF3B3B'
+    ),
+
+    account_updated: renderEmail(
+      'Account Details Updated 🔧',
+      p(`Hi ${username}, an administrator made the following changes to your account:`) +
+      receiptTable(changes || []),
+      replyFooter
+    ),
+
+    password_reset_by_admin: renderEmail(
+      'Password Reset 🔐',
+      p(`Hi ${username}, your account password was reset by an administrator.`) +
+      receiptTable([['New Password', newPassword]]) +
+      p(`Please use this new password to log in. For your security, we recommend changing it again after logging in.`),
       replyFooter
     )
   };
