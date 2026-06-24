@@ -11,9 +11,14 @@ const transporter = nodemailer.createTransport({
 const senderName = 'NETLINK AGENCIES';
 const replyFooter = "If you have any questions, just reply to this email.";
 
+const logoUrl = 'https://netlinkagencies.linkpc.net/netlink-N-logo-white-bg.png';
+
 function renderEmail(heading, bodyHtml, footer, headingColor) {
   return `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
+    <div style="text-align:center;margin-bottom:20px;">
+      <img src="${logoUrl}" alt="NETLINK AGENCIES" width="130" style="max-width:130px;height:auto;display:inline-block;"/>
+    </div>
     <h2 style="margin:0 0 16px;font-size:${headingColor ? '24px' : '20px'};font-weight:800;color:${headingColor || '#1a1a1a'};">${heading}</h2>
     ${bodyHtml}
     <p style="margin:20px 0 0;font-size:12px;color:#999;">${footer}</p>
