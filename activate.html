@@ -136,10 +136,15 @@ input:read-only{opacity:.6;cursor:not-allowed;}
   <h1>Activate Account</h1>
   <p class="sub">Pay activation fee to unlock your dashboard</p>
 
+  <!-- CLIENT PAYMENT BANNER (shown only if someone paid partially for this user) -->
+  <div class="card" id="client-paid-banner" style="display:none;background:linear-gradient(135deg,#00897B,#00C853);border:none;">
+    <p id="client-paid-text" style="color:#fff;font-size:14px;font-weight:700;line-height:1.6;margin:0;"></p>
+  </div>
+
   <!-- AMOUNT CARD -->
   <div class="card">
-    <div class="amount">KES 150</div>
-    <div class="alabel">One-time Activation Fee</div>
+    <div class="amount" id="amount-display">KES 150</div>
+    <div class="alabel" id="amount-label">One-time Activation Fee</div>
   </div>
 
   <!-- AUTOMATIC STK PUSH CARD -->
@@ -234,7 +239,7 @@ async function sendEmail(type, userData, extra={}){
 }
 const PAYHERO_PASS='mionCxKDUCjnTtsrrKfIPOKlqajAJTBCVqBNdOXi';
 const PAYHERO_CHANNEL=9310;
-const AMOUNT=150;
+let AMOUNT=150;
 
 onAuthStateChanged(auth,async u=>{
   if(u){
@@ -243,11 +248,33 @@ onAuthStateChanged(auth,async u=>{
     if(snap.exists()){
       userData=snap.data();
       if(userData.activated) window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
+      applyClientPaymentState();
     }
   } else {
     window.location.replace('https://netlinkagencies.linkpc.net/login');
   }
 });
+
+function applyClientPaymentState(){
+  const paid=userData?.clientPaidAmount||0;
+  AMOUNT=Math.max(0,150-paid);
+  const amtDisplay=document.getElementById('amount-display');
+  const amtLabel=document.getElementById('amount-label');
+  const amtFixedInput=document.querySelector('#auto-card input[readonly]');
+  if(paid>0){
+    document.getElementById('client-paid-banner').style.display='block';
+    document.getElementById('client-paid-text').textContent=
+      '🎉 '+(userData.lastPayerUsername||'Someone')+' paid KSh '+paid+' for you. Now you will have to pay KSh '+AMOUNT+' to complete your activation.';
+    amtDisplay.textContent='KES '+AMOUNT;
+    amtLabel.textContent='Remaining Activation Fee';
+  }
+  if(amtFixedInput) amtFixedInput.value='KES '+AMOUNT;
+  // Update the manual-payment instructions amount line
+  const manualAmountLine=document.querySelector('#manual-card .inst p:nth-child(6) strong');
+  if(manualAmountLine) manualAmountLine.textContent='KES '+AMOUNT;
+  const stkBtn=document.getElementById('stk-btn');
+  if(stkBtn && !stkBtn.disabled) stkBtn.textContent='📱 Pay KES '+AMOUNT;
+}
 
 // Listen for admin approval
 onAuthStateChanged(auth, u=>{

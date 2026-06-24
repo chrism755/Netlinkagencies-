@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Payment Receipt — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{--pk:#E91E8C;--pkd:#B0156A;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px;}
+.wrap{width:100%;max-width:420px;}
+#receipt{background:#fff;border-radius:16px;padding:0;overflow:hidden;}
+.r-head{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:24px;text-align:center;}
+.r-logo{width:54px;height:54px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 8px;border:1.5px solid rgba(255,255,255,.4);}
+.r-name{color:#fff;font-weight:900;font-size:16px;letter-spacing:1px;}
+.r-sub{color:rgba(255,255,255,.85);font-size:10px;letter-spacing:2px;margin-top:2px;}
+.r-status{background:#E8FFF1;color:#00A152;text-align:center;padding:10px;font-size:13px;font-weight:800;}
+.r-body{padding:24px;}
+.r-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px dashed #ddd;}
+.r-row:last-child{border-bottom:none;}
+.r-label{font-size:12px;color:#888;font-weight:700;}
+.r-value{font-size:13px;color:#1a1a1a;font-weight:800;text-align:right;}
+.r-foot{text-align:center;padding:16px 24px 22px;font-size:11px;color:#aaa;}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),#FF4DB8);color:#fff;margin-top:18px;}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.msg{text-align:center;padding:40px 16px;font-size:14px;color:#fff;opacity:.8;}
+.err{background:rgba(255,82,82,.1);border:1.5px solid #FF5252;color:#FF8A80;border-radius:12px;padding:16px;font-size:13px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="loading" class="msg">Loading receipt...</div>
+  <div id="receipt" style="display:none;">
+    <div class="r-head">
+      <div class="r-logo">🔗</div>
+      <div class="r-name">NETLINK AGENCIES</div>
+      <div class="r-sub">PAYMENT RECEIPT</div>
+    </div>
+    <div class="r-status">✅ PAYMENT SUCCESSFUL</div>
+    <div class="r-body">
+      <div class="r-row"><div class="r-label">Amount Paid</div><div class="r-value" id="r-amount"></div></div>
+      <div class="r-row"><div class="r-label">Paid To</div><div class="r-value" id="r-to"></div></div>
+      <div class="r-row"><div class="r-label">Time</div><div class="r-value" id="r-time"></div></div>
+      <div class="r-row"><div class="r-label">Date</div><div class="r-value" id="r-date"></div></div>
+      <div class="r-row"><div class="r-label">Account Balance</div><div class="r-value" id="r-balance"></div></div>
+    </div>
+    <div class="r-foot">Thank you for using NETLINK AGENCIES</div>
+  </div>
+  <div id="error" class="err" style="display:none;">❌ Receipt not found.</div>
+  <button class="btn" id="dl-btn" onclick="downloadReceipt()" style="display:none;">📥 Download as Photo</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const db=getFirestore(app);
+
+const id=new URLSearchParams(window.location.search).get('id');
+
+(async()=>{
+  if(!id){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error').style.display='block';
+    return;
+  }
+  try{
+    const snap=await getDoc(doc(db,'clientPayments',id));
+    if(!snap.exists()){
+      document.getElementById('loading').style.display='none';
+      document.getElementById('error').style.display='block';
+      return;
+    }
+    const d=snap.data();
+    document.getElementById('r-amount').textContent='KSh '+d.amount;
+    document.getElementById('r-to').textContent=d.payeeUsername||'';
+    document.getElementById('r-time').textContent=d.time||'';
+    document.getElementById('r-date').textContent=d.date||'';
+    document.getElementById('r-balance').textContent='KSh '+(d.payerBalanceAfter!==undefined?d.payerBalanceAfter:'—');
+    document.getElementById('loading').style.display='none';
+    document.getElementById('receipt').style.display='block';
+    document.getElementById('dl-btn').style.display='block';
+  }catch(e){
+    document.getElementById('loading').style.display='none';
+    document.getElementById('error').style.display='block';
+    document.getElementById('error').textContent='❌ '+e.message;
+  }
+})();
+
+window.downloadReceipt=function(){
+  const btn=document.getElementById('dl-btn');
+  btn.disabled=true;btn.textContent='Generating...';
+  html2canvas(document.getElementById('receipt'),{backgroundColor:'#ffffff',scale:2}).then(canvas=>{
+    const link=document.createElement('a');
+    link.download='netlink-receipt-'+Date.now()+'.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    btn.disabled=false;btn.textContent='📥 Download as Photo';
+  }).catch(()=>{
+    btn.disabled=false;btn.textContent='📥 Download as Photo';
+  });
+};
+</script>
+</body>
+</html>
