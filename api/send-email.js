@@ -50,6 +50,10 @@ export default async function handler(req, res) {
     referral_level1: '🎉 you Earned a Referral Bonus 💲',
     referral_level2: '🎉 you Earned a Referral Bonus 💲',
     referral_level3: '🎉 you Earned a Referral Bonus 💲',
+    deposit_pending: '💰 Deposit Request Received',
+    deposit_approved: '✅ Deposit Approved',
+    deposit_stk_success: '✅ Deposit Successful',
+    deposit_stk_failed: '❌ Deposit Payment Failed',
     new_referral: 'New Referral Alert',
     karibu_bonus: 'Bonus Credited to Your Account',
     account_deactivated: '⛔ Your Account Has Been Deactivated',
@@ -148,6 +152,37 @@ export default async function handler(req, res) {
         ['Level', level],
         ['Activated On', date]
       ]),
+      replyFooter
+    ),
+
+    deposit_pending: renderEmail(
+      'Deposit Request Received 💰',
+      p(`Dear ${username}, we've received your deposit submission of ${amount} (Transaction ID: ${txnId}). We will notify you once it's approved and credited to your account.`),
+      replyFooter
+    ),
+
+    deposit_approved: renderEmail(
+      'Deposit Approved ✅',
+      p(`Hi ${username}, great news! Your deposit of ${amount} has been approved and credited to your Account Balance and Total Earnings.`),
+      replyFooter,
+      '#00C853'
+    ),
+
+    deposit_stk_success: renderEmail(
+      'Deposit Successful ✅',
+      p(`Hi ${username}, your M-Pesa payment was received successfully and has been credited to your Account Balance and Total Earnings.`) +
+      receiptTable([
+        ['Amount', amount],
+        ['Transaction ID', txnId],
+        ['Date', date]
+      ]),
+      replyFooter,
+      '#00C853'
+    ),
+
+    deposit_stk_failed: renderEmail(
+      'Deposit Payment Failed ❌',
+      p(`Dear ${username}, your M-Pesa deposit prompt was canceled or failed, so ${amount} was not credited to your account. Please try again or use manual deposit.`),
       replyFooter
     ),
 
