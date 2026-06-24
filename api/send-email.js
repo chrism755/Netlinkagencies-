@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, to, username, country, amount, method, txnId, referredBy, date, referralUsername, level, changes, newPassword, reason } = req.body;
+  const { type, to, username, country, amount, method, txnId, referredBy, date, referralUsername, level, changes, newPassword, reason, clientUsername, payerUsername, remaining, balance, time, receiptUrl } = req.body;
 
   const subjects = {
     activation_pending: `🚀 Hello ${username} 🎉`,
@@ -58,7 +58,9 @@ export default async function handler(req, res) {
     karibu_bonus: 'Bonus Credited to Your Account',
     account_deactivated: '⛔ Your Account Has Been Deactivated',
     account_updated: '🔧 Your Account Details Were Updated',
-    password_reset_by_admin: '🔐 Your Password Has Been Reset'
+    password_reset_by_admin: '🔐 Your Password Has Been Reset',
+    client_payment_sent: 'Paid for Client ✅',
+    client_payment_received: `Hello ${username}`
   };
 
   const emails = {
@@ -220,6 +222,46 @@ export default async function handler(req, res) {
       receiptTable([['New Password', newPassword]]) +
       p(`Please use this new password to log in. For your security, we recommend changing it again after logging in.`),
       replyFooter
+    ),
+
+    client_payment_sent: renderEmail(
+      'Paid for Client ✅',
+      p(`Dear ${username}, you've paid an activation fee of KSh ${amount} to ${clientUsername}. Here is your receipt:`) +
+      receiptTable([
+        ['Amount Paid', `KSh ${amount}`],
+        ['Paid To', clientUsername],
+        ['Time', time],
+        ['Date', date],
+        ['Your Account Balance', `KSh ${balance}`]
+      ]) +
+      (receiptUrl ? `<div style="text-align:center;margin:24px 0;"><a href="${receiptUrl}" style="display:inline-block;background:#E91E8C;color:#fff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">📄 View &amp; Download Receipt</a></div>` : ''),
+      replyFooter,
+      '#00C853'
+    ),
+
+    client_payment_received: renderEmail(
+      `Hello ${username}`,
+      p(`Dear ${username}, ${payerUsername} has paid KSh ${amount} for your activation fee.`) +
+      receiptTable([
+        [`Amount Paid By ${payerUsername}`, `KSh ${amount}`],
+        ['Amount You Still Need To Pay', `KSh ${remaining}`],
+        ['Time', time],
+        ['Date', date]
+      ]) +
+      (Number(remaining) > 0 ?
+        p(`<strong>You can complete your activation:</strong>`) +
+        `<div style="background:#f5f5f5;border-radius:10px;padding:18px;margin:0 0 18px;font-size:14px;line-height:2;color:#333;">
+          <p style="margin:0;"><strong>1.</strong> Go and log in to NETLINK AGENCIES using your username and password.</p>
+          <p style="margin:0;"><strong>2.</strong> Choose Manual Payment.</p>
+          <p style="margin:0;"><strong>3.</strong> Pay via Till.</p>
+          <p style="margin:0;"><strong>4.</strong> Submit your Transaction ID.</p>
+          <p style="margin:0;"><strong>5.</strong> Wait for admin to approve.</p>
+        </div>`
+        :
+        p(`🎉 Your activation fee has been fully covered! Your account has been activated automatically — no further action needed.`)
+      ),
+      replyFooter,
+      Number(remaining) > 0 ? undefined : '#00C853'
     )
   };
 
