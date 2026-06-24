@@ -175,6 +175,23 @@ window.approve=async function(docId,uid,amount,username){
           balance:(ud.balance||0)+amount,
           totalEarnings:(ud.totalEarnings||0)+amount
         });
+
+        // Send deposit approved email
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'deposit_approved',
+              to: ud.email||'',
+              username: username,
+              amount: 'KES '+amount,
+              date: new Date().toLocaleString()
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
       }
     }
     allData=allData.map(d=>d.id===docId?{...d,status:'approved'}:d);
