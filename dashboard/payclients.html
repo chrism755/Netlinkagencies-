@@ -42,63 +42,52 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
 .card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
 .card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
-.reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
 .btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
 .fg{margin-bottom:14px;}
 label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
-select option{background:var(--bg3);}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
+input:focus{border-color:var(--pk);}
+input::placeholder{color:#fff;opacity:.6;}
+.hint{font-size:11px;color:#fff;opacity:.6;margin-top:5px;}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
+.found{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:10px 12px;font-size:12px;margin-top:6px;display:none;}
+.notfound{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:10px 12px;font-size:12px;margin-top:6px;display:none;}
 .amt-w{position:relative;}
 .amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
 .amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+/* CONFIRM MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal.show{display:flex;}
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px 22px;width:100%;max-width:380px;text-align:center;}
+.mcard h3{font-size:17px;font-weight:800;color:#fff;margin-bottom:12px;}
+.mcard p{font-size:14px;color:#fff;opacity:.9;line-height:1.7;margin-bottom:18px;}
+.mcard .warn{font-size:12px;color:var(--yellow);font-weight:700;margin-top:-6px;margin-bottom:18px;}
+.mbtns{display:flex;gap:10px;}
+.mbtn{flex:1;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;}
+.mbtn.confirm{background:var(--green);color:#08210f;}
+.mbtn.cancel{background:var(--red);color:#fff;}
 </style>
 </head>
 <body>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal" id="confirmModal">
+  <div class="mcard">
+    <h3>⚠️ Confirm Payment</h3>
+    <p>Are you sure you want to pay <strong id="cm-amount" style="color:var(--gold);"></strong> to <strong id="cm-name" style="color:var(--pk2);"></strong>?</p>
+    <div class="warn">Note: once you confirm, this payment cannot be undone.</div>
+    <div class="mbtns">
+      <button class="mbtn confirm" onclick="confirmPay()">✅ Confirm</button>
+      <button class="mbtn cancel" onclick="closeConfirm()">❌ Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="layout">
 <nav class="sidebar" id="sb">
 <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
@@ -152,20 +141,25 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>💸 Pay for Clients</h3><p>Help a friend pay for something using your account balance. The amount is deducted from your balance.</p></div>
+<div class="card-pink"><h3>💸 Pay for Clients</h3><p>Help a friend complete their activation. Whatever amount you pay is deducted straight from your account balance and credited toward their activation fee.</p></div>
 <div class="card">
   <div style="background:var(--bg3);border-radius:10px;padding:12px;margin-bottom:16px;">
     <div style="font-size:11px;color:#fff;margin-bottom:4px;">YOUR ACCOUNT BALANCE</div>
     <div id="bal-display" style="font-size:22px;font-weight:900;color:var(--gold);">...</div>
   </div>
-  <div class="fg"><label>Client Username</label><input id="c-name" placeholder="Enter client username"/></div>
-  <div class="fg"><label>Client Phone Number</label><input id="c-phone" placeholder="+254 7XX XXX XXX"/></div>
-  <div class="fg"><label>Amount (<span class="cur-lbl">KES</span>)</label>
-    <div class="amt-w"><span class="amt-p">KES</span><input class="amt-i" id="c-amount" type="number" placeholder="Enter amount"/></div>
+  <div class="fg">
+    <label>Client Username</label>
+    <input id="c-name" placeholder="Enter exact username" oninput="onNameChange()"/>
+    <div class="found" id="name-found"></div>
+    <div class="notfound" id="name-notfound"></div>
+  </div>
+  <div class="fg"><label>Amount (KSh)</label>
+    <div class="amt-w"><span class="amt-p">KSh</span><input class="amt-i" id="c-amount" type="number" placeholder="Enter amount"/></div>
+    <div class="hint" id="amt-hint">Minimum KSh 5 — Maximum KSh 150</div>
   </div>
   <div class="ok" id="pay-ok"></div>
   <div class="err" id="pay-err"></div>
-  <button class="btn" id="pay-btn" onclick="payForClient()">💸 Pay for My Friend</button>
+  <button class="btn" id="pay-btn" onclick="payForClient()">💸 Pay for Client</button>
 </div>
 
 </div>
@@ -174,67 +168,193 @@ select option{background:var(--bg3);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
 const app=initializeApp(FB);
 const auth=getAuth(app),db=getFirestore(app);
-let U=null,UD=null;
+const FEE=150;
+let U=null,UD=null,foundClient=null,nameCheckTimer=null;
+
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace("/login");return;}
   U=u;
   const snap=await getDoc(doc(db,"users",u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
   UD=snap.data();UD.uid=u.uid;
-  // Currency based on user country
-  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
-  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
-  window._CUR=_currencyMap[UD.country]||'KES';
-  window._FEE=_feeMap[UD.country]||150;
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
-  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+  document.getElementById('bal-display').textContent='KSh '+(UD.balance||0);
 });
+
 window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
 window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
 window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
 
-async function pageReady(db,U,UD,F){
-  document.getElementById('bal-display').textContent=(window._CUR||'KES')+(UD.balance||0);
-  window._db=db;window._U=U;window._UD=UD;window._F=F;
-}
-window.payForClient=async function(){
-  const name=document.getElementById('c-name').value.trim();
-  const phone=document.getElementById('c-phone').value.trim();
-  const amount=parseInt(document.getElementById('c-amount').value)||0;
-  const ok=document.getElementById('pay-ok'),err=document.getElementById('pay-err'),btn=document.getElementById('pay-btn');
-  ok.style.display='none';err.style.display='none';
-  if(!name||!phone||!amount){err.textContent='⚠️ Please fill all fields.';err.style.display='block';return;}
-  if(amount>(_UD.balance||0)){err.textContent='❌ Insufficient account balance. Your balance is '+(window._CUR||'KES')+' '+(_UD.balance||0);err.style.display='block';return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Processing...';
+async function sendUserEmail(type,payload){
   try{
-    const {doc,updateDoc,increment,collection,addDoc,serverTimestamp}=_F;
-    await updateDoc(doc(_db,'users',_U.uid),{balance:increment(-amount)});
-    await addDoc(collection(_db,'clientPayments'),{uid:_U.uid,username:_UD.username,clientName:name,clientPhone:phone,amount:amount,status:'completed',createdAt:serverTimestamp()});
-    ok.innerHTML='✅ Payment of '+(window._CUR||'KES')+' '+amount+' for '+name+' completed! Deducted from your account balance.';
-    ok.style.display='block';
-    _UD.balance=(_UD.balance||0)-amount;
-    document.getElementById('bal-display').textContent=(window._CUR||'KES')+_UD.balance;
-    btn.disabled=false;btn.textContent='💸 Pay for My Friend';
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='💸 Pay for My Friend';}
+    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type,...payload})
+    });
+  }catch(e){console.log('Email send failed (non-blocking):',e.message);}
+}
+
+window.onNameChange=function(){
+  document.getElementById('name-found').style.display='none';
+  document.getElementById('name-notfound').style.display='none';
+  foundClient=null;
+  clearTimeout(nameCheckTimer);
+  const val=document.getElementById('c-name').value.trim();
+  if(!val) return;
+  nameCheckTimer=setTimeout(()=>checkClientUsername(val),500);
 };
 
+async function checkClientUsername(val){
+  const foundEl=document.getElementById('name-found'),notfoundEl=document.getElementById('name-notfound');
+  try{
+    const q=query(collection(db,'users'),where('username','==',val.toLowerCase()));
+    const snap=await getDocs(q);
+    if(snap.empty){
+      notfoundEl.textContent=`❌ We couldn't find any user "${val}"`;
+      notfoundEl.style.display='block';
+      foundEl.style.display='none';
+      foundClient=null;
+      return;
+    }
+    const d=snap.docs[0];
+    const data=d.data();
+    if(data.uid===U.uid || d.id===U.uid){
+      notfoundEl.textContent=`❌ You can't pay for your own account.`;
+      notfoundEl.style.display='block';
+      foundEl.style.display='none';
+      foundClient=null;
+      return;
+    }
+    foundClient={id:d.id,...data};
+    if(data.activated){
+      notfoundEl.textContent=`✅ Found "${data.username}" — but their account is already activated. No payment needed.`;
+      notfoundEl.style.display='block';
+      foundEl.style.display='none';
+      foundClient=null;
+      return;
+    }
+    const already=data.clientPaidAmount||0;
+    const remainingNeeded=Math.max(0,FEE-already);
+    foundEl.textContent=`✅ Found "${data.username}". Remaining needed for activation: KSh ${remainingNeeded}`;
+    foundEl.style.display='block';
+    notfoundEl.style.display='none';
+    document.getElementById('amt-hint').textContent=`Minimum KSh 5 — Maximum KSh ${Math.min(150,remainingNeeded)}`;
+  }catch(e){
+    notfoundEl.textContent='❌ '+e.message;
+    notfoundEl.style.display='block';
+  }
+}
+
+window.payForClient=async function(){
+  const err=document.getElementById('pay-err'),ok=document.getElementById('pay-ok');
+  err.style.display='none';ok.style.display='none';
+  const amount=parseInt(document.getElementById('c-amount').value)||0;
+
+  if(!foundClient){
+    err.textContent='⚠️ Please enter a valid client username first.';err.style.display='block';return;
+  }
+  const already=foundClient.clientPaidAmount||0;
+  const remainingNeeded=Math.max(0,FEE-already);
+  if(amount<5){err.textContent='⚠️ Minimum payment is KSh 5.';err.style.display='block';return;}
+  if(amount>150){err.textContent='⚠️ Maximum payment is KSh 150.';err.style.display='block';return;}
+  if(amount>remainingNeeded){err.textContent=`⚠️ ${foundClient.username} only needs KSh ${remainingNeeded} more to activate.`;err.style.display='block';return;}
+  if(amount>(UD.balance||0)){err.textContent='❌ Insufficient account balance. Your balance is KSh '+(UD.balance||0);err.style.display='block';return;}
+
+  document.getElementById('cm-amount').textContent='KSh '+amount;
+  document.getElementById('cm-name').textContent=foundClient.username;
+  document.getElementById('confirmModal').classList.add('show');
+};
+
+window.closeConfirm=function(){
+  document.getElementById('confirmModal').classList.remove('show');
+};
+
+window.confirmPay=async function(){
+  document.getElementById('confirmModal').classList.remove('show');
+  const err=document.getElementById('pay-err'),ok=document.getElementById('pay-ok'),btn=document.getElementById('pay-btn');
+  const amount=parseInt(document.getElementById('c-amount').value)||0;
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Processing...';
+
+  try{
+    // Re-fetch both docs fresh to avoid stale data
+    const bSnap=await getDoc(doc(db,'users',foundClient.id));
+    if(!bSnap.exists()) throw new Error('Client account no longer exists.');
+    const bData=bSnap.data();
+    if(bData.activated) throw new Error(foundClient.username+"'s account is already activated.");
+
+    const already=bData.clientPaidAmount||0;
+    const newTotal=already+amount;
+    const fullyPaid=newTotal>=FEE;
+    const remainingDue=Math.max(0,FEE-newTotal);
+
+    const now=new Date();
+    const dateStr=now.toLocaleDateString();
+    const timeStr=now.toLocaleTimeString();
+
+    // 1. Deduct from payer's balance
+    await updateDoc(doc(db,'users',U.uid),{balance:increment(-amount)});
+    const newBalance=(UD.balance||0)-amount;
+    UD.balance=newBalance;
+
+    // 2. Credit toward client's activation
+    const bUpdate={clientPaidAmount:newTotal,lastPayerUsername:UD.username};
+    if(fullyPaid){
+      bUpdate.activated=true;
+      bUpdate.activatedAt=serverTimestamp();
+      bUpdate.activationMethod='client_payment';
+    }
+    await updateDoc(doc(db,'users',foundClient.id),bUpdate);
+
+    // 3. Log the payment for the admin notifications page + receipt
+    const payDoc=await addDoc(collection(db,'clientPayments'),{
+      payerUid:U.uid,payerUsername:UD.username,payerEmail:UD.email||U.email,
+      payeeUid:foundClient.id,payeeUsername:bData.username,payeeEmail:bData.email,
+      amount,remainingDue,fullyPaid,
+      payerBalanceAfter:newBalance,
+      date:dateStr,time:timeStr,
+      createdAt:serverTimestamp()
+    });
+
+    // 4. Update UI
+    document.getElementById('bal-display').textContent='KSh '+newBalance;
+    ok.innerHTML='✅ Payment of KSh '+amount+' to '+bData.username+' completed! '+
+      (fullyPaid?bData.username+"'s account has been activated automatically. ":'')+
+      '<br><a href="/receipt.html?id='+payDoc.id+'" target="_blank" style="color:#69F0AE;text-decoration:underline;">📄 View &amp; download receipt</a>';
+    ok.style.display='block';
+    document.getElementById('c-name').value='';
+    document.getElementById('c-amount').value='';
+    document.getElementById('name-found').style.display='none';
+    document.getElementById('name-notfound').style.display='none';
+    foundClient=null;
+    btn.disabled=false;btn.textContent='💸 Pay for Client';
+
+    // 5. Send emails (non-blocking)
+    const receiptUrl='https://netlinkagencies.linkpc.net/receipt.html?id='+payDoc.id;
+    sendUserEmail('client_payment_sent',{
+      to:UD.email||U.email, username:UD.username, clientUsername:bData.username,
+      amount, date:dateStr, time:timeStr, balance:newBalance, receiptUrl
+    });
+    sendUserEmail('client_payment_received',{
+      to:bData.email, username:bData.username, payerUsername:UD.username,
+      amount, remaining:remainingDue, date:dateStr, time:timeStr
+    });
+    if(fullyPaid){
+      sendUserEmail('activation',{
+        to:bData.email, username:bData.username, country:bData.country||'', date:dateStr
+      });
+    }
+  }catch(e){
+    err.textContent='❌ '+e.message;err.style.display='block';
+    btn.disabled=false;btn.textContent='💸 Pay for Client';
+  }
+};
 </script>
 </body>
 </html>
