@@ -210,7 +210,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 
 
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, serverTimestamp, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
@@ -422,6 +422,21 @@ function startPolling(reference){
         document.getElementById('fail-popup').style.display='flex';
         document.getElementById('stk-btn').disabled=false;
         document.getElementById('stk-btn').textContent='📱 Pay KES 150';
+
+        // Send STK failure email
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'stk_failed',
+              to: currentUser.email,
+              username: userData?.username||'User'
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
       }
     } catch(e){ /* keep polling */ }
   },5000);
@@ -468,6 +483,105 @@ async function activateUser(txnId){
       console.log('Email result:', emailData);
     } catch(emailErr){
       console.log('Email error:',emailErr);
+    }
+
+    // Pay referral commissions (same logic as manual admin approval)
+    const referredBy = userData?.referredBy || '';
+    const newMemberUsername = userData?.username || 'User';
+    if(referredBy){
+      const q1=query(collection(db,'users'),where('referralCode','==',referredBy));
+      const snap1=await getDocs(q1);
+      if(!snap1.empty){
+        const ref1Doc=snap1.docs[0];
+        const ref1Data=ref1Doc.data();
+        await updateDoc(doc(db,'users',ref1Doc.id),{
+          balance:increment(80),
+          totalEarnings:increment(80),
+          level1Count:increment(1)
+        });
+
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'referral_level1',
+              to: ref1Data.email||'',
+              username: ref1Data.username||'User',
+              amount: 'KES 80',
+              referralUsername: newMemberUsername,
+              level: '1',
+              date: new Date().toLocaleString()
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
+
+        if(ref1Data.referredBy){
+          const q2=query(collection(db,'users'),where('referralCode','==',ref1Data.referredBy));
+          const snap2=await getDocs(q2);
+          if(!snap2.empty){
+            const ref2Doc=snap2.docs[0];
+            const ref2Data=ref2Doc.data();
+            await updateDoc(doc(db,'users',ref2Doc.id),{
+              balance:increment(20),
+              totalEarnings:increment(20),
+              level2Count:increment(1)
+            });
+
+            try{
+              await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({
+                  type:'referral_level2',
+                  to: ref2Data.email||'',
+                  username: ref2Data.username||'User',
+                  amount: 'KES 20',
+                  referralUsername: newMemberUsername,
+                  level: '2',
+                  date: new Date().toLocaleString()
+                })
+              });
+            } catch(emailErr){
+              console.log('Email error:',emailErr);
+            }
+
+            if(ref2Data.referredBy){
+              const q3=query(collection(db,'users'),where('referralCode','==',ref2Data.referredBy));
+              const snap3=await getDocs(q3);
+              if(!snap3.empty){
+                const ref3Doc=snap3.docs[0];
+                const ref3Data=ref3Doc.data();
+                await updateDoc(doc(db,'users',ref3Doc.id),{
+                  balance:increment(10),
+                  totalEarnings:increment(10),
+                  level3Count:increment(1)
+                });
+
+                try{
+                  await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                      type:'referral_level3',
+                      to: ref3Data.email||'',
+                      username: ref3Data.username||'User',
+                      amount: 'KES 10',
+                      referralUsername: newMemberUsername,
+                      level: '3',
+                      date: new Date().toLocaleString()
+                    })
+                  });
+                } catch(emailErr){
+                  console.log('Email error:',emailErr);
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     document.getElementById('stk-modal').style.display='none';
