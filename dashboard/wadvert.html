@@ -201,9 +201,13 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
 
   drawAdvert();
+  await checkCooldown();
+});
 
-  // Rolling 7-day reset: based on THIS user's own last submission day, not a fixed global day
-  const q=query(collection(db,'waAdverts'),where('uid','==',u.uid),orderBy('createdAt','desc'),limit(1));
+// Re-usable cooldown check — called both on page load AND right before final submission,
+// so it can't be bypassed by back button, cached tabs, or staying on the page past midnight.
+async function checkCooldown(){
+  const q=query(collection(db,'waAdverts'),where('uid','==',U.uid),orderBy('createdAt','desc'),limit(1));
   const existing=await getDocs(q);
   if(!existing.empty){
     const data=existing.docs[0].data();
@@ -213,9 +217,11 @@ onAuthStateChanged(auth,async u=>{
       const nextStr=nextEligible.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
       document.getElementById('submit-section').innerHTML=
         '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you already submitted this week ('+data.viewCount+' views = '+(window._CUR||'KES')+' '+data.viewCount+'). Come back on <strong>'+nextStr+'</strong>. Thank you!</div>';
+      return true; // blocked
     }
   }
-});
+  return false; // clear to submit
+}
 
 window.handleScreenshot=function(input){
   const ok=document.getElementById('scan-result'),err=document.getElementById('wa-err'),scanMsg=document.getElementById('scan-msg'),btn=document.getElementById('wa-btn'),confirmFg=document.getElementById('confirm-fg');
@@ -267,6 +273,11 @@ window.confirmSubmitWA=async function(){
   if(!finalViews){err.textContent='⚠️ Please enter a valid number of viewers.';err.style.display='block';return;}
 
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
+
+  // Re-check cooldown right now — this is the real gate, not just the page-load check
+  const blocked=await checkCooldown();
+  if(blocked) return; // checkCooldown() already replaced the section with the error message
+
   try{
     await addDoc(collection(db,'waAdverts'),{
       uid:U.uid,username:UD.username,
