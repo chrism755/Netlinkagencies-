@@ -85,26 +85,26 @@ input::placeholder{color:#fff;opacity:.5;}
   <div class="card-pink"><h3>📲 WhatsApp Adverts</h3><p>Get 1 picture per week. Post on your WhatsApp status. Upload screenshot of your viewers. <span class="kes-val" data-kes="1">KES 1</span> per viewer goes to Total Earnings! Upload allowed once per week (resets every Thursday).</p></div>
   <div class="card">
     <h3>📸 This Week's Advert Picture</h3>
-    <div style="background:#000;border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
-      <div style="text-align:center;"><div style="font-size:50px;">📢</div><p style="color:#fff;font-size:13px;margin-top:8px;">Weekly Advert Picture</p></div>
-    </div>
-    <button class="btn" onclick="alert('📸 Advert picture downloaded! Post it on your WhatsApp status.')">⬇️ Download Advert Picture</button>
+    <canvas id="advert-canvas" width="540" height="960" style="width:100%;max-width:280px;display:block;margin:0 auto 14px;border-radius:12px;"></canvas>
+    <button class="btn" id="dl-btn" onclick="downloadAdvert()">⬇️ Download Advert Picture</button>
   </div>
   <div class="card" id="submit-section">
     <h3>📤 Submit Your Views</h3>
-    <p style="margin-bottom:14px;font-size:13px;">Post the picture on your WhatsApp status, screenshot your viewers, upload it below and enter number of views.</p>
+    <p style="margin-bottom:14px;font-size:13px;">Post the picture on your WhatsApp status, then upload a screenshot of your viewers below. Our system will scan it and detect your view count automatically.</p>
     <div class="fg"><label>Upload Screenshot of Views</label>
-      <div class="upload-box" onclick="document.getElementById('ss-file').click()">
+      <div class="upload-box" id="upload-box" onclick="document.getElementById('ss-file').click()">
         <div style="font-size:32px;margin-bottom:8px;">📸</div>
         <p style="color:#fff;font-size:13px;">Tap to upload screenshot</p>
-        <input type="file" id="ss-file" accept="image/*" style="display:none;" onchange="previewImg(this)"/>
+        <input type="file" id="ss-file" accept="image/*" style="display:none;" onchange="handleScreenshot(this)"/>
       </div>
       <div id="ss-preview"></div>
     </div>
-    <div class="fg"><label>Number of Views</label><input id="wa-views" type="number" placeholder="Enter exact number of viewers"/></div>
+    <div class="polling-bar" id="scan-msg" style="display:none;align-items:center;gap:8px;background:rgba(255,77,184,.1);border:1.5px solid var(--pk2);color:#FF9DD6;border-radius:10px;padding:12px;font-size:13px;font-weight:700;margin:10px 0;"><span class="spinner"></span>Scanning your screenshot...</div>
+    <div class="ok" id="scan-result"></div>
+    <div class="fg" id="confirm-fg" style="display:none;"><label>Confirm Number of Viewers</label><input id="confirm-views" type="number"/></div>
     <div class="ok" id="wa-ok"></div>
     <div class="err" id="wa-err"></div>
-    <button class="btn" id="wa-btn" onclick="submitWA()">📤 Submit Views</button>
+    <button class="btn" id="wa-btn" onclick="confirmSubmitWA()" style="display:none;">✅ Confirm & Submit</button>
   </div>
 </div>
 </div>
@@ -112,19 +112,80 @@ input::placeholder{color:#fff;opacity:.5;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 
-// Get current week number (resets every Thursday)
-function getWeekKey(){
-  const now=new Date();
-  const day=now.getDay(); // 0=Sun, 4=Thu
-  const diff=now.getDate()-(day>=4?day-4:day+3);
-  const thursday=new Date(now.setDate(diff));
-  return thursday.toISOString().split('T')[0];
+// ISO week number (used to rotate the weekly advert design)
+function getISOWeek(date){
+  const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+  d.setUTCDate(d.getUTCDate()+4-(d.getUTCDay()||7));
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
 }
+
+// 5 rotating weekly designs — cycles automatically based on week number
+const ADVERT_DESIGNS=[
+  {g1:'#B0156A',g2:'#FF4DB8',headline:'Earn While You Scroll!',sub:'Get paid for posting on WhatsApp Status',emoji:'💰'},
+  {g1:'#1565C0',g2:'#42A5F5',headline:'Turn Views Into Cash!',sub:'Join NETLINK AGENCIES today',emoji:'📲'},
+  {g1:'#2E7D32',g2:'#66BB6A',headline:'Your Status, Your Income',sub:'KES 1 per viewer — paid instantly',emoji:'💵'},
+  {g1:'#E65100',g2:'#FFA726',headline:'Refer. Earn. Repeat.',sub:'Build your network with NETLINK AGENCIES',emoji:'🚀'},
+  {g1:'#6A1B9A',g2:'#AB47BC',headline:'Get Paid To Share!',sub:'Post. Screenshot. Earn.',emoji:'🎉'}
+];
+
+function drawAdvert(){
+  const canvas=document.getElementById('advert-canvas');
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  const weekNum=getISOWeek(new Date());
+  const d=ADVERT_DESIGNS[weekNum%ADVERT_DESIGNS.length];
+
+  const grad=ctx.createLinearGradient(0,0,w,h);
+  grad.addColorStop(0,d.g1);grad.addColorStop(1,d.g2);
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,255,255,.95)';
+  ctx.font='bold 110px Arial';
+  ctx.fillText(d.emoji,w/2,h*0.32);
+
+  ctx.fillStyle='#fff';
+  ctx.font='bold 48px Arial';
+  wrapText(ctx,d.headline,w/2,h*0.46,w-80,58);
+
+  ctx.font='28px Arial';
+  ctx.fillStyle='rgba(255,255,255,.9)';
+  wrapText(ctx,d.sub,w/2,h*0.58,w-100,38);
+
+  ctx.font='bold 34px Arial';
+  ctx.fillStyle='#fff';
+  ctx.fillText('NETLINK AGENCIES',w/2,h*0.88);
+  ctx.font='22px Arial';
+  ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText('netlinkagencies.linkpc.net',w/2,h*0.92);
+}
+
+function wrapText(ctx,text,x,y,maxWidth,lineHeight){
+  const words=text.split(' ');
+  let line='',lines=[];
+  for(const word of words){
+    const test=line+word+' ';
+    if(ctx.measureText(test).width>maxWidth&&line!==''){lines.push(line);line=word+' ';}
+    else line=test;
+  }
+  lines.push(line);
+  const startY=y-((lines.length-1)*lineHeight)/2;
+  lines.forEach((l,i)=>ctx.fillText(l.trim(),x,startY+i*lineHeight));
+}
+
+window.downloadAdvert=function(){
+  const canvas=document.getElementById('advert-canvas');
+  const link=document.createElement('a');
+  link.download='netlink-advert-week.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+};
 
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
@@ -137,75 +198,92 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
-  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
 
-  // Check if already submitted this week using FIREBASE (not localStorage)
-  const weekKey=getWeekKey();
-  const q=query(collection(db,'waAdverts'),where('uid','==',u.uid),where('week','==',weekKey));
+  drawAdvert();
+
+  // Rolling 7-day reset: based on THIS user's own last submission day, not a fixed global day
+  const q=query(collection(db,'waAdverts'),where('uid','==',u.uid),orderBy('createdAt','desc'),limit(1));
   const existing=await getDocs(q);
   if(!existing.empty){
     const data=existing.docs[0].data();
-    document.getElementById('submit-section').innerHTML=
-      '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you have already uploaded this week ('+data.views+' views = '+(window._CUR||'KES')+' '+data.views+'). Come again on Thursday. Thank you!</div>';
+    const lastDate=data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+    const nextEligible=new Date(lastDate.getTime()+7*24*60*60*1000);
+    if(Date.now()<nextEligible.getTime()){
+      const nextStr=nextEligible.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+      document.getElementById('submit-section').innerHTML=
+        '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you already submitted this week ('+data.viewCount+' views = '+(window._CUR||'KES')+' '+data.viewCount+'). Come back on <strong>'+nextStr+'</strong>. Thank you!</div>';
+    }
   }
 });
 
-window.previewImg=function(input){
-  if(input.files&&input.files[0]){
-    const r=new FileReader();
-    r.onload=e=>document.getElementById('ss-preview').innerHTML='<img src="'+e.target.result+'" style="width:100%;border-radius:10px;margin-top:8px;max-height:200px;object-fit:cover;"/>';
-    r.readAsDataURL(input.files[0]);
-  }
+window.handleScreenshot=function(input){
+  const ok=document.getElementById('scan-result'),err=document.getElementById('wa-err'),scanMsg=document.getElementById('scan-msg'),btn=document.getElementById('wa-btn'),confirmFg=document.getElementById('confirm-fg');
+  ok.style.display='none';err.style.display='none';btn.style.display='none';confirmFg.style.display='none';
+
+  if(!input.files||!input.files[0]) return;
+  const file=input.files[0];
+  const r=new FileReader();
+  r.onload=async e=>{
+    const dataUrl=e.target.result;
+    document.getElementById('ss-preview').innerHTML='<img src="'+dataUrl+'" style="width:100%;border-radius:10px;margin-top:8px;max-height:200px;object-fit:cover;"/>';
+
+    const base64=dataUrl.split(',')[1];
+    scanMsg.style.display='flex';
+
+    try{
+      const res=await fetch('https://netlinkagencies.vercel.app/api/verify-screenshot',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({image:base64,mediaType:file.type})
+      });
+      const result=await res.json();
+      scanMsg.style.display='none';
+
+      if(result.isValid && result.viewCount>0){
+        ok.innerHTML='✅ We detected <strong>'+result.viewCount+' viewers</strong> in your screenshot. Please double-check this number below before submitting.';
+        ok.style.display='block';
+        document.getElementById('confirm-views').value=result.viewCount;
+        confirmFg.style.display='block';
+        btn.style.display='block';
+      } else {
+        err.textContent='❌ '+(result.reason||'We could not detect a viewer count in this screenshot.')+' Please upload a clear screenshot of your status viewers.';
+        err.style.display='block';
+      }
+    }catch(e){
+      scanMsg.style.display='none';
+      err.textContent='❌ Could not scan the screenshot right now. Please try again.';
+      err.style.display='block';
+    }
+  };
+  r.readAsDataURL(file);
 };
 
-window.submitWA=async function(){
-  const views=parseInt(document.getElementById('wa-views').value)||0;
-  const file=document.getElementById('ss-file').files[0];
+window.confirmSubmitWA=async function(){
   const ok=document.getElementById('wa-ok'),err=document.getElementById('wa-err'),btn=document.getElementById('wa-btn');
   ok.style.display='none';err.style.display='none';
 
-  if(!views){err.textContent='⚠️ Please enter number of views.';err.style.display='block';return;}
-  if(!file){err.textContent='⚠️ Please upload a screenshot of your views.';err.style.display='block';return;}
-
-  // Check Firebase again before submitting
-  const weekKey=getWeekKey();
-  const q=query(collection(db,'waAdverts'),where('uid','==',U.uid),where('week','==',weekKey));
-  const existing=await getDocs(q);
-  if(!existing.empty){
-    err.textContent='❌ Sorry '+UD.username+', you have already uploaded this week. Come again on Thursday. Thank you!';
-    err.style.display='block';return;
-  }
+  const finalViews=parseInt(document.getElementById('confirm-views').value)||0;
+  if(!finalViews){err.textContent='⚠️ Please enter a valid number of viewers.';err.style.display='block';return;}
 
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
   try{
-    // Save to Firebase with week key
     await addDoc(collection(db,'waAdverts'),{
       uid:U.uid,username:UD.username,
-      views:views,amount:views,
-      week:weekKey,
+      viewCount:finalViews,amount:finalViews,
       createdAt:serverTimestamp()
     });
-    // Credit total earnings
-    await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(views)});
+    await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(finalViews)});
 
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong> for submitting your WhatsApp viewers! You had <strong>'+views+' views</strong>. You have earned <strong>'+(window._CUR||'KES')+' '+views+'</strong>. '+(window._CUR||'KES')+' '+views+' has been instantly disbursed to your Total Earnings. Come back next Thursday for a new advert picture!';
+    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You had <strong>'+finalViews+' views</strong> and earned <strong>'+(window._CUR||'KES')+' '+finalViews+'</strong>, instantly added to your Total Earnings. Come back in 7 days for a new advert picture!';
     ok.style.display='block';
-    document.getElementById('submit-section').querySelector('.fg').style.display='none';
-    document.getElementById('wa-views').style.display='none';
+    document.getElementById('scan-result').style.display='none';
+    document.getElementById('confirm-fg').style.display='none';
+    document.getElementById('upload-box').style.display='none';
     btn.style.display='none';
   }catch(e){
     err.textContent='❌ '+e.message;err.style.display='block';
-    btn.disabled=false;btn.textContent='📤 Submit Views';
+    btn.disabled=false;btn.textContent='✅ Confirm & Submit';
   }
 };
 
