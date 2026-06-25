@@ -91,10 +91,11 @@ export default async function handler(req, res) {
 
     withdrawal_submitted: renderEmail(
       'Withdraw Request 💵',
-      p(`Dear ${username}, your withdraw request of ${amount} has been received.`) +
+      p(`Dear ${username}, your withdraw request has been received.`) +
       receiptTable([
         ['Username', username],
         ['Amount Requested', amount],
+        ['Amount You Will Receive', req.body.receive || amount],
         ['Date', date],
         ['Method', method],
         ['Estimated Time', '5-10 minutes'],
@@ -107,7 +108,8 @@ export default async function handler(req, res) {
       '🚀 Withdraw Processed 💵',
       p(`Hi ${username}, your withdrawal was successfully approved.`) +
       receiptTable([
-        ['Amount', amount],
+        ['Amount Requested', amount],
+        ['Amount Sent to You', req.body.receive || amount],
         ['Method', method],
         ['Date', date],
         ['Time Taken', 'Processed instantly']
