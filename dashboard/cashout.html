@@ -391,6 +391,7 @@ window.doWithdraw=async function(method, methodName){
           to: U.email,
           username: UD.username,
           amount: (window._CUR||'KES')+' '+fmt(amt),
+          receive: (window._CUR||'KES')+' '+fmt(amt-fee),
           method: methodName||method,
           date: new Date().toLocaleString()
         })
