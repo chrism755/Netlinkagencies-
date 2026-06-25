@@ -134,7 +134,8 @@ function render(){
   list.innerHTML=filtered.map(d=>`
     <div class="rc">
       <div class="rn">${d.username||''} <span class="${d.status}-badge">${d.status}</span></div>
-      <div class="rrow"><div class="rl">Amount</div><div class="amount-big">KES ${d.amount||0}</div></div>
+      <div class="rrow"><div class="rl">Amount Entered</div><div class="amount-big">KES ${d.amount||0}</div></div>
+      <div class="rrow"><div class="rl">Amount to Send</div><div class="amount-big" style="color:var(--green);">KES ${d.receive||0}</div></div>
       <div class="rrow"><div class="rl">Method</div><div class="rv">${d.method||'M-PESA'}</div></div>
       <div class="rrow"><div class="rl">Phone</div><div class="rv">${d.phone||'—'}</div></div>
       ${d.paypalEmail?`<div class="rrow"><div class="rl">PayPal</div><div class="rv">${d.paypalEmail}</div></div>`:''}
@@ -157,6 +158,8 @@ window.approve=async function(btnEl,docId,uid,amount,username,method){
   btnEl.disabled=true;
   btnEl.innerHTML='<span class="spinner"></span>Approving...';
   try{
+    // Get withdraw record to access receive amount
+    const withdrawData=allData.find(d=>d.id===docId)||{};
     // Mark withdrawal as approved
     await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
 
@@ -185,6 +188,7 @@ window.approve=async function(btnEl,docId,uid,amount,username,method){
               to: userData.email||'',
               username: username,
               amount: 'KES '+amount,
+              receive: 'KES '+(withdrawData.receive||amount),
               method: method||'M-PESA',
               date: new Date().toLocaleString()
             })
