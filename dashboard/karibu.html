@@ -6,95 +6,35 @@
 <title>Karibu Bonus — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:260px;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.layout{display:flex;min-height:100vh;}
-.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
-.sidebar.open{transform:translateX(0);}
-.sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
-.logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
-.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
-.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
-.sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
-.sb-nav::-webkit-scrollbar{width:3px;}
-.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
-.ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
-.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
-.ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
-.arr{margin-left:auto;font-size:10px;}
-.sub-nav{display:none;background:rgba(0,0,0,.3);}
-.sub-nav.open{display:block;}
-.sub-ni{padding-left:44px!important;font-size:12px;}
-.main{flex:1;}
-.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
-.menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
-.tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
-.content{padding:16px 14px;max-width:760px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
-.overlay.show{display:block;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
-.card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
-.card p{font-size:13px;color:#fff;line-height:1.7;}
-.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
-.card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
-.card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
-.reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
-select option{background:var(--bg3);}
-.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
-.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column}
+.sidebar.open{transform:translateX(0)}
+.sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk))}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3)}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1}
+.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px}
+.sb-nav{flex:1;overflow-y:auto;padding:6px 0}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk)}
+.main{flex:1}
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50}
+.menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer}
+.tb-title{font-size:15px;font-weight:800;color:#fff;flex:1}
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.08)}
+.content{padding:16px 14px;max-width:760px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px}
+.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important}
+.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none}
+.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -103,46 +43,10 @@ select option{background:var(--bg3);}
 <nav class="sidebar" id="sb">
 <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
 <div class="sb-nav">
-<a class="ni" href="/dashboard"><span class="ni-icon">🏠</span>Home</a>
-<a class="ni" href="/dashboard/tournaments"><span class="ni-icon">🏆</span>E-Tournaments</a>
-<a class="ni active" href="/dashboard/karibu"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-<a class="ni" href="/dashboard/payclients"><span class="ni-icon">💸</span>Pay for Clients</a>
-<a class="ni" href="/dashboard/deposit"><span class="ni-icon">💰</span>Deposit</a>
-<a class="ni" href="/dashboard/mentorship"><span class="ni-icon">🎓</span>Mentorship</a>
-<a class="ni" href="/dashboard/Company-advertisement"><span class="ni-icon">📢</span>Company Advert</a>
-<a class="ni" href="/dashboard/betting"><span class="ni-icon">⚽</span>Betting Prediction</a>
-<a class="ni" href="/dashboard/cashout"><span class="ni-icon">💳</span>Cashout</a>
-<a class="ni" href="/dashboard/article"><span class="ni-icon">📰</span>Article</a>
-<a class="ni" href="/dashboard/viewads"><span class="ni-icon">👁️</span>View Ads</a>
-<div class="ns">Videos</div>
-<a class="ni" href="/dashboard/tiktok"><span class="ni-icon">🎵</span>TikTok Videos</a>
-<a class="ni" href="/dashboard/instagram"><span class="ni-icon">📸</span>Instagram Videos</a>
-<a class="ni" href="/dashboard/youtube"><span class="ni-icon">▶️</span>YouTube Videos</a>
-<div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
-<div class="sub-nav" id="sw">
-<a class="ni sub-ni" href="/dashboard/withdraw-videos">Videos</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-surveys">Surveys</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-quiz">Trivia Quiz</a>
-<a class="ni sub-ni" href="/dashboard/withdraw-numgame">Number Game</a>
-</div>
-<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
-<div class="sub-nav" id="sd">
-<a class="ni sub-ni" href="/dashboard/downlines-1">Level 1</a>
-<a class="ni sub-ni" href="/dashboard/downlines-2">Level 2</a>
-<a class="ni sub-ni" href="/dashboard/downlines-3">Level 3</a>
-</div>
-<div class="ns">More</div>
-<a class="ni" href="/dashboard/wadvert"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-<a class="ni" href="/dashboard/forex"><span class="ni-icon">📈</span>Forex Trading</a>
-<a class="ni" href="/dashboard/trivia"><span class="ni-icon">🧠</span>Trivia Quiz</a>
-<a class="ni" href="/dashboard/survey"><span class="ni-icon">📋</span>Daily Survey</a>
-<a class="ni" href="/dashboard/mathquiz"><span class="ni-icon">🔢</span>Math Quiz</a>
-<a class="ni" href="/dashboard/numgame"><span class="ni-icon">🎲</span>Number Game</a>
-<a class="ni" href="/dashboard/community"><span class="ni-icon">💬</span>Community</a>
-<a class="ni" href="/dashboard/help"><span class="ni-icon">🆘</span>Get Help</a>
-<a class="ni" href="/dashboard/timetable"><span class="ni-icon">🗓️</span>Time Table</a>
-<a class="ni" href="/dashboard/profile"><span class="ni-icon">👤</span>Profile</a>
-<a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+<a class="ni" href="/dashboard">🏠 Home</a>
+<a class="ni" href="/dashboard/tournaments">🏆 E-Tournaments</a>
+<a class="ni active" href="/dashboard/karibu">🎁 Karibu Bonus</a>
+<!-- more nav -->
 </div></nav>
 <div class="main">
 <div class="topbar">
@@ -152,16 +56,18 @@ select option{background:var(--bg3);}
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>🎁 Karibu Bonus — <span class="kes-val" data-kes="100">KES 100</span></h3><p>Invite 20 friends using your referral link. Once all 20 register, claim your <span class="kes-val" data-kes="100">KES 100</span> bonus here!</p></div>
+<div class="card-pink"><h3>🎁 Karibu Bonus — <span class="kes-val" data-kes="100">KES 100</span></h3><p>Invite 20 friends using your referral link. Once all 20 register, claim your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus.</p></div>
 <div class="card">
   <h3>📊 Your Progress</h3>
-  <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:13px;color:#fff;">Referrals</span><span id="ref-count" style="font-weight:800;color:var(--gold);">Loading...</span></div>
+  <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:13px;color:#fff;">Referrals</span><span id="ref-count" style="font-weight:800;color:var(--gold)">...</span></div>
   <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
   <p style="font-size:11px;color:#fff;margin-top:8px;">Invite 20 people to unlock claim button</p>
 </div>
-<div class="card" id="claim-section" style="display:none;">
+
+<!-- Claim section: always visible per request -->
+<div class="card" id="claim-section" style="display:block;">
   <h3>🎉 Claim Your Bonus!</h3>
-  <p style="margin-bottom:12px;">You have reached 20 referrals! Click below to claim your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus.</p>
+  <p style="margin-bottom:12px;">Claim your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus. This amount is fixed and cannot be changed.</p>
   <div class="ok" id="claim-ok"></div>
   <div class="err" id="claim-err"></div>
   <button class="btn btn-green" id="claim-btn" onclick="claimBonus()">🎁 Claim <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus</button>
@@ -173,74 +79,92 @@ select option{background:var(--bg3);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
+import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.appspot.com"};
 const app=initializeApp(FB);
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login");return;}
+  if(!u){window.location.replace("/login");return}
   U=u;
   const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
+  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return}
   UD=snap.data();UD.uid=u.uid;
-  // Currency based on user country
   const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  // Update KES value spans with correct currency
   const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
   const _rate=_rates[window._CUR]||1;
-  document.querySelectorAll('.kes-val').forEach(el=>{
-    const base=parseInt(el.getAttribute('data-kes'));
-    const converted=Math.round(base*_rate);
-    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
-  });
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
+  document.querySelectorAll('.kes-val').forEach(el=>{const base=parseInt(el.getAttribute('data-kes'));const converted=Math.round(base*_rate);el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();});
   document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
+  const mw=document.getElementById('min-withdraw');if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment});
 });
-window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
-window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
+window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show")};
+window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show")};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾"};
 window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
 
 async function pageReady(db,U,UD,F){
   const count = UD.level1Count||0;
   document.getElementById('ref-count').textContent = count+' / 20';
   document.getElementById('prog').style.width = Math.min((count/20)*100,100)+'%';
-  if(count>=20 && !UD.karibu){
-    document.getElementById('claim-section').style.display='block';
-  } else if(UD.karibu){
+  // Always show claim section; button behavior handled on click
+  document.getElementById('claim-section').style.display='block';
+  if(UD.karibu){
     document.getElementById('claim-section').innerHTML='<div class="ok" style="display:block;">✅ You have already claimed your <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus! It has been added to your account balance.</div>';
     document.getElementById('claim-section').style.display='block';
   }
 }
+
 window.claimBonus=async function(){
   const btn=document.getElementById('claim-btn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Claiming...';
-  try{
-    const {doc,updateDoc,increment}=window._F||{};
-    await fetch('https://firestore.googleapis.com/v1/projects/netlink-agencies-6399e/databases/(default)/documents/users/'+U.uid+'?updateMask.fieldPaths=balance&updateMask.fieldPaths=karibu',{method:'PATCH'});
-    const F2=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const db2=F2.getFirestore();
-    await F2.updateDoc(F2.doc(db2,'users',U.uid),{balance:F2.increment(100),karibu:100});
-    document.getElementById('claim-ok').textContent='🎉 Congratulations! <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus has been added to your account balance!';
-    document.getElementById('claim-ok').style.display='block';
+  const okEl=document.getElementById('claim-ok'), errEl=document.getElementById('claim-err');
+  okEl.style.display='none'; errEl.style.display='none';
+  const count = UD.level1Count||0;
+  if(UD.karibu){
+    okEl.textContent='✅ You have already claimed your KES 100 Karibu Bonus! It has been added to your account balance.';
+    okEl.style.display='block';
     btn.style.display='none';
-  }catch(e){document.getElementById('claim-err').textContent='❌ '+e.message;document.getElementById('claim-err').style.display='block';btn.disabled=false;btn.textContent='🎁 Claim <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus';}
+    return;
+  }
+  if(count < 20){
+    errEl.textContent = `❌ You need 20 referrals to claim this bonus. You currently have ${count}.`;
+    errEl.style.display='block';
+    // brief shake / auto-hide
+    setTimeout(()=>{errEl.style.display='none';},5000);
+    return;
+  }
+
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Claiming...';
+  try{
+    // Update Firestore: increment balance and totalEarnings and set karibu
+    const F2 = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const db2 = F2.getFirestore();
+    await F2.updateDoc(F2.doc(db2,'users',U.uid),{ balance: F2.increment(100), totalEarnings: F2.increment(100), karibu: 100 });
+
+    // Update UI
+    UD.karibu = 100;
+    UD.balance = (UD.balance||0) + 100;
+    UD.totalEarnings = (UD.totalEarnings||0) + 100;
+
+    okEl.innerHTML = `🎉 Congratulations! You have claimed <span class="kes-val" data-kes="100">KES 100</span>. Check your account balance.`;
+    okEl.style.display='block';
+    btn.style.display='none';
+
+    // Update displayed balances if present
+    const balEl = document.getElementById('acc-balance') || document.getElementById('bal-display');
+    if(balEl) balEl.textContent = (window._CUR||'KES')+' '+(UD.balance).toLocaleString();
+    const te = document.getElementById('total-earn'); if(te) te.textContent = (window._CUR||'KES')+' '+(UD.totalEarnings).toLocaleString();
+
+  }catch(e){
+    errEl.textContent='❌ '+(e.message||e);
+    errEl.style.display='block';
+    btn.disabled=false; btn.textContent='🎁 Claim <span class="kes-val" data-kes="100">KES 100</span> Karibu Bonus';
+  }
 };
 
 </script>
