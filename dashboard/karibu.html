@@ -160,6 +160,25 @@ window.claimBonus=async function(){
     if(balEl) balEl.textContent = (window._CUR||'KES')+' '+(UD.balance).toLocaleString();
     const te = document.getElementById('total-earn'); if(te) te.textContent = (window._CUR||'KES')+' '+(UD.totalEarnings).toLocaleString();
 
+    // Send email notification to the user about the credited Karibu bonus
+    try{
+      const toEmail = UD.email || (U && U.email) || '';
+      if(toEmail){
+        const resp = await fetch('/api/send-email',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ type: 'karibu_bonus', to: toEmail, username: UD.username || '', amount: 100 })
+        });
+        if(!resp.ok){
+          console.warn('Failed to send Karibu email', await resp.text());
+        }
+      } else {
+        console.warn('No user email available to send Karibu notification');
+      }
+    }catch(se){
+      console.warn('Error sending Karibu email', se);
+    }
+
   }catch(e){
     errEl.textContent='❌ '+(e.message||e);
     errEl.style.display='block';
