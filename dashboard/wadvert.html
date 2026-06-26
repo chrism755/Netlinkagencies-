@@ -227,19 +227,19 @@ onAuthStateChanged(auth,async u=>{
   await checkCooldown();
 });
 
-// Re-usable cooldown check — called both on page load AND right before final submission,
-// so it can't be bypassed by back button, cached tabs, or staying on the page past midnight.
+// Re-usable cooldown check — reads directly from user document to avoid index issues
 async function checkCooldown(){
-  const q=query(collection(db,'waAdverts'),where('uid','==',U.uid),orderBy('createdAt','desc'),limit(1));
-  const existing=await getDocs(q);
-  if(!existing.empty){
-    const data=existing.docs[0].data();
-    const lastDate=data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+  // Re-fetch user doc fresh every time to get latest waLastSubmit
+  const freshSnap=await getDoc(doc(db,'users',U.uid));
+  const freshData=freshSnap.exists()?freshSnap.data():{};
+  const lastSubmit=freshData.waLastSubmit;
+  if(lastSubmit){
+    const lastDate=lastSubmit.toDate?lastSubmit.toDate():new Date(lastSubmit);
     const nextEligible=new Date(lastDate.getTime()+7*24*60*60*1000);
     if(Date.now()<nextEligible.getTime()){
       const nextStr=nextEligible.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
       document.getElementById('submit-section').innerHTML=
-        '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you already submitted this week ('+data.viewCount+' views = '+(window._CUR||'KES')+' '+data.viewCount+'). Come back on <strong>'+nextStr+'</strong>. Thank you!</div>';
+        '<div class="err" style="display:block;">❌ Sorry <strong>'+UD.username+'</strong>, you already submitted this week. Come back on <strong>'+nextStr+'</strong>. Thank you!</div>';
       return true; // blocked
     }
   }
@@ -307,7 +307,10 @@ window.confirmSubmitWA=async function(){
       viewCount:finalViews,amount:finalViews,
       createdAt:serverTimestamp()
     });
-    await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(finalViews)});
+    await updateDoc(doc(db,'users',U.uid),{
+      totalEarnings:increment(finalViews),
+      waLastSubmit:serverTimestamp()
+    });
 
     ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You had <strong>'+finalViews+' views</strong> and earned <strong>'+(window._CUR||'KES')+' '+finalViews+'</strong>, instantly added to your Total Earnings. Come back in 7 days for a new advert picture!';
     ok.style.display='block';
