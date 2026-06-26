@@ -391,6 +391,7 @@ window.doWithdraw=async function(method, methodName){
           to: U.email,
           username: UD.username,
           amount: (window._CUR||'KES')+' '+fmt(amt),
+          receive: (window._CUR||'KES')+' '+fmt(amt-fee),
           method: methodName||method,
           date: new Date().toLocaleString()
         })
@@ -400,7 +401,7 @@ window.doWithdraw=async function(method, methodName){
     }
 
     // Show GREEN TOAST
-    showToast('Your withdrawal request of <strong>'+(window._CUR||'KES')+' '+fmt(amt)+'</strong> has been submitted successfully. Wait verification and timely disbursement to your account.');
+    showToast('Your withdrawal request of <strong>'+(window._CUR||'KES')+' '+fmt(amt-fee)+'</strong> has been submitted successfully. Wait verification and timely disbursement to your account.');
 
     // Reset form
     document.getElementById(amtId).value='';
