@@ -167,6 +167,7 @@ window.doLogin = async function(){
 
       // Redirect to USER pages only — never admin
       if(data.activated){
+        sessionStorage.setItem('just_logged_in', username);
         window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
       } else {
         window.location.replace('https://netlinkagencies.linkpc.net/activate');
