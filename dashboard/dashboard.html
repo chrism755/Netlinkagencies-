@@ -191,7 +191,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
       <div class="top-grid">
         <div class="top-card expenses">
           <div class="top-card-label">📉 Expenses</div>
-          <div class="top-card-amount">ACTIVATION FEE</div>
+          <div class="top-card-amount" id="expenses-amt">...</div>
           <div class="top-card-icon">📉</div>
         </div>
         <div class="top-card earnings">
@@ -285,6 +285,9 @@ onAuthStateChanged(auth,async u=>{
   // Currency based on country
   const currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
   const CUR=currencyMap[UD.country]||'KES';
+  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
+  const actFee=_feeMap[UD.country]||150;
+  document.getElementById('expenses-amt').textContent=CUR+' '+fmt(actFee);
   window._CUR=CUR;
 
   // Stats with commas
@@ -304,9 +307,8 @@ onAuthStateChanged(auth,async u=>{
 
   // Load notifications
   loadNotifications(u.uid, UD.username);
-  // Show welcome toast on fresh login
-  const justLoggedIn=sessionStorage.getItem('just_logged_in');
-  if(justLoggedIn){
+  // Show welcome only on fresh login from login.html
+  if(sessionStorage.getItem('just_logged_in')){
     sessionStorage.removeItem('just_logged_in');
     const wt=document.getElementById('welcome-toast');
     wt.innerHTML='✅ You have logged in to your account successfully. Welcome Back, <strong>'+UD.username+'</strong>!';
