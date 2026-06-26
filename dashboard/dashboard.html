@@ -100,6 +100,9 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
+.welcome-toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:9999;min-width:300px;max-width:90vw;padding:16px 20px;border-radius:14px;font-size:14px;font-weight:700;line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,.5);background:linear-gradient(135deg,#2d006e,#4a0080);border:1.5px solid #7c3aed;color:#fff;text-align:center;display:none;}
+.welcome-toast.show{display:block;animation:wfadeIn .4s ease;}
+@keyframes wfadeIn{from{opacity:0;top:6px;}to{opacity:1;top:18px;}}
 </style>
 </head>
 <body>
@@ -107,6 +110,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 <div class="overlay" id="ov" onclick="closeSB();closeNotif()"></div>
 
 <div class="layout">
+<div class="welcome-toast" id="welcome-toast"></div>
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sb">
 <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
@@ -180,7 +184,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
           <div class="greeting-text" id="greeting-text">Good morning ☀️, User!</div>
           <div class="greeting-sub">Welcome to NETLINK AGENCIES</div>
         </div>
-        <div class="greeting-num" id="greeting-num">5</div>
+        
       </div>
 
       <!-- TOP 2 CARDS -->
@@ -275,8 +279,8 @@ onAuthStateChanged(auth,async u=>{
   if(h>=5&&h<12){g='Good morning';emoji='🌞';}
   else if(h>=12&&h<17){g='Good afternoon';emoji='☀️';}
   else{g='Good evening';emoji='🌙';}
-  document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
-  document.getElementById('greeting-num').textContent=UD.level1Count||0;
+  document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle;margin-left:4px;" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path d="M9.5 16.5l-3.5-3.5 1.41-1.41L9.5 13.67l7.09-7.09L18 8l-8.5 8.5z" fill="#fff"/></svg>';
+
 
   // Currency based on country
   const currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
@@ -300,6 +304,15 @@ onAuthStateChanged(auth,async u=>{
 
   // Load notifications
   loadNotifications(u.uid, UD.username);
+  // Show welcome toast on fresh login
+  const justLoggedIn=sessionStorage.getItem('just_logged_in');
+  if(justLoggedIn){
+    sessionStorage.removeItem('just_logged_in');
+    const wt=document.getElementById('welcome-toast');
+    wt.innerHTML='✅ You have logged in to your account successfully. Welcome Back, <strong>'+UD.username+'</strong>!';
+    wt.classList.add('show');
+    setTimeout(()=>wt.classList.remove('show'),6000);
+  }
 });
 
 // NOTIFICATIONS
