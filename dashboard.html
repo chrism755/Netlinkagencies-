@@ -37,7 +37,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .tb-brand{font-size:16px;font-weight:900;color:#fff;flex:1;letter-spacing:.5px;}
 .notif-wrap{position:relative;cursor:pointer;}
 .notif-btn{width:38px;height:38px;background:rgba(255,255,255,.2);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#fff;}
-.notif-badge{position:absolute;top:-3px;right:-3px;background:#FFD700;color:#000;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;}
+.notif-badge{position:absolute;top:-3px;right:-3px;background:#FFD700;color:#000;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
 
 /* NOTIFICATION DROPDOWN */
 .notif-dropdown{position:fixed;top:64px;right:10px;width:300px;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:200;display:none;overflow:hidden;max-height:400px;overflow-y:auto;}
@@ -64,7 +64,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .greeting-left{}
 .greeting-text{font-size:15px;font-weight:800;color:#222;margin-bottom:2px;}
 .greeting-sub{font-size:12px;color:#888;}
-.greeting-num{width:42px;height:42px;background:linear-gradient(135deg,#E91E8C,#FF4DB8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;}
+.greeting-num{width:42px;height:42px;background:linear-gradient(135deg,#E91E8C,#FF4DB8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
 
 /* TOP 2 CARDS */
 .top-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
@@ -98,17 +98,11 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 .rb.fb{background:#1877F2;}
 .rb.tg{background:#2CA5E0;}
 
-/* FOOTER */
-.footer{background:#fff;border-top:1px solid #e0e0e0;padding:20px 16px;margin-top:20px;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
-.footer-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:14px;}
-.footer-link{font-size:11px;font-weight:600;color:#E91E8C;text-decoration:none;cursor:pointer;}
-.footer-link:hover{text-decoration:underline;}
-.footer-divider{width:1px;height:14px;background:#ddd;}
-.footer-bottom{text-align:center;font-size:11px;color:#888;line-height:1.6;}
-.footer-bottom strong{color:#222;font-weight:700;}
-
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
+.welcome-toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:9999;min-width:300px;max-width:90vw;padding:16px 20px;border-radius:14px;font-size:14px;font-weight:700;line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,.5);background:linear-gradient(135deg,#2d006e,#4a0080);border:1.5px solid #7c3aed;color:#fff;text-align:center;display:none;}
+.welcome-toast.show{display:block;animation:wfadeIn .4s ease;}
+@keyframes wfadeIn{from{opacity:0;top:6px;}to{opacity:1;top:18px;}}
 </style>
 </head>
 <body>
@@ -116,52 +110,52 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 <div class="overlay" id="ov" onclick="closeSB();closeNotif()"></div>
 
 <div class="layout">
+<div class="welcome-toast" id="welcome-toast"></div>
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sb">
-    <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
-    <div class="sb-nav">
-      <a class="ni active" href="/dashboard.html"><span class="ni-icon">🏠</span>Home</a>
-      <a class="ni" href="/dashboard/tournaments.html"><span class="ni-icon">🏆</span>E-Tournaments</a>
-      <a class="ni" href="/dashboard/karibu.html"><span class="ni-icon">🎁</span>Karibu Bonus</a>
-      <a class="ni" href="/dashboard/payclients.html"><span class="ni-icon">💸</span>Pay for Clients</a>
-      <a class="ni" href="/dashboard/deposit.html"><span class="ni-icon">💰</span>Deposit</a>
-      <a class="ni" href="/dashboard/mentorship.html"><span class="ni-icon">🎓</span>Mentorship</a>
-      <a class="ni" href="/dashboard/company-advertisement.html"><span class="ni-icon">📢</span>Company Advert</a>
-      <a class="ni" href="/dashboard/betting.html"><span class="ni-icon">⚽</span>Betting Prediction</a>
-      <a class="ni" href="/dashboard/cashout.html"><span class="ni-icon">💳</span>Cashout</a>
-      <a class="ni" href="/dashboard/article.html"><span class="ni-icon">📰</span>Article</a>
-      <a class="ni" href="/dashboard/viewads.html"><span class="ni-icon">👁️</span>View Ads</a>
-      <div class="ns">Videos</div>
-      <a class="ni" href="/dashboard/tiktok.html"><span class="ni-icon">🎵</span>TikTok Videos</a>
-      <a class="ni" href="/dashboard/instagram.html"><span class="ni-icon">📸</span>Instagram Videos</a>
-      <a class="ni" href="/dashboard/youtube.html"><span class="ni-icon">▶️</span>YouTube Videos</a>
-      <div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
-      <div class="sub-nav" id="sw">
-        <a class="ni sub-ni" href="/dashboard/withdraw-videos.html">Videos</a>
-        <a class="ni sub-ni" href="/dashboard/withdraw-surveys.html">Surveys</a>
-        <a class="ni sub-ni" href="/dashboard/withdraw-quiz.html">Trivia Quiz</a>
-        <a class="ni sub-ni" href="/dashboard/withdraw-numgame.html">Number Game</a>
-      </div>
-      <div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
-      <div class="sub-nav" id="sd">
-        <a class="ni sub-ni" href="/dashboard/downlines-1.html">Level 1</a>
-        <a class="ni sub-ni" href="/dashboard/downlines-2.html">Level 2</a>
-        <a class="ni sub-ni" href="/dashboard/downlines-3.html">Level 3</a>
-      </div>
-      <div class="ns">More</div>
-      <a class="ni" href="/dashboard/wadvert.html"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
-      <a class="ni" href="/dashboard/forex.html"><span class="ni-icon">📈</span>Forex Trading</a>
-      <a class="ni" href="/dashboard/trivia.html"><span class="ni-icon">🧠</span>Trivia Quiz</a>
-      <a class="ni" href="/dashboard/survey.html"><span class="ni-icon">📋</span>Daily Survey</a>
-      <a class="ni" href="/dashboard/mathquiz.html"><span class="ni-icon">🔢</span>Math Quiz</a>
-      <a class="ni" href="/dashboard/numgame.html"><span class="ni-icon">🎲</span>Number Game</a>
-      <a class="ni" href="/dashboard/community.html"><span class="ni-icon">💬</span>Community</a>
-      <a class="ni" href="/dashboard/help.html"><span class="ni-icon">🆘</span>Get Help</a>
-      <a class="ni" href="/dashboard/timetable.html"><span class="ni-icon">🗓️</span>Time Table</a>
-      <a class="ni" href="/dashboard/profile.html"><span class="ni-icon">👤</span>Profile</a>
-      <a class="ni" style="color:#FF5252;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
-    </div>
-  </nav>
+<div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div></div>
+<div class="sb-nav">
+<a class="ni active" href="/dashboard"><span class="ni-icon">🏠</span>Home</a>
+<a class="ni" href="/dashboard/tournaments"><span class="ni-icon">🏆</span>E-Tournaments</a>
+<a class="ni" href="/dashboard/karibu"><span class="ni-icon">🎁</span>Karibu Bonus</a>
+<a class="ni" href="/dashboard/payclients"><span class="ni-icon">💸</span>Pay for Clients</a>
+<a class="ni" href="/dashboard/deposit"><span class="ni-icon">💰</span>Deposit</a>
+<a class="ni" href="/dashboard/mentorship"><span class="ni-icon">🎓</span>Mentorship</a>
+<a class="ni" href="/dashboard/Company-advertisement"><span class="ni-icon">📢</span>Company Advert</a>
+<a class="ni" href="/dashboard/betting"><span class="ni-icon">⚽</span>Betting Prediction</a>
+<a class="ni" href="/dashboard/cashout"><span class="ni-icon">💳</span>Cashout</a>
+<a class="ni" href="/dashboard/article"><span class="ni-icon">📰</span>Article</a>
+<a class="ni" href="/dashboard/viewads"><span class="ni-icon">👁️</span>View Ads</a>
+<div class="ns">Videos</div>
+<a class="ni" href="/dashboard/tiktok"><span class="ni-icon">🎵</span>TikTok Videos</a>
+<a class="ni" href="/dashboard/instagram"><span class="ni-icon">📸</span>Instagram Videos</a>
+<a class="ni" href="/dashboard/youtube"><span class="ni-icon">▶️</span>YouTube Videos</a>
+<div class="ni" onclick="toggleSub('sw',this)"><span class="ni-icon">📤</span>Withdraw Tasks<span class="arr">▾</span></div>
+<div class="sub-nav" id="sw">
+<a class="ni sub-ni" href="/dashboard/withdraw-videos">Videos</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-surveys">Surveys</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-quiz">Trivia Quiz</a>
+<a class="ni sub-ni" href="/dashboard/withdraw-numgame">Number Game</a>
+</div>
+<div class="ni" onclick="toggleSub('sd',this)"><span class="ni-icon">👥</span>Downlines<span class="arr">▾</span></div>
+<div class="sub-nav" id="sd">
+<a class="ni sub-ni" href="/dashboard/downlines-1">Level 1</a>
+<a class="ni sub-ni" href="/dashboard/downlines-2">Level 2</a>
+<a class="ni sub-ni" href="/dashboard/downlines-3">Level 3</a>
+</div>
+<div class="ns">More</div>
+<a class="ni" href="/dashboard/wadvert"><span class="ni-icon">📲</span>WhatsApp Adverts</a>
+<a class="ni" href="/dashboard/forex"><span class="ni-icon">📈</span>Forex Trading</a>
+<a class="ni" href="/dashboard/trivia"><span class="ni-icon">🧠</span>Trivia Quiz</a>
+<a class="ni" href="/dashboard/survey"><span class="ni-icon">📋</span>Daily Survey</a>
+<a class="ni" href="/dashboard/mathquiz"><span class="ni-icon">🔢</span>Math Quiz</a>
+<a class="ni" href="/dashboard/numgame"><span class="ni-icon">🎲</span>Number Game</a>
+<a class="ni" href="/dashboard/community"><span class="ni-icon">💬</span>Community</a>
+<a class="ni" href="/dashboard/help"><span class="ni-icon">🆘</span>Get Help</a>
+<a class="ni" href="/dashboard/timetable"><span class="ni-icon">🗓️</span>Time Table</a>
+<a class="ni" href="/dashboard/profile"><span class="ni-icon">👤</span>Profile</a>
+<a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+</div></nav>
 
   <div class="main">
     <!-- TOPBAR -->
@@ -190,14 +184,14 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
           <div class="greeting-text" id="greeting-text">Good morning ☀️, User!</div>
           <div class="greeting-sub">Welcome to NETLINK AGENCIES</div>
         </div>
-        <div class="greeting-num" id="greeting-num">5</div>
+        
       </div>
 
       <!-- TOP 2 CARDS -->
       <div class="top-grid">
         <div class="top-card expenses">
           <div class="top-card-label">📉 Expenses</div>
-          <div class="top-card-amount" id="expense-amount">...</div>
+          <div class="top-card-amount">ACTIVATION FEE</div>
           <div class="top-card-icon">📉</div>
         </div>
         <div class="top-card earnings">
@@ -258,30 +252,6 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
           <button class="rb tg" id="tg-share">Telegram</button>
         </div>
       </div>
-
-      <!-- FOOTER -->
-      <div class="footer">
-        <div class="footer-links">
-          <a class="footer-link" href="#">Terms</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Privacy</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Security</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Status</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Community</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Docs</a>
-          <div class="footer-divider"></div>
-          <a class="footer-link" href="#">Contact</a>
-        </div>
-        <div class="footer-bottom">
-          <div>All rights reserved.</div>
-          <div><a class="footer-link" href="#">Manage cookies</a> • <a class="footer-link" href="#">Do not share my personal information</a></div>
-          <div style="margin-top:8px;"><strong>©2026 NETLINK AGENCIES inc</strong></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -291,22 +261,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.appspot.com",messagingSenderId:"862193916799",appId:"1:862193916799:web:db038c83f1f7906cd3b3e9"});
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
-
-// Expenses by country
-const expenseMap={
-  'Kenya':'KES 150',
-  'Tanzania':'TZS 7,000',
-  'Nigeria':'NGN 3,700',
-  'Uganda':'UGX 3,900',
-  'Rwanda':'RWF 1,350',
-  'Ghana':'GHS 11',
-  'South Africa':'ZAR 20',
-  'United States':'USD 2',
-  'United Kingdom':'GBP 2',
-  'Other':'KES 150'
-};
 
 // Format numbers with commas
 function fmt(n){return Number(n||0).toLocaleString('en-KE');}
@@ -323,17 +279,13 @@ onAuthStateChanged(auth,async u=>{
   if(h>=5&&h<12){g='Good morning';emoji='🌞';}
   else if(h>=12&&h<17){g='Good afternoon';emoji='☀️';}
   else{g='Good evening';emoji='🌙';}
-  document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <span style="color:#4caf50;font-size:14px;">✔</span>';
-  document.getElementById('greeting-num').textContent=UD.level1Count||0;
+  document.getElementById('greeting-text').innerHTML=g+' '+emoji+', <strong>@'+UD.username+'</strong> <svg width="18" height="18" viewBox="0 0 24 24" style="vertical-align:middle;margin-left:4px;" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path d="M9.5 16.5l-3.5-3.5 1.41-1.41L9.5 13.67l7.09-7.09L18 8l-8.5 8.5z" fill="#fff"/></svg>';
+
 
   // Currency based on country
   const currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
   const CUR=currencyMap[UD.country]||'KES';
   window._CUR=CUR;
-
-  // Set Expenses based on country
-  const expense=expenseMap[UD.country]||expenseMap['Other'];
-  document.getElementById('expense-amount').textContent=expense;
 
   // Stats with commas
   document.getElementById('total-earn').textContent=CUR+' '+fmt(UD.totalEarnings);
@@ -343,8 +295,8 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('karibu').textContent=CUR+' '+fmt(UD.karibu);
   document.getElementById('weekly').textContent=CUR+' '+fmt(UD.weeklyBonus);
 
-  // Referral link - Updated format without .html extension
-  const ref='https://netlinkagencies.linkpc.net/register?ref='+UD.username;
+  // Referral link
+  const ref='https://netlinkagencies.linkpc.net/register.html?ref='+UD.referralCode;
   document.getElementById('reflink').textContent=ref;
   document.getElementById('wa-share').onclick=()=>window.open('https://wa.me/?text=Join NETLINK AGENCIES and earn daily! '+encodeURIComponent(ref),'_blank');
   document.getElementById('fb-share').onclick=()=>window.open('https://facebook.com/sharer/sharer.php?u='+encodeURIComponent(ref),'_blank');
@@ -352,6 +304,15 @@ onAuthStateChanged(auth,async u=>{
 
   // Load notifications
   loadNotifications(u.uid, UD.username);
+  // Show welcome toast on fresh login
+  const justLoggedIn=sessionStorage.getItem('just_logged_in');
+  if(justLoggedIn){
+    sessionStorage.removeItem('just_logged_in');
+    const wt=document.getElementById('welcome-toast');
+    wt.innerHTML='✅ You have logged in to your account successfully. Welcome Back, <strong>'+UD.username+'</strong>!';
+    wt.classList.add('show');
+    setTimeout(()=>wt.classList.remove('show'),6000);
+  }
 });
 
 // NOTIFICATIONS
@@ -372,7 +333,7 @@ async function loadNotifications(uid, username){
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
-          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been refunded to your balance.`,
+          msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been returned to your balance.`,
           time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
         });
       }
