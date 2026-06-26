@@ -232,41 +232,125 @@ const pairs=[
 ];
 async function pageReady(db,U,UD,F){
   window._db=db;window._U=U;window._UD=UD;window._F=F;
-  document.getElementById('forex-bal').textContent=(window._CUR||'KES')+(UD.balance||0);
+  const CUR=window._CUR||'KES';
+  document.getElementById('forex-bal').textContent=CUR+' '+(UD.balance||0);
+
+  // Show live pairs
   document.getElementById('pairs-list').innerHTML=pairs.map(p=>`
     <div style="background:var(--bg3);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;">
       <div style="font-weight:800;color:#fff;">${p.p}</div>
       <div><span style="font-size:16px;font-weight:800;color:#fff;">${p.rate}</span> <span style="font-size:12px;color:${p.up?'var(--green)':'var(--red)'};">${p.change}</span></div>
     </div>`).join('');
+
+  // Check if user already staked this week
+  const lastStake=UD.forexLastStake;
+  if(lastStake){
+    const lastDate=lastStake.toDate?lastStake.toDate():new Date(lastStake);
+    const now=new Date();
+    // Get Monday of current week
+    const monday=new Date(now);
+    monday.setHours(0,0,0,0);
+    monday.setDate(now.getDate()-((now.getDay()+6)%7));
+    if(lastDate>=monday){
+      // Already staked this week
+      const nextMonday=new Date(monday);
+      nextMonday.setDate(monday.getDate()+7);
+      const daysLeft=Math.ceil((nextMonday-now)/(1000*60*60*24));
+      document.getElementById('forex-btn').disabled=true;
+      document.getElementById('forex-btn').textContent='✅ Staked This Week — Next stake in '+daysLeft+' day'+(daysLeft===1?'':'s');
+      document.getElementById('forex-ok').innerHTML='✅ You have already placed your stake this week. Your profit of <strong>'+CUR+' 5</strong> will be added to your balance. Come back in <strong>'+daysLeft+' day'+(daysLeft===1?'':'s')+'</strong>!';
+      document.getElementById('forex-ok').style.display='block';
+    }
+  }
 }
+
 window.placeTrade=async function(){
   const amt=parseInt(document.getElementById('forex-amt').value)||0;
   const pair=document.getElementById('forex-pair').value;
   const dir=document.getElementById('forex-dir').value;
-  const ok=document.getElementById('forex-ok'),err=document.getElementById('forex-err'),btn=document.getElementById('forex-btn');
+  const ok=document.getElementById('forex-ok');
+  const err=document.getElementById('forex-err');
+  const btn=document.getElementById('forex-btn');
+  const CUR=window._CUR||'KES';
   ok.style.display='none';err.style.display='none';
-  if(!amt){err.textContent='⚠️ Enter amount.';err.style.display='block';return;}
-  if(amt>(_UD.balance||0)){err.textContent='❌ Insufficient balance. Your balance is '+(window._CUR||'KES')+' '+(_UD.balance||0);err.style.display='block';return;}
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Placing trade...';
-  await new Promise(r=>setTimeout(r,2000));
-  const win=Math.random()>0.45;
-  const profit=Math.floor(amt*(0.1+Math.random()*0.2));
-  try{
-    const {updateDoc,doc,increment,collection,addDoc,serverTimestamp}=_F;
-    if(win){
-      await updateDoc(doc(_db,'users',_U.uid),{balance:increment(profit)});
-      ok.innerHTML='🎉 Trade Won! You bought <strong>'+pair+'</strong> ('+dir.toUpperCase()+') with '+(window._CUR||'KES')+' '+amt+'. Profit: <strong style="color:var(--green);">+'+(window._CUR||'KES')+' '+profit+'</strong> added to your account balance!';
-    } else {
-      const loss=Math.floor(amt*0.05);
-      await updateDoc(doc(_db,'users',_U.uid),{balance:increment(-loss)});
-      ok.style.background='rgba(255,82,82,.1)';ok.style.borderColor='var(--red)';ok.style.color='#FF8A80';
-      ok.innerHTML='📉 Trade closed. Small loss of <strong>'+(window._CUR||'KES')+' '+loss+'</strong>. The market moved against your position. Try again!';
+
+  // Validate amount
+  if(!amt||amt<=0){
+    err.textContent='⚠️ Please enter a stake amount.';
+    err.style.display='block';return;
+  }
+
+  // Check sufficient balance
+  if(amt>(_UD.balance||0)){
+    err.textContent='❌ Insufficient balance. Your balance is '+CUR+' '+(_UD.balance||0)+'. Please use money from your account balance.';
+    err.style.display='block';return;
+  }
+
+  // Check already staked this week
+  const lastStake=_UD.forexLastStake;
+  if(lastStake){
+    const lastDate=lastStake.toDate?lastStake.toDate():new Date(lastStake);
+    const now=new Date();
+    const monday=new Date(now);
+    monday.setHours(0,0,0,0);
+    monday.setDate(now.getDate()-((now.getDay()+6)%7));
+    if(lastDate>=monday){
+      const nextMonday=new Date(monday);
+      nextMonday.setDate(monday.getDate()+7);
+      const daysLeft=Math.ceil((nextMonday-now)/(1000*60*60*24));
+      err.textContent='⛔ You have already staked this week. You can stake again in '+daysLeft+' day'+(daysLeft===1?'':'s')+'.';
+      err.style.display='block';return;
     }
-    ok.style.display='block';btn.disabled=false;btn.textContent='📈 Place Trade';
-    const newBal=(_UD.balance||0)+(win?profit:-Math.floor(amt*0.05));
-    _UD.balance=newBal;
-    document.getElementById('forex-bal').textContent=(window._CUR||'KES')+newBal;
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📈 Place Trade';}
+  }
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Placing trade...';
+
+  try{
+    const {updateDoc,doc,increment,serverTimestamp}=_F;
+    const PROFIT=5;
+    const win=Math.random()>0.5; // 50/50 chance
+
+    if(win){
+      // Return stake + 5 profit: deduct stake then return stake+5 = net +5
+      await updateDoc(doc(_db,'users',_U.uid),{
+        balance:increment(PROFIT),
+        totalEarnings:increment(PROFIT),
+        forexLastStake:serverTimestamp()
+      });
+      _UD.balance=(_UD.balance||0)+PROFIT;
+      _UD.totalEarnings=(_UD.totalEarnings||0)+PROFIT;
+      _UD.forexLastStake=new Date();
+      document.getElementById('forex-bal').textContent=CUR+' '+_UD.balance;
+      ok.style.background='rgba(0,230,118,.1)';
+      ok.style.borderColor='var(--green)';
+      ok.style.color='#69F0AE';
+      ok.innerHTML='🎉 You Won! You staked <strong>'+CUR+' '+amt+'</strong> on <strong>'+pair+'</strong> ('+dir.toUpperCase()+'). Your stake has been returned plus a profit of <strong style="color:var(--green);">+'+CUR+' '+PROFIT+'</strong> added to your account balance and total earnings!';
+    } else {
+      // Lose — deduct stake, nothing returned
+      await updateDoc(doc(_db,'users',_U.uid),{
+        balance:increment(-amt),
+        forexLastStake:serverTimestamp()
+      });
+      _UD.balance=(_UD.balance||0)-amt;
+      _UD.forexLastStake=new Date();
+      document.getElementById('forex-bal').textContent=CUR+' '+_UD.balance;
+      ok.style.background='rgba(255,82,82,.1)';
+      ok.style.borderColor='var(--red)';
+      ok.style.color='#FF8A80';
+      ok.innerHTML='📉 You Lost! Your stake of <strong>'+CUR+' '+amt+'</strong> on <strong>'+pair+'</strong> ('+dir.toUpperCase()+') was lost. Better luck next week!';
+    }
+
+    ok.style.display='block';
+    btn.disabled=true;
+    btn.textContent='✅ Staked This Week';
+
+  }catch(e){
+    err.textContent='❌ Error: '+e.message;
+    err.style.display='block';
+    btn.disabled=false;
+    btn.textContent='📈 Place Trade';
+  }
 };
 
 </script>
