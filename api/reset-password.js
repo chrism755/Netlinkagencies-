@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   try {
     const actionCodeSettings = {
       url: 'https://netlinkagencies.linkpc.net/do-reset',
-      handleCodeInApp: false
+      handleCodeInApp: true
     };
 
     const resetLink = await admin.auth().generatePasswordResetLink(email, actionCodeSettings);
