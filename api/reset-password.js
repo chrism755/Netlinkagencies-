@@ -1,25 +1,6 @@
 import admin from 'firebase-admin';
 import nodemailer from 'nodemailer';
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\n/g, '
-'),
-    }),
-  });
-}
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
-  }
-});
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -30,13 +11,42 @@ export default async function handler(req, res) {
   const { email, username } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required.' });
 
+  // Step 1: Init Firebase Admin
+  try {
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+        }),
+      });
+    }
+  } catch(initErr) {
+    return res.status(500).json({ error: 'Firebase init failed: ' + initErr.message });
+  }
+
+  // Step 2: Generate reset link
+  let resetLink;
   try {
     const actionCodeSettings = {
       url: 'https://netlinkagencies.linkpc.net/do-reset',
       handleCodeInApp: true
     };
+    resetLink = await admin.auth().generatePasswordResetLink(email, actionCodeSettings);
+  } catch(linkErr) {
+    return res.status(500).json({ error: 'Reset link failed: ' + linkErr.message });
+  }
 
-    const resetLink = await admin.auth().generatePasswordResetLink(email, actionCodeSettings);
+  // Step 3: Send email
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD
+      }
+    });
 
     await transporter.sendMail({
       from: `"NETLINK AGENCIES" <${process.env.GMAIL_USER}>`,
@@ -61,8 +71,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true });
 
-  } catch (err) {
-    console.error('Reset password error:', err.message);
-    return res.status(500).json({ error: err.message });
+  } catch(emailErr) {
+    return res.status(500).json({ error: 'Email failed: ' + emailErr.message });
   }
 }
