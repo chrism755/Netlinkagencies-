@@ -29,11 +29,14 @@ export default async function handler(req, res) {
   // Step 2: Generate reset link
   let resetLink;
   try {
-    const actionCodeSettings = {
-      url: 'https://netlinkagencies.linkpc.net/do-reset',
-      handleCodeInApp: true
-    };
-    resetLink = await admin.auth().generatePasswordResetLink(email, actionCodeSettings);
+    // Generate without custom domain — Firebase generates a valid link
+    // with oobCode that do-reset.html will handle
+    resetLink = await admin.auth().generatePasswordResetLink(email);
+    // Replace Firebase default URL with our do-reset page
+    const url = new URL(resetLink);
+    const oobCode = url.searchParams.get('oobCode');
+    const mode = url.searchParams.get('mode');
+    resetLink = 'https://netlinkagencies.linkpc.net/do-reset?mode=' + mode + '&oobCode=' + oobCode;
   } catch(linkErr) {
     return res.status(500).json({ error: 'Reset link failed: ' + linkErr.message });
   }
