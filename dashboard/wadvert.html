@@ -261,24 +261,92 @@ window.handleScreenshot=function(input){
     scanMsg.style.display='flex';
 
     try{
-      const res=await fetch('https://netlinkagencies.vercel.app/api/verify-screenshot',{
+      // Use OCR Space to extract text from screenshot
+      const params=new URLSearchParams();
+      params.append('apikey','helloworld'); // free OCR Space key
+      params.append('base64Image','data:'+file.type+';base64,'+base64);
+      params.append('OCREngine','2');
+      params.append('scale','true');
+      params.append('isTable','false');
+
+      const ocrRes=await fetch('https://api.ocr.space/parse/image',{
         method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({image:base64,mediaType:file.type})
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:params.toString()
       });
-      const result=await res.json();
+      const ocrData=await ocrRes.json();
       scanMsg.style.display='none';
 
-      if(result.isValid && result.viewCount>0){
-        ok.innerHTML='✅ We detected <strong>'+result.viewCount+' viewers</strong> in your screenshot. Please double-check this number below before submitting.';
-        ok.style.display='block';
-        document.getElementById('confirm-views').value=result.viewCount;
-        confirmFg.style.display='block';
-        btn.style.display='block';
-      } else {
-        err.textContent='❌ '+(result.reason||'We could not detect a viewer count in this screenshot.')+' Please upload a clear screenshot of your status viewers.';
+      if(ocrData.IsErroredOnProcessing){
+        err.textContent='❌ Could not read this image. Please upload a clearer screenshot.';
         err.style.display='block';
+        return;
       }
+
+      const rawText=(ocrData.ParsedResults||[]).map(r=>r.ParsedText).join(' ');
+      const text=rawText.toLowerCase();
+
+      // ── STRICT WHATSAPP VIEWERS DETECTION ──
+      // WhatsApp status viewers screen always contains specific UI text
+      // We look for these patterns that ONLY appear on WhatsApp viewers screen
+
+      const whatsappPatterns=[
+        /viewed\s+by/i,           // "Viewed by"
+        /\d+\s*view/i,            // "25 views" or "25views"
+        /view\s*\d+/i,            // "views 25"
+        /\d+\s*seen/i,            // "10 seen"
+        /seen\s+by/i,             // "Seen by"
+        /status\s+view/i,         // "status views"
+        /(viewers?)/i,        // "viewer" or "viewers"
+        /muted\s+\d+/i,           // WhatsApp shows "Muted X"
+        /\d+\s*muted/i,
+      ];
+
+      const hasWhatsAppPattern=whatsappPatterns.some(p=>p.test(rawText));
+
+      // Also check for NETLINK advert text as secondary verification
+      const hasNetlink=/netlink|agencies|karibu/i.test(rawText);
+
+      if(!hasWhatsAppPattern && !hasNetlink){
+        err.textContent='❌ This does not look like a WhatsApp status viewers screenshot. We need a screenshot showing your WhatsApp status viewers list (the screen that shows who viewed your status).';
+        err.style.display='block';
+        return;
+      }
+
+      // Extract viewer count — look for number near view-related words
+      // Pattern: number followed by "view" word, or "view" word followed by number
+      let viewCount=0;
+
+      // Try pattern: "X views", "X viewers", "X seen"
+      const nearViewMatch=rawText.match(/(\d{1,5})\s*(view|viewer|viewers|seen|muted)/i);
+      if(nearViewMatch) viewCount=parseInt(nearViewMatch[1]);
+
+      // Try pattern: "viewed by X", "seen by X"  
+      if(!viewCount){
+        const afterViewMatch=rawText.match(/(?:viewed|seen)\s+by\s+(\d{1,5})/i);
+        if(afterViewMatch) viewCount=parseInt(afterViewMatch[1]);
+      }
+
+      // Fallback: any standalone number between 1-5000
+      if(!viewCount){
+        const allNums=(rawText.match(/(\d{1,4})/g)||[])
+          .map(n=>parseInt(n))
+          .filter(n=>n>=1&&n<=5000);
+        if(allNums.length) viewCount=Math.max(...allNums);
+      }
+
+      if(!viewCount){
+        err.textContent='❌ Could not detect the viewer count number. Make sure your screenshot clearly shows the number of viewers on your WhatsApp status.';
+        err.style.display='block';
+        return;
+      }
+
+      ok.innerHTML='✅ Verified! We detected <strong>'+viewCount+' viewers</strong> in your WhatsApp status screenshot. Please confirm this number below before submitting.';
+      ok.style.display='block';
+      document.getElementById('confirm-views').value=viewCount;
+      confirmFg.style.display='block';
+      btn.style.display='block';
+
     }catch(e){
       scanMsg.style.display='none';
       err.textContent='❌ Could not scan the screenshot right now. Please try again.';
