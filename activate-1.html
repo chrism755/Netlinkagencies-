@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Activate Account — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--gold:#FFD700;--green:#00E676;--red:#FF5252;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
+.bg{position:fixed;inset:0;pointer-events:none;}
+.bg::before{content:'';position:absolute;top:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(233,30,140,.15),transparent 70%);border-radius:50%;}
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px;}
+.logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px;}
+.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--pkd),var(--pk));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 24px rgba(233,30,140,.5);}
+.logo-text{font-weight:900;font-size:16px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:9px;color:var(--pk2);letter-spacing:3px;}
+h1{font-weight:900;font-size:20px;color:#fff;margin-bottom:6px;text-align:center;}
+.sub{color:#fff;font-size:13px;text-align:center;margin-bottom:20px;opacity:.8;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:100%;max-width:460px;margin-bottom:14px;}
+.amount{font-size:42px;font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(255,215,0,.3);text-align:center;}
+.alabel{color:#fff;font-size:12px;text-align:center;margin-top:4px;margin-bottom:4px;opacity:.8;}
+.section-title{font-weight:800;font-size:15px;color:var(--pk2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.badge{background:var(--pk);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;}
+.inst{background:var(--bg3);border-radius:12px;padding:16px;font-size:13px;line-height:1.9;color:#fff;margin-bottom:14px;}
+.inst strong{color:var(--pk2);}
+.snum{display:inline-flex;width:20px;height:20px;background:var(--pk);border-radius:50%;align-items:center;justify-content:center;font-size:10px;font-weight:800;margin-right:7px;}
+.fg{margin-bottom:14px;}
+label{display:block;font-size:12px;font-weight:700;color:#fff;margin-bottom:6px;text-transform:uppercase;opacity:.8;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;color:#fff;font-family:'Nunito',sans-serif;font-size:15px;outline:none;}
+input:focus{border-color:var(--pk);}
+input::placeholder{color:#fff;opacity:.4;}
+input:read-only{opacity:.6;cursor:not-allowed;}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-bottom:10px;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.wa-btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#25D366;color:#fff;margin-bottom:10px;}
+.logout-btn{width:100%;padding:12px;border:1.5px solid var(--red);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:var(--red);}
+.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:10px;padding:12px;font-size:13px;margin:10px 0;display:none;}
+.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.manual-link{background:none;border:none;color:var(--pk2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;padding:0;text-decoration:underline;width:100%;text-align:center;display:block;margin-top:4px;}
+.phone-prefix{display:flex;align-items:center;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;overflow:hidden;}
+.phone-prefix span{padding:12px 12px;color:#fff;opacity:.7;font-size:14px;border-right:1px solid var(--border);white-space:nowrap;}
+.phone-prefix input{border:none;border-radius:0;background:transparent;}
+.phone-prefix input:focus{border:none;}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+.modal-box{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:460px;padding:0 0 30px 0;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 0;}
+.modal-title{text-align:center;font-size:17px;font-weight:800;color:#222;padding:16px 24px 0;}
+.modal-body{display:flex;flex-direction:column;align-items:center;padding:24px;}
+.modal-icon{width:72px;height:72px;background:rgba(0,200,100,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.modal-icon svg{width:36px;height:36px;}
+.modal-h{font-size:18px;font-weight:800;color:#222;margin-bottom:8px;text-align:center;}
+.modal-p{font-size:14px;color:#666;text-align:center;line-height:1.6;margin-bottom:0;}
+.modal-footer{padding:0 24px;}
+.modal-close{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;}
+.polling-bar{text-align:center;color:var(--pk2);font-size:13px;margin:10px 0;display:none;}
+
+/* Payment Result Popups */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;}
+.popup-box{background:#fff;border-radius:20px;padding:32px 24px;width:100%;max-width:320px;text-align:center;animation:popIn .3s ease;}
+@keyframes popIn{from{transform:scale(.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+.popup-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.popup-icon.fail{background:#FFE5E5;}
+.popup-icon.success{background:#E5FFE5;}
+.popup-icon svg{width:36px;height:36px;}
+.popup-title{font-size:20px;font-weight:900;margin-bottom:8px;}
+.popup-title.fail{color:#E53935;}
+.popup-title.success{color:#2E7D32;}
+.popup-msg{font-size:14px;color:#666;margin-bottom:24px;line-height:1.5;}
+.popup-btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;}
+.popup-btn.fail{background:#E53935;color:#fff;}
+.popup-btn.success{background:#2E7D32;color:#fff;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- STK SUCCESS MODAL -->
+<div class="modal-overlay" id="stk-modal" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Payment Initiating</div>
+    <div class="modal-body">
+      <!-- Safaricom-style double spinning rings with headphones icon -->
+      <div class="stk-rings">
+        <div class="stk-ring-outer"></div>
+        <div class="stk-ring-inner"></div>
+        <div class="stk-ring-icon">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#00C864" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+            <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="modal-h">Processing...</div>
+      <div class="modal-p">Check your phone for STK Push</div>
+      <!-- Green animated progress bar -->
+      <div class="stk-progress-wrap">
+        <div class="stk-progress-bar" id="stk-progress-bar"></div>
+      </div>
+      <div class="stk-almost">Almost done...</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Failed Popup -->
+<div class="popup-overlay" id="fail-popup" style="display:none;">
+  <div class="popup-box">
+    <div class="popup-icon fail">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#E53935" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+    </div>
+    <div class="popup-title fail">Payment Failed</div>
+    <div class="popup-msg">Request Cancelled by User. Please try again.</div>
+    <button class="popup-btn fail" onclick="closeFailPopup()">Try Again</button>
+  </div>
+</div>
+
+<!-- Payment Success Popup -->
+<div class="popup-overlay" id="success-popup" style="display:none;">
+  <div class="popup-box">
+    <div class="popup-icon success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="9 12 11 14 15 10"/>
+      </svg>
+    </div>
+    <div class="popup-title success">Payment Successful!</div>
+    <div class="popup-msg">Your account has been activated successfully. Welcome to NETLINK AGENCIES!</div>
+    <button class="popup-btn success" onclick="window.location.replace('https://netlinkagencies.linkpc.net/dashboard')">Go to Dashboard</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div></div>
+  <h1>Activate Account</h1>
+  <p class="sub">Pay activation fee to unlock your dashboard</p>
+
+  <!-- CLIENT PAYMENT BANNER (shown only if someone paid partially for this user) -->
+  <div class="card" id="client-paid-banner" style="display:none;background:linear-gradient(135deg,#00897B,#00C853);border:none;">
+    <p id="client-paid-text" style="color:#fff;font-size:14px;font-weight:700;line-height:1.6;margin:0;"></p>
+  </div>
+
+  <!-- AMOUNT CARD -->
+  <div class="card">
+    <div class="amount" id="amount-display">KES 150</div>
+    <div class="alabel" id="amount-label">One-time Activation Fee</div>
+  </div>
+
+  <!-- AUTOMATIC STK PUSH CARD -->
+  <div class="card" id="auto-card">
+    <div class="section-title">⚡ Automatic Payment <span class="badge">RECOMMENDED</span></div>
+    <div class="inst">
+      <p><span class="snum">1</span>Enter your <strong>Safaricom number</strong> below</p>
+      <p><span class="snum">2</span>Click <strong>Pay KES 150</strong></p>
+      <p><span class="snum">3</span>An <strong>M-Pesa prompt</strong> will appear on your phone</p>
+      <p><span class="snum">4</span>Enter your <strong>M-Pesa PIN</strong> to confirm</p>
+      <p><span class="snum">5</span>Your account will be <strong>activated automatically!</strong> 🎉</p>
+    </div>
+    <div class="fg">
+      <label>Safaricom Phone Number</label>
+      <div class="phone-prefix">
+        <span>🇰🇪 +254</span>
+        <input type="tel" id="phone" placeholder="7XXXXXXXX" maxlength="9"/>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Amount</label>
+      <input type="text" value="KES 150" readonly/>
+    </div>
+    <div class="err" id="stk-err"></div>
+    <div class="polling-bar" id="polling-msg"><span class="spinner"></span> Waiting for payment confirmation...</div>
+    <div class="ok" id="stk-activated" style="display:none;">🎉 <strong>Account Activated!</strong> Redirecting...</div>
+    <button class="btn" id="stk-btn" onclick="sendSTK()">📱 Pay KES 150</button>
+    <button class="manual-link" onclick="showManual()">📋 Use Manual Payment Instead</button>
+  </div>
+
+  <!-- MANUAL PAYMENT CARD -->
+  <div class="card" id="manual-card" style="display:none;">
+    <div class="section-title">🖐 Manual M-PESA Payment</div>
+    <div class="inst">
+      <p style="font-weight:800;color:var(--pk2);margin-bottom:10px;">M-PESA Steps</p>
+      <p><span class="snum">1</span>Open <strong>M-PESA</strong> on your phone</p>
+      <p><span class="snum">2</span>Select <strong>Send Money</strong></p>
+      <p><span class="snum">3</span>Till Number: <strong>9252910</strong></p>
+      <p><span class="snum">4</span>Name: <strong>MARY KINAITORE MPURUNGA</strong></p>
+      <p><span class="snum">5</span>Amount: <strong>KES 150</strong></p>
+      <p><span class="snum">6</span>Confirm with <strong>PIN</strong></p>
+      <p><span class="snum">7</span>Copy <strong>Transaction ID</strong> from SMS</p>
+    </div>
+    <div class="fg">
+      <label>Transaction ID</label>
+      <input id="txn" placeholder="e.g. QGH7K2X9P1" style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;font-size:16px;"/>
+    </div>
+    <div class="ok" id="manual-ok"></div>
+    <div class="err" id="manual-err"></div>
+    <button class="btn" id="manual-btn" onclick="submitTxn()">✅ Activate Account</button>
+    <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
+    <button class="manual-link" onclick="showAuto()" style="margin-top:8px;">⚡ Use Automatic Payment Instead</button>
+  </div>
+
+  <!-- LOGOUT -->
+  <div style="width:100%;max-width:460px;">
+    <button class="logout-btn" onclick="logOut()">🚪 Logout</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, serverTimestamp, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const auth=getAuth(app),db=getFirestore(app);
+let currentUser=null,userData=null,pollingInterval=null;
+
+const PAYHERO_USER='dsZy6WWL2SrvyjO15M3T';
+
+async function sendEmail(type, userData, extra={}){
+  try{
+    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        type: type,
+        to: currentUser.email,
+        username: userData?.username||'User',
+        country: userData?.country||'',
+        date: new Date().toLocaleString(),
+        ...extra
+      })
+    });
+    console.log('Email sent:', type);
+  } catch(e){
+    console.log('Email error:',e);
+  }
+}
+const PAYHERO_PASS='mionCxKDUCjnTtsrrKfIPOKlqajAJTBCVqBNdOXi';
+const PAYHERO_CHANNEL=9310;
+let AMOUNT=150;
+
+onAuthStateChanged(auth,async u=>{
+  if(u){
+    currentUser=u;
+    const snap=await getDoc(doc(db,'users',u.uid));
+    if(snap.exists()){
+      userData=snap.data();
+      if(userData.activated) window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
+      applyClientPaymentState();
+    }
+  } else {
+    window.location.replace('https://netlinkagencies.linkpc.net/login');
+  }
+});
+
+function applyClientPaymentState(){
+  const paid=userData?.clientPaidAmount||0;
+  AMOUNT=Math.max(0,150-paid);
+  const amtDisplay=document.getElementById('amount-display');
+  const amtLabel=document.getElementById('amount-label');
+  const amtFixedInput=document.querySelector('#auto-card input[readonly]');
+  if(paid>0){
+    document.getElementById('client-paid-banner').style.display='block';
+    document.getElementById('client-paid-text').textContent=
+      '🎉 '+(userData.lastPayerUsername||'Someone')+' paid KSh '+paid+' for you. Now you will have to pay KSh '+AMOUNT+' to complete your activation.';
+    amtDisplay.textContent='KES '+AMOUNT;
+    amtLabel.textContent='Remaining Activation Fee';
+  }
+  if(amtFixedInput) amtFixedInput.value='KES '+AMOUNT;
+  // Update the manual-payment instructions amount line
+  const manualAmountLine=document.querySelector('#manual-card .inst p:nth-child(6) strong');
+  if(manualAmountLine) manualAmountLine.textContent='KES '+AMOUNT;
+  const stkBtn=document.getElementById('stk-btn');
+  if(stkBtn && !stkBtn.disabled) stkBtn.textContent='📱 Pay KES '+AMOUNT;
+}
+
+// Listen for admin approval
+onAuthStateChanged(auth, u=>{
+  if(!u) return;
+  let wasActivated = false;
+  onSnapshot(doc(db,'users',u.uid),(snap)=>{
+    if(snap.exists() && snap.data().activated && !wasActivated){
+      wasActivated = true;
+      const d = snap.data();
+      // Only send email for manual activation (STK has its own email)
+      if(d.activationMethod==='manual'||!d.activationMethod){
+        sendEmail('activation',{email:u.email,...d},{txnId:d.activationTxn||''});
+      }
+      window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
+    }
+  });
+});
+
+window.closeFailPopup=function(){
+  document.getElementById('fail-popup').style.display='none';
+  document.getElementById('stk-btn').disabled=false;
+  document.getElementById('stk-btn').textContent='📱 Pay KES 150';
+};
+
+window.showManual=function(){
+  document.getElementById('auto-card').style.display='none';
+  document.getElementById('manual-card').style.display='block';
+};
+
+window.showAuto=function(){
+  document.getElementById('manual-card').style.display='none';
+  document.getElementById('auto-card').style.display='block';
+};
+
+window.closeModal=function(){
+  document.getElementById('stk-modal').style.display='none';
+};
+
+window.logOut=async function(){
+  await signOut(auth);
+  window.location.replace('https://netlinkagencies.linkpc.net/login');
+};
+
+window.sendSTK=async function(){
+  const phoneInput=document.getElementById('phone').value.trim();
+  const stkErr=document.getElementById('stk-err');
+  const stkBtn=document.getElementById('stk-btn');
+  const pollingMsg=document.getElementById('polling-msg');
+
+  stkErr.style.display='none';
+
+  if(!phoneInput||phoneInput.length<9){
+    stkErr.textContent='⚠️ Please enter a valid Safaricom number (e.g. 712345678)';
+    stkErr.style.display='block';
+    return;
+  }
+  if(!currentUser){window.location.replace('https://netlinkagencies.linkpc.net/login');return;}
+
+  const fullPhone='254'+phoneInput.replace(/^0/,'');
+
+  stkBtn.disabled=true;
+  stkBtn.innerHTML='<span class="spinner"></span>Sending STK Push...';
+
+  try{
+    const creds=btoa(PAYHERO_USER+':'+PAYHERO_PASS);
+    const res=await fetch('https://backend.payhero.co.ke/api/v2/payments',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Basic '+creds},
+      body:JSON.stringify({
+        amount:AMOUNT,
+        phone_number:fullPhone,
+        channel_id:PAYHERO_CHANNEL,
+        provider:'m-pesa',
+        external_reference:'NETLINK-'+currentUser.uid.slice(0,8),
+        callback_url:'https://netlinkagencies.linkpc.net/activate'
+      })
+    });
+
+    const data=await res.json();
+
+    if(res.ok && data.success!==false){
+      const ref=data.reference||data.CheckoutRequestID||data.id||null;
+
+      await addDoc(collection(db,'stkPayments'),{
+        uid:currentUser.uid,
+        username:userData?.username||'',
+        email:currentUser.email,
+        phone:fullPhone,
+        amount:AMOUNT,
+        reference:ref,
+        status:'pending',
+        createdAt:serverTimestamp()
+      });
+
+      // Show modal popup
+      document.getElementById('stk-modal').style.display='flex';
+  // Reset and restart progress bar animation
+  const bar=document.getElementById('stk-progress-bar');
+  bar.style.animation='none';
+  bar.offsetHeight; // force reflow
+  bar.style.animation='stkProgress 30s linear forwards';
+      stkBtn.innerHTML='<span class="spinner"></span>Waiting for payment...';
+      pollingMsg.style.display='block';
+
+      if(ref) startPolling(ref);
+      else startUserPolling();
+
+    } else {
+      throw new Error(data.message||data.errorMessage||'STK Push failed. Please try again.');
+    }
+  } catch(e){
+    stkErr.textContent='❌ '+e.message;
+    stkErr.style.display='block';
+    stkBtn.disabled=false;
+    stkBtn.textContent='📱 Pay KES 150';
+  }
+};
+
+function startPolling(reference){
+  let attempts=0;
+  const maxAttempts=24;
+  const creds=btoa(PAYHERO_USER+':'+PAYHERO_PASS);
+
+  pollingInterval=setInterval(async()=>{
+    attempts++;
+    if(attempts>maxAttempts){
+      clearInterval(pollingInterval);
+      document.getElementById('polling-msg').style.display='none';
+      document.getElementById('stk-err').textContent='⏱️ Payment timeout. If you paid, please use Manual Activation below with your Transaction ID.';
+      document.getElementById('stk-err').style.display='block';
+      document.getElementById('stk-btn').disabled=false;
+      document.getElementById('stk-btn').textContent='📱 Try Again';
+      return;
+    }
+    try{
+      const res=await fetch('https://backend.payhero.co.ke/api/v2/transaction-status?reference='+reference,{
+        headers:{'Authorization':'Basic '+creds}
+      });
+      const data=await res.json();
+      const status=(data.status||data.Status||'').toLowerCase();
+      const successStatuses=['success','completed','complete','successful','paid'];
+      const failStatuses=['failed','cancelled','canceled','failed','error'];
+      if(successStatuses.includes(status)){
+        clearInterval(pollingInterval);
+        await activateUser(data.transaction_id||data.TransactionID||reference);
+      } else if(failStatuses.includes(status)){
+        clearInterval(pollingInterval);
+        document.getElementById('polling-msg').style.display='none';
+        document.getElementById('stk-modal').style.display='none';
+        document.getElementById('fail-popup').style.display='flex';
+        document.getElementById('stk-btn').disabled=false;
+        document.getElementById('stk-btn').textContent='📱 Pay KES 150';
+
+        // Send STK failure email
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'stk_failed',
+              to: currentUser.email,
+              username: userData?.username||'User'
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
+      }
+    } catch(e){ /* keep polling */ }
+  },5000);
+}
+
+function startUserPolling(){
+  const unsub=onSnapshot(doc(db,'users',currentUser.uid),(snap)=>{
+    if(snap.exists()&&snap.data().activated){
+      unsub();
+      window.location.replace('https://netlinkagencies.linkpc.net/dashboard');
+    }
+  });
+  setTimeout(()=>unsub(),180000);
+}
+
+async function activateUser(txnId){
+  try{
+    await setDoc(doc(db,'users',currentUser.uid),{
+      activated:true,
+      activatedAt:serverTimestamp(),
+      activationTxn:txnId,
+      activationMethod:'stk'
+    },{merge:true});
+
+    // Reload user data fresh from Firestore
+    const freshSnap = await getDoc(doc(db,'users',currentUser.uid));
+    const freshData = freshSnap.exists() ? freshSnap.data() : {};
+
+    // EMAIL 1: STK Push payment confirmed email
+    try{
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'deposit_stk_success',
+          to: currentUser.email,
+          username: freshData.username||userData?.username||'User',
+          amount: 'KES 150',
+          txnId: txnId,
+          date: new Date().toLocaleString()
+        })
+      });
+      console.log('STK payment confirmed email sent');
+    } catch(emailErr){
+      console.log('STK email error:',emailErr);
+    }
+
+    // EMAIL 2: Account activated email
+    try{
+      const emailRes = await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'activation',
+          to: currentUser.email,
+          username: freshData.username||userData?.username||'User',
+          country: freshData.country||userData?.country||'',
+          txnId: txnId,
+          date: new Date().toLocaleString()
+        })
+      });
+      const emailData = await emailRes.json();
+      console.log('Activation email result:', emailData);
+    } catch(emailErr){
+      console.log('Activation email error:',emailErr);
+    }
+
+    // Pay referral commissions (same logic as manual admin approval)
+    const referredBy = userData?.referredBy || '';
+    const newMemberUsername = userData?.username || 'User';
+    if(referredBy){
+      const q1=query(collection(db,'users'),where('referralCode','==',referredBy));
+      const snap1=await getDocs(q1);
+      if(!snap1.empty){
+        const ref1Doc=snap1.docs[0];
+        const ref1Data=ref1Doc.data();
+        await updateDoc(doc(db,'users',ref1Doc.id),{
+          balance:increment(80),
+          totalEarnings:increment(80),
+          level1Count:increment(1)
+        });
+
+        try{
+          await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              type:'referral_level1',
+              to: ref1Data.email||'',
+              username: ref1Data.username||'User',
+              amount: 'KES 80',
+              referralUsername: newMemberUsername,
+              level: '1',
+              date: new Date().toLocaleString()
+            })
+          });
+        } catch(emailErr){
+          console.log('Email error:',emailErr);
+        }
+
+        if(ref1Data.referredBy){
+          const q2=query(collection(db,'users'),where('referralCode','==',ref1Data.referredBy));
+          const snap2=await getDocs(q2);
+          if(!snap2.empty){
+            const ref2Doc=snap2.docs[0];
+            const ref2Data=ref2Doc.data();
+            await updateDoc(doc(db,'users',ref2Doc.id),{
+              balance:increment(20),
+              totalEarnings:increment(20),
+              level2Count:increment(1)
+            });
+
+            try{
+              await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({
+                  type:'referral_level2',
+                  to: ref2Data.email||'',
+                  username: ref2Data.username||'User',
+                  amount: 'KES 20',
+                  referralUsername: newMemberUsername,
+                  level: '2',
+                  date: new Date().toLocaleString()
+                })
+              });
+            } catch(emailErr){
+              console.log('Email error:',emailErr);
+            }
+
+            if(ref2Data.referredBy){
+              const q3=query(collection(db,'users'),where('referralCode','==',ref2Data.referredBy));
+              const snap3=await getDocs(q3);
+              if(!snap3.empty){
+                const ref3Doc=snap3.docs[0];
+                const ref3Data=ref3Doc.data();
+                await updateDoc(doc(db,'users',ref3Doc.id),{
+                  balance:increment(10),
+                  totalEarnings:increment(10),
+                  level3Count:increment(1)
+                });
+
+                try{
+                  await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({
+                      type:'referral_level3',
+                      to: ref3Data.email||'',
+                      username: ref3Data.username||'User',
+                      amount: 'KES 10',
+                      referralUsername: newMemberUsername,
+                      level: '3',
+                      date: new Date().toLocaleString()
+                    })
+                  });
+                } catch(emailErr){
+                  console.log('Email error:',emailErr);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    document.getElementById('stk-modal').style.display='none';
+    document.getElementById('polling-msg').style.display='none';
+    document.getElementById('stk-activated').style.display='block';
+    document.getElementById('stk-btn').textContent='✅ Activated!';
+
+    // User clicks Go to Dashboard button in popup
+  }catch(e){
+    document.getElementById('stk-err').textContent='✅ Payment received but activation failed. Please contact admin.';
+    document.getElementById('stk-err').style.display='block';
+  }
+}
+
+
+
+window.submitTxn=async function(){
+  const txn=document.getElementById('txn').value.trim().toUpperCase();
+  const ok=document.getElementById('manual-ok');
+  const err=document.getElementById('manual-err');
+  const btn=document.getElementById('manual-btn');
+  err.style.display='none';ok.style.display='none';
+  if(!txn){err.textContent='⚠️ Please enter your Transaction ID.';err.style.display='block';return;}
+  if(!currentUser){window.location.replace('https://netlinkagencies.linkpc.net/login');return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
+  try{
+    await addDoc(collection(db,'pendingActivations'),{
+      uid:currentUser.uid,
+      username:userData?.username||'',
+      email:currentUser.email,
+      txnId:txn,
+      referredBy:userData?.referredBy||'',
+      status:'pending',
+      createdAt:serverTimestamp()
+    });
+
+    // Send confirmation email
+    await sendEmail('activation_pending', userData, {txnId: txn});
+    ok.innerHTML=`✅ Dear <strong>${userData?.username||'User'}</strong>, your payment request has been received.<br>
+    Wait <strong>2–5 minutes</strong> for activation.<br><br>
+    Not activated within 5 minutes?<br>
+    <button onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;">💬 WhatsApp Admin</button>`;
+    ok.style.display='block';
+    btn.disabled=true;btn.textContent='✅ Submitted — Waiting for approval';
+  }catch(e){
+    err.textContent='❌ '+e.message;err.style.display='block';
+    btn.disabled=false;btn.textContent='✅ Activate Account';
+  }
+};
+</script>
+</body>
+</html>
