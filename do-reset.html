@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Set New Password — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--primary:#E91E63;--green:#00C853;--red:#FF3B3B;--bg3:#F0F4F8;--border:#E0E0E0;--text:#1A1A1A;--text2:#666666;--white:#FFFFFF;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:linear-gradient(180deg,#E91E63 0%,#FF1493 50%,#FF9800 100%);color:var(--text);min-height:100vh;}
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:60px 16px;}
+.logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:20px;}
+.logo-icon{width:56px;height:56px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.logo-text{font-weight:900;font-size:20px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.9);letter-spacing:2px;}
+h1{font-size:24px;font-weight:800;color:#fff;margin-bottom:6px;text-align:center;}
+.sub{color:rgba(255,255,255,.95);font-size:14px;text-align:center;margin-bottom:30px;}
+.card{background:#fff;border-radius:20px;padding:32px 24px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+.fg{margin-bottom:16px;position:relative;}
+label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 44px 12px 15px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;outline:none;transition:all .3s;}
+input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(233,30,99,.1);}
+.eye-toggle{position:absolute;right:14px;top:38px;cursor:pointer;font-size:18px;user-select:none;}
+.strength-bar{height:4px;border-radius:2px;background:#eee;margin-top:6px;overflow:hidden;}
+.strength-fill{height:4px;border-radius:2px;width:0%;transition:all .3s;}
+.strength-text{font-size:11px;margin-top:4px;font-weight:700;}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#E91E63,#FF9800);color:#fff;transition:all .3s;box-shadow:0 8px 20px rgba(233,30,99,.3);}
+.btn:hover{transform:translateY(-2px);}
+.btn:disabled{opacity:.6;cursor:not-allowed;}
+.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#2E7D32;border-radius:10px;padding:12px 15px;font-size:13px;margin:10px 0;display:none;font-weight:600;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#C62828;border-radius:10px;padding:12px 15px;font-size:13px;margin:10px 0;display:none;font-weight:500;}
+.link{text-align:center;margin-top:16px;font-size:13px;color:var(--text2);}
+.link a{color:var(--primary);font-weight:700;text-decoration:none;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">
+    <div class="logo-icon">🔗</div>
+    <div><div class="logo-text">NETLINK</div><div class="logo-sub">AGENCIES</div></div>
+  </div>
+  <h1>Set New Password</h1>
+  <p class="sub">Enter and confirm your new password below</p>
+  <div class="card">
+    <div class="fg">
+      <label>New Password</label>
+      <input type="password" id="pw1" placeholder="Enter new password" oninput="checkStrength()"/>
+      <span class="eye-toggle" onclick="toggleEye('pw1',this)">👁</span>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-text" id="strength-text"></div>
+    </div>
+    <div class="fg">
+      <label>Confirm New Password</label>
+      <input type="password" id="pw2" placeholder="Confirm new password"/>
+      <span class="eye-toggle" onclick="toggleEye('pw2',this)">👁</span>
+    </div>
+    <div class="ok" id="ok">✅ Password reset successfully! Redirecting to login...</div>
+    <div class="err" id="err"></div>
+    <button class="btn" id="btn" onclick="doReset()">🔐 Set New Password</button>
+    <div class="link"><a href="/login">← Back to Login</a></div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const auth=getAuth(app);
+
+// Get oobCode from URL
+const params=new URLSearchParams(window.location.search);
+const oobCode=params.get('oobCode');
+
+if(!oobCode){
+  document.getElementById('err').textContent='❌ Invalid or expired reset link. Please request a new one.';
+  document.getElementById('err').style.display='block';
+  document.getElementById('btn').disabled=true;
+}
+
+window.toggleEye=function(id,el){
+  const input=document.getElementById(id);
+  if(input.type==='password'){input.type='text';el.textContent='🙈';}
+  else{input.type='password';el.textContent='👁';}
+};
+
+window.checkStrength=function(){
+  const pw=document.getElementById('pw1').value;
+  const fill=document.getElementById('strength-fill');
+  const text=document.getElementById('strength-text');
+  let score=0;
+  if(pw.length>=6) score++;
+  if(pw.length>=8) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels=[
+    {w:'0%',color:'#eee',label:''},
+    {w:'25%',color:'#FF3B3B',label:'Weak'},
+    {w:'50%',color:'#FF9800',label:'Fair'},
+    {w:'75%',color:'#FFD700',label:'Good'},
+    {w:'100%',color:'#00C853',label:'Strong'},
+  ];
+  const l=levels[Math.min(score,4)];
+  fill.style.width=l.w;
+  fill.style.background=l.color;
+  text.textContent=l.label;
+  text.style.color=l.color;
+};
+
+window.doReset=async function(){
+  const btn=document.getElementById('btn');
+  const ok=document.getElementById('ok');
+  const err=document.getElementById('err');
+  const pw1=document.getElementById('pw1').value;
+  const pw2=document.getElementById('pw2').value;
+
+  ok.style.display='none';
+  err.style.display='none';
+
+  if(!pw1||pw1.length<6){
+    err.textContent='⚠️ Password must be at least 6 characters.';
+    err.style.display='block';return;
+  }
+  if(pw1!==pw2){
+    err.textContent='⚠️ Passwords do not match.';
+    err.style.display='block';return;
+  }
+  if(!oobCode){
+    err.textContent='❌ Invalid reset link. Please request a new one.';
+    err.style.display='block';return;
+  }
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Resetting...';
+
+  try{
+    // Verify the code is valid first
+    await verifyPasswordResetCode(auth, oobCode);
+    // Confirm the new password
+    await confirmPasswordReset(auth, oobCode, pw1);
+
+    ok.style.display='block';
+    btn.disabled=true;
+    btn.textContent='✅ Done!';
+    // Redirect to login after 3 seconds
+    setTimeout(()=>window.location.replace('/login'),3000);
+
+  }catch(e2){
+    let msg='❌ Something went wrong. Please try again.';
+    if(e2.code==='auth/expired-action-code') msg='❌ This reset link has expired. Please request a new one.';
+    if(e2.code==='auth/invalid-action-code') msg='❌ This reset link is invalid or already used. Please request a new one.';
+    if(e2.code==='auth/weak-password') msg='❌ Password is too weak. Please use at least 6 characters.';
+    err.textContent=msg;
+    err.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='🔐 Set New Password';
+  }
+};
+</script>
+</body>
+</html>
