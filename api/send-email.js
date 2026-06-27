@@ -60,7 +60,8 @@ export default async function handler(req, res) {
     account_updated: '🔧 Your Account Details Were Updated',
     password_reset_by_admin: '🔐 Your Password Has Been Reset',
     client_payment_sent: 'Paid for Client ✅',
-    client_payment_received: `Hello ${username}`
+    client_payment_received: `Hello ${username}`,
+    password_reset: '🔐 Reset Your NETLINK AGENCIES Password'
   };
 
   const emails = {
@@ -239,6 +240,19 @@ export default async function handler(req, res) {
       (receiptUrl ? `<div style="text-align:center;margin:24px 0;"><a href="${receiptUrl}" style="display:inline-block;background:#E91E8C;color:#fff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">📄 View &amp; Download Receipt</a></div>` : ''),
       replyFooter,
       '#00C853'
+    ),
+
+    password_reset: renderEmail(
+      'Reset Your Password 🔐',
+      p(`Hi ${username}, we received a request to reset your NETLINK AGENCIES password.`) +
+      p(`Click the button below to reset your password. This link expires in <strong>1 hour</strong>.`) +
+      `<div style="text-align:center;margin:24px 0;">
+        <a href="${req.body.resetLink}" style="display:inline-block;background:linear-gradient(135deg,#E91E8C,#FF4DB8);color:#fff;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;">Reset Password</a>
+      </div>` +
+      p(`Or copy and paste this link into your browser:<br/><a href="${req.body.resetLink}" style="color:#E91E8C;word-break:break-all;">${req.body.resetLink}</a>`) +
+      p(`If you did not request a password reset, you can safely ignore this email. Your password will not change.`),
+      replyFooter,
+      '#E91E8C'
     ),
 
     client_payment_received: renderEmail(
