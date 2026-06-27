@@ -45,18 +45,28 @@ input:read-only{opacity:.6;cursor:not-allowed;}
 .phone-prefix input{border:none;border-radius:0;background:transparent;}
 .phone-prefix input:focus{border:none;}
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
 .modal-box{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:460px;padding:0 0 30px 0;animation:slideUp .3s ease;}
 @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
 .modal-handle{width:40px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 0;}
-.modal-title{text-align:center;font-size:17px;font-weight:800;color:#222;padding:16px 24px 0;}
-.modal-body{display:flex;flex-direction:column;align-items:center;padding:24px;}
-.modal-icon{width:72px;height:72px;background:rgba(0,200,100,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-.modal-icon svg{width:36px;height:36px;}
-.modal-h{font-size:18px;font-weight:800;color:#222;margin-bottom:8px;text-align:center;}
-.modal-p{font-size:14px;color:#666;text-align:center;line-height:1.6;margin-bottom:0;}
+.modal-title{text-align:center;font-size:13px;font-weight:600;color:#888;padding:14px 24px 0;letter-spacing:0.5px;text-transform:uppercase;}
+.modal-body{display:flex;flex-direction:column;align-items:center;padding:24px 24px 16px;}
+.modal-h{font-size:20px;font-weight:900;color:#222;margin-bottom:6px;text-align:center;}
+.modal-p{font-size:13px;color:#888;text-align:center;line-height:1.6;margin-bottom:0;}
 .modal-footer{padding:0 24px;}
 .modal-close{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;}
+/* ── Safaricom-style spinning rings ── */
+.stk-rings{position:relative;width:110px;height:110px;margin:0 auto 20px;}
+.stk-ring-outer{position:absolute;inset:0;border-radius:50%;border:4px solid #e0e0e0;border-top-color:#00C864;border-right-color:#00C864;animation:stkSpinO 1.4s linear infinite;}
+.stk-ring-inner{position:absolute;inset:14px;border-radius:50%;border:4px solid #e0e0e0;border-bottom-color:#00C864;border-left-color:#00C864;animation:stkSpinI 1s linear infinite reverse;}
+.stk-ring-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+@keyframes stkSpinO{to{transform:rotate(360deg);}}
+@keyframes stkSpinI{to{transform:rotate(360deg);}}
+/* ── Green progress bar ── */
+.stk-progress-wrap{width:100%;background:#e0e0e0;border-radius:6px;height:6px;margin:18px 0 8px;overflow:hidden;}
+.stk-progress-bar{height:6px;width:0%;background:linear-gradient(90deg,#00C864,#00E676);border-radius:6px;transition:width .3s ease;}
+@keyframes stkProgress{0%{width:0%;}60%{width:75%;}90%{width:90%;}100%{width:95%;}}
+.stk-almost{font-size:11px;color:#aaa;text-align:center;margin-top:2px;}
 .polling-bar{text-align:center;color:var(--pk2);font-size:13px;margin:10px 0;display:none;}
 
 /* Payment Result Popups */
