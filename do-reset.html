@@ -69,11 +69,31 @@ import { getAuth, verifyPasswordResetCode, confirmPasswordReset } from "https://
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app);
 
-// Get oobCode from URL
+// Extract oobCode from URL — works whether Firebase redirects here directly
+// or user lands here from the email link with oobCode in the query string
 const params=new URLSearchParams(window.location.search);
-const oobCode=params.get('oobCode');
+let oobCode=params.get('oobCode');
+const mode=params.get('mode');
 
+// If Firebase redirected here with mode=resetPassword, oobCode is already in params
+// If page loaded without oobCode, check if we're being redirected from Firebase default page
 if(!oobCode){
+  // Try extracting from continueUrl if present
+  const continueUrl=params.get('continueUrl');
+  if(continueUrl){
+    try{
+      const continueParams=new URLSearchParams(new URL(continueUrl).search);
+      oobCode=continueParams.get('oobCode');
+    }catch(e){}
+  }
+}
+
+if(!oobCode && mode==='resetPassword'){
+  // Firebase sent us here but oobCode missing — show error
+  document.getElementById('err').textContent='❌ Invalid or expired reset link. Please request a new one.';
+  document.getElementById('err').style.display='block';
+  document.getElementById('btn').disabled=true;
+} else if(!oobCode){
   document.getElementById('err').textContent='❌ Invalid or expired reset link. Please request a new one.';
   document.getElementById('err').style.display='block';
   document.getElementById('btn').disabled=true;
