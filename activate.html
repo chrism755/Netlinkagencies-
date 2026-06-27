@@ -461,12 +461,31 @@ async function activateUser(txnId){
       activationMethod:'stk'
     },{merge:true});
 
-    // Send activation email via Vercel + Resend
+    // Reload user data fresh from Firestore
+    const freshSnap = await getDoc(doc(db,'users',currentUser.uid));
+    const freshData = freshSnap.exists() ? freshSnap.data() : {};
+
+    // EMAIL 1: STK Push payment confirmed email
     try{
-      // Reload user data fresh from Firestore to ensure it's available
-      const freshSnap = await getDoc(doc(db,'users',currentUser.uid));
-      const freshData = freshSnap.exists() ? freshSnap.data() : {};
-      
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'deposit_stk_success',
+          to: currentUser.email,
+          username: freshData.username||userData?.username||'User',
+          amount: 'KES 150',
+          txnId: txnId,
+          date: new Date().toLocaleString()
+        })
+      });
+      console.log('STK payment confirmed email sent');
+    } catch(emailErr){
+      console.log('STK email error:',emailErr);
+    }
+
+    // EMAIL 2: Account activated email
+    try{
       const emailRes = await fetch('https://netlinkagencies.vercel.app/api/send-email',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -480,9 +499,9 @@ async function activateUser(txnId){
         })
       });
       const emailData = await emailRes.json();
-      console.log('Email result:', emailData);
+      console.log('Activation email result:', emailData);
     } catch(emailErr){
-      console.log('Email error:',emailErr);
+      console.log('Activation email error:',emailErr);
     }
 
     // Pay referral commissions (same logic as manual admin approval)
