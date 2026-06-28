@@ -32,24 +32,84 @@ input:focus{border-color:var(--primary);}
   <div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">ADMIN PANEL</div></div></div>
   <h1>Admin Access</h1><p class="sub">Authorized personnel only</p>
   <div class="card">
-    <div class="fg"><label>Username</label><input id="u" placeholder="admin"/></div>
+    <div class="fg"><label>Username or Email</label><input id="u" placeholder="admin"/></div>
     <div class="fg"><label>Password</label><input id="p" type="password" placeholder="••••••••"/></div>
     <div class="err" id="err"></div>
     <button class="btn" onclick="login()">🔐 Login</button>
   </div>
 </div>
-<script>
-function login(){
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+window.login=async function(){
   const u=document.getElementById('u').value.trim();
   const p=document.getElementById('p').value;
+  const err=document.getElementById('err');
+  const btn=document.querySelector('.btn');
+  err.style.display='none';
+
+  if(!u||!p){err.textContent='⚠️ Enter username/email and password.';err.style.display='block';return;}
+
+  btn.disabled=true;btn.textContent='Logging in...';
+
+  // Check if master admin
   if(u==='admin'&&p==='Netlink2026'){
-    localStorage.setItem('nlAdmin','true');
+    localStorage.setItem('nlAdmin', JSON.stringify({role:'master', email:'admin@netlinkagencies.com'}));
     window.location.href='/admin/panel.html';
-  } else {
-    document.getElementById('err').textContent='⚠️ Invalid credentials.';
-    document.getElementById('err').style.display='block';
+    return;
   }
-}
+
+  // Try co-admin login via Firebase Auth
+  try{
+    // Sign in with Firebase Auth using email
+    let email=u;
+    // If username entered (not email), look up email from Firestore
+    if(!u.includes('@')){
+      const q=query(collection(db,'coAdmins'),where('username','==',u));
+      const snap=await getDocs(q);
+      if(snap.empty){
+        err.textContent='⚠️ Invalid credentials.';
+        err.style.display='block';
+        btn.disabled=false;btn.textContent='🔐 Login';
+        return;
+      }
+      email=snap.docs[0].data().email;
+    }
+
+    // Sign in with Firebase
+    await signInWithEmailAndPassword(auth, email, p);
+
+    // Get co-admin data from Firestore
+    const q2=query(collection(db,'coAdmins'),where('email','==',email));
+    const snap2=await getDocs(q2);
+    if(snap2.empty){
+      err.textContent='⚠️ Co-admin not found.';
+      err.style.display='block';
+      btn.disabled=false;btn.textContent='🔐 Login';
+      return;
+    }
+
+    const coAdminData=snap2.docs[0].data();
+    localStorage.setItem('nlAdmin', JSON.stringify({
+      role:'coadmin',
+      email:email,
+      username:coAdminData.username,
+      permissions:coAdminData.permissions||{}
+    }));
+    window.location.href='/admin/panel.html';
+
+  }catch(e){
+    err.textContent='⚠️ Invalid credentials.';
+    err.style.display='block';
+    btn.disabled=false;btn.textContent='🔐 Login';
+  }
+};
 </script>
 </body>
 </html>
