@@ -189,9 +189,6 @@ async function finishVid(i,btn){
     document.getElementById('tt-count').textContent=watched.length+'/3';
     document.getElementById('tt-earn').textContent=window._CUR+(watched.length*15);
     btn.style.display='none';
-    const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 <strong>'+UD.username+'</strong> — KES 15 credited to Total Earnings!';
-    document.getElementById('tt-card-'+i).appendChild(ok);
     showToast('💰 KES 15 earned from TikTok video!');
   }catch(e){btn.disabled=false;btn.textContent='▶️ Watch & Earn KES 15';}
 }

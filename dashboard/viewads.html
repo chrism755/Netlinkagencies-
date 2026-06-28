@@ -193,9 +193,6 @@ async function finishAd(i,btn){
     document.getElementById('ads-count').textContent=watched.length+'/5';
     document.getElementById('ads-earn').textContent=window._CUR+(watched.length*5);
     btn.style.display='none';
-    const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 <strong>'+UD.username+'</strong> — KES 5 credited to your Total Earnings!';
-    document.getElementById('ad-card-'+i).appendChild(ok);
     showToast('💰 KES 5 earned from ad!');
   }catch(e){btn.disabled=false;btn.textContent='👁️ View Ad & Earn KES 5';}
 }

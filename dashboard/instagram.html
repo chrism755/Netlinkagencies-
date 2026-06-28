@@ -181,9 +181,6 @@ async function finishVid(i,btn){
     document.getElementById('ig-count').textContent=watched.length+'/3';
     document.getElementById('ig-earn').textContent=window._CUR+(watched.length*20);
     btn.style.display='none';
-    const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 <strong>'+UD.username+'</strong> — KES 20 credited to Total Earnings!';
-    document.getElementById('ig-card-'+i).appendChild(ok);
     showToast('💰 KES 20 earned from Instagram reel!');
   }catch(e){btn.disabled=false;btn.textContent='▶️ Watch Reel & Earn KES 20';}
 }

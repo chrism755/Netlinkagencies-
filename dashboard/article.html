@@ -212,9 +212,6 @@ async function finishArticle(i,btn){
     document.getElementById('art-count').textContent=read.length+'/3';
     document.getElementById('art-earn').textContent=window._CUR+(read.length*20);
     btn.style.display='none';
-    const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 <strong>'+UD.username+'</strong> — KES 20 credited to your Total Earnings!';
-    document.getElementById('art-card-'+i).appendChild(ok);
     showToast('💰 KES 20 earned from article!');
   }catch(e){btn.disabled=false;btn.textContent='📖 Read Article & Earn KES 20';}
 }
