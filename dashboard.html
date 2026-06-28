@@ -381,14 +381,7 @@ async function loadNotifications(uid, username){
     if(notifications.length===0){
       document.getElementById('notif-list').innerHTML='<div class="notif-empty">No notifications yet</div>';
     } else {
-      document.getElementById('notif-list').innerHTML=notifications.map(n=>`
-        <div class="notif-item unread">
-          <div class="notif-icon ${n.type}">${n.icon}</div>
-          <div>
-            <div class="notif-text">${n.msg}</div>
-            <div class="notif-time">${n.time}</div>
-          </div>
-        </div>`).join('');
+      document.getElementById('notif-list').innerHTML=notifications.map(n=>`\n        <div class="notif-item unread">\n          <div class="notif-icon ${n.type}">${n.icon}</div>\n          <div>\n            <div class="notif-text">${n.msg}</div>\n            <div class="notif-time">${n.time}</div>\n          </div>\n        </div>`).join('');
     }
   }catch(e){console.log('Notif error:',e);} 
 }
@@ -419,7 +412,8 @@ window.copyRef=()=>{
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
-window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
+// Updated logout redirect to absolute URL with .html
+window.doLogout=async()=>{await signOut(auth);window.location.replace('https://netlinkagencies.linkpc.net/login.html');};
 </script>
 </body>
 </html>
