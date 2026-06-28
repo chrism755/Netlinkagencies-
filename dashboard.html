@@ -154,7 +154,7 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 <a class="ni" href="/dashboard/help"><span class="ni-icon">🆘</span>Get Help</a>
 <a class="ni" href="/dashboard/timetable"><span class="ni-icon">🗓️</span>Time Table</a>
 <a class="ni" href="/dashboard/profile"><span class="ni-icon">👤</span>Profile</a>
-<a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
+<a class="ni" style="color:#FF5252;font-weight:800;" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 
   <div class="main">
@@ -274,7 +274,7 @@ const auth=getAuth(app),db=getFirestore(app);
 function fmt(n){return Number(n||0).toLocaleString('en-KE');}
 
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace('/login.html');return;}
+  if(!u){window.location.replace('/login');return;}
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
   const UD=snap.data();
@@ -451,7 +451,7 @@ window.copyRef=()=>{
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
-window.doLogout=async()=>{await signOut(auth);window.location.replace('/login.html');};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
 </script>
 </body>
 </html>
