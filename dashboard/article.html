@@ -5,7 +5,7 @@
 <title>Article — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
@@ -14,77 +14,44 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
 .logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
-.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
-.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
-.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:#FF80CE;letter-spacing:2px;text-transform:uppercase;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
-.sub-nav{display:none;background:rgba(0,0,0,.3);}
-.sub-nav.open{display:block;}
+.sub-nav{display:none;background:rgba(0,0,0,.3);}.sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
 .topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.3);}
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
-.overlay.show{display:block;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}.overlay.show{display:block;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
 .card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
 .card p{font-size:13px;color:#fff;line-height:1.7;}
-.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;}
-.card-pink h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;}
-.card-pink p{font-size:13px;color:#fff;opacity:.9;line-height:1.6;}
+.card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
+.card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
+.card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.5;}
-select option{background:var(--bg3);}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);}
-.qo.selected{border-color:var(--pk);background:rgba(233,30,140,.2);}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3);margin:10px 0;}
-.upload-box:hover{border-color:var(--pk);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:#FF80CE;margin-left:7px;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.video-player{background:#000;border-radius:12px;width:100%;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;overflow:hidden;}
-.play-btn{width:60px;height:60px;background:linear-gradient(135deg,var(--pkd),var(--pk));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border:none;}
-.progress-ring{width:70px;height:70px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#FF80CE;font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150px);z-index:9999;background:#3d0050;border:2px solid #6a0080;color:#fff;border-radius:16px;padding:16px 18px;width:92%;max-width:420px;box-shadow:0 8px 30px rgba(0,0,0,.5);display:flex;align-items:flex-start;gap:12px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);font-size:14px;line-height:1.6;font-weight:600;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;}
+.week-badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:800;color:var(--pk3);margin-bottom:12px;}
+.day-lock{background:rgba(255,82,82,.1);border:2px solid var(--red);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px;}
 </style>
 </head>
 <body>
+<div class="toast" id="toast"><div id="toast-msg" style="flex:1;"></div><button class="toast-close" onclick="document.getElementById('toast').classList.remove('show')">✕</button></div>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="layout">
 <nav class="sidebar" id="sb">
@@ -134,13 +101,18 @@ select option{background:var(--bg3);}
 <div class="main">
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Article</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-<div class="card-pink"><h3>📰 Daily Articles</h3><p>Read 3 articles per day. <span class="kes-val" data-kes="20">KES 20</span> per article. Money goes to Total Earnings!</p></div>
+<div class="card-pink"><h3>📰 Weekly Articles</h3><p>Read 3 articles per day and earn KES 20 per article. Articles rotate every week — new content every week! Money goes to Total Earnings. Available on Saturdays.</p></div>
 <div class="card">
   <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">TODAY EARNINGS</div><div id="art-earn" style="font-size:20px;font-weight:900;color:var(--gold);">...</div></div>
     <div><div style="font-size:11px;color:#fff;margin-bottom:4px;">ARTICLES READ</div><div id="art-count" style="font-size:20px;font-weight:900;color:#fff;">0/3</div></div>
   </div>
-  <div class="reward">💰 <span class="kes-val" data-kes="20">KES 20</span> per article · 3 per day</div>
+  <div class="reward">💰 KES 20 per article · 3 per day · Resets daily</div>
+</div>
+<div id="day-lock" style="display:none;" class="day-lock">
+  <div style="font-size:36px;margin-bottom:10px;">🔒</div>
+  <h3 style="color:var(--red);margin-bottom:8px;">Available on Saturdays Only</h3>
+  <p>Articles are only available every <strong>Saturday</strong>. Come back this Saturday to read and earn!</p>
 </div>
 <div id="articles-list"></div>
 </div>
@@ -148,62 +120,81 @@ select option{background:var(--bg3);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"123029073482","appId":"1:123029073482:web:61bccfbd2c5c8e0ad9b8d4"});
+import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
+
+// 4 weeks of articles — rotates weekly
+const ALL_ARTICLES=[
+  // Week 1
+  [{t:'How to Make Money Online in Africa 2025',body:'The digital economy in Africa is booming faster than ever. From content creation to remote work and digital platforms like NETLINK, millions of Africans are now earning real income from home. The key is consistency, skill-building, and leveraging the right platforms. NETLINK connects you to real earning tasks that pay weekly.'},
+   {t:'Top 5 Ways to Grow Your Referral Network Fast',body:'Building a strong referral network is the foundation of passive income on NETLINK. Start by sharing your referral link on all your social media platforms every morning. Target groups, communities, and friends who are looking for ways to earn online. Follow up with everyone who joins to keep them active.'},
+   {t:'Understanding Mobile Money and Safe Transactions',body:'Mobile money platforms have transformed financial access in East Africa. Always verify the recipient name before confirming any transaction. Never share your PIN with anyone, including people claiming to be support staff. Report suspicious activity immediately to your network provider.'}],
+  // Week 2
+  [{t:'Digital Marketing for Beginners: Earn More Online',body:'Digital marketing is one of the fastest growing skills in Africa. You can earn by promoting businesses on social media, creating content, and running ads. NETLINK teaches you practical digital skills through tasks like company advertisements and WhatsApp adverts. Start small and grow your income every week.'},
+   {t:'How Referral Programs Create Financial Freedom',body:'Referral programs work because they reward loyalty and network growth. On NETLINK, every person you refer can earn you passive income through downline commissions. Focus on helping your referrals succeed — when they earn, you earn too. Build your team and watch your income multiply every week.'},
+   {t:'Social Media as a Business Tool in 2025',body:'Social media is no longer just for entertainment — it is a powerful business tool. Businesses pay millions for social media advertising. On NETLINK, you earn money by advertising companies on your social platforms. The more active your accounts, the more value you add and the more you can earn.'}],
+  // Week 3
+  [{t:'Building Financial Discipline for Long-Term Wealth',body:'Financial discipline is the number one habit of wealthy people. It means saving a portion of every earning, no matter how small. With NETLINK, withdraw your earnings wisely — save first, spend what remains. Set weekly earning goals and track your progress. Small consistent amounts add up to life-changing wealth.'},
+   {t:'The Power of Consistency in Online Earning',body:'Many people start online earning with excitement but quit after a few weeks. The secret to success is showing up every single day, completing your tasks, and reinvesting in your skills. On NETLINK, members who complete daily tasks consistently earn 5x more than those who are irregular. Commit to your daily routine.'},
+   {t:'Cybersecurity Tips for Online Earners',body:'Protecting your online accounts is critical when you earn money online. Use strong, unique passwords for every platform. Enable two-factor authentication wherever possible. Never click suspicious links or download unknown files. Your NETLINK account and earnings are only secure as your personal security practices.'}],
+  // Week 4
+  [{t:'E-Commerce Opportunities for African Entrepreneurs',body:'E-commerce is one of the biggest income opportunities in Africa right now. Platforms like Jumia, Kilimall, and social commerce through WhatsApp and Instagram are creating new millionaires. You can start with no inventory by dropshipping or promoting products as an affiliate. NETLINK helps you build digital skills to capitalize on these opportunities.'},
+   {t:'How to Set and Achieve Your Weekly Earning Goals',body:'Setting clear weekly earning goals transforms your income. Write down exactly how much you want to earn this week on NETLINK. Break it down by task: videos, articles, quizzes, and referrals. Track your progress daily. Celebrate reaching your goals and set bigger ones the next week. Goal-setting is the foundation of financial success.'},
+   {t:'Why Community and Teamwork Multiply Your Income',body:'Online earners who work in teams consistently out-earn solo workers. In the NETLINK community, sharing tips, motivating each other, and solving problems together creates a positive earning environment. Join the WhatsApp and Telegram groups, share your wins and challenges, and grow together. Your network is your net worth.'}],
+];
+
+function getWeekArticles(){
+  const d=new Date();
+  const jan1=new Date(d.getFullYear(),0,1);
+  const week=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return ALL_ARTICLES[week%ALL_ARTICLES.length];
+}
+
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
   U=u;
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
-  // Currency based on user country
-  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
-  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
-  window._CUR=_currencyMap[UD.country]||'KES';
-  window._FEE=_feeMap[UD.country]||150;
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
-  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
+  window._CUR=({'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP'}[UD.country])||'KES';
   document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
-  if(typeof pageReady==='function') pageReady();
+  // Check if Saturday (6)
+  const isSat=new Date().getDay()===6;
+  if(!isSat){
+    document.getElementById('day-lock').style.display='block';
+    document.getElementById('art-earn').textContent=window._CUR+'0';
+    document.getElementById('art-count').textContent='0/3';
+    return;
+  }
+  pageReady();
 });
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
 window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
+window.showToast=function(msg){const t=document.getElementById('toast');document.getElementById('toast-msg').innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);};
 
+const ARTICLES=getWeekArticles();
 
-const ARTICLES=[
-  {t:'How to Make Money Online in Kenya 2024',body:'Kenya has seen a massive rise in online income opportunities. From content creation to digital marketing, there are many ways to earn from home. NETLINK has made it easy for Kenyans to monetize their skills online.'},
-  {t:'Top 5 Ways to Grow Your Referral Network Fast',body:'Building a strong referral network is the key to earning big on NETLINK. Start by sharing your referral link on all social media platforms. Encourage friends and family to join today.'},
-  {t:'Understanding M-PESA and Safe Transactions',body:'M-PESA is Kenya most trusted mobile money platform. When making transactions always verify the recipient name before confirming. Keep your PIN private and never share it with anyone.'}
-];
-async function pageReady(){
+function pageReady(){
   const today=new Date().toDateString();
   const read=JSON.parse(localStorage.getItem('art_'+U.uid+'_'+today)||'[]');
   document.getElementById('art-count').textContent=read.length+'/3';
-  document.getElementById('art-earn').textContent=(window._CUR||'KES')+(read.length*20);
+  document.getElementById('art-earn').textContent=window._CUR+(read.length*20);
   document.getElementById('articles-list').innerHTML=ARTICLES.map((a,i)=>`
     <div class="card" id="art-card-${i}">
       <h3>📄 ${a.t}</h3>
       <p id="art-body-${i}" style="display:none;margin:12px 0;">${a.body}</p>
       ${read.includes(i)?
-        '<div class="ok" style="display:block;">✅ Article read — <span class="kes-val" data-kes="20">KES 20</span> earned!</div>':
-        `<button class="btn" id="art-btn-${i}" onclick="readArticle(${i})">📖 Read Article & Earn <span class="kes-val" data-kes="20">KES 20</span>+'</button>`
+        '<div class="ok" style="display:block;">✅ Article read — KES 20 earned!</div>':
+        `<button class="btn" id="art-btn-${i}" onclick="readArticle(${i})">📖 Read Article & Earn KES 20</button>`
       }
     </div>`).join('');
 }
-window.readArticle=async function(i){
+
+window.readArticle=function(i){
   const btn=document.getElementById('art-btn-'+i);
   const body=document.getElementById('art-body-'+i);
   body.style.display='block';
@@ -211,6 +202,7 @@ window.readArticle=async function(i){
   let s=15;
   const t=setInterval(()=>{s--;btn.innerHTML='<span class="spinner"></span>Reading... '+s+'s';if(s<=0){clearInterval(t);finishArticle(i,btn);}},1000);
 };
+
 async function finishArticle(i,btn){
   try{
     await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(20)});
@@ -218,14 +210,14 @@ async function finishArticle(i,btn){
     const read=JSON.parse(localStorage.getItem('art_'+U.uid+'_'+today)||'[]');
     read.push(i);localStorage.setItem('art_'+U.uid+'_'+today,JSON.stringify(read));
     document.getElementById('art-count').textContent=read.length+'/3';
-    document.getElementById('art-earn').textContent=(window._CUR||'KES')+(read.length*20);
+    document.getElementById('art-earn').textContent=window._CUR+(read.length*20);
     btn.style.display='none';
-    const card=document.getElementById('art-card-'+i);
     const ok=document.createElement('div');ok.className='ok';ok.style.display='block';
-    ok.innerHTML='🎉 Congratulations <strong>'+UD.username+'</strong>! You have earned <strong><span class="kes-val" data-kes="20">KES 20</span></strong> from this article. <span class="kes-val" data-kes="20">KES 20</span> has been instantly disbursed to your Total Earnings!';
-    card.appendChild(ok);
-  }catch(e){btn.disabled=false;btn.textContent='📖 Read Article & Earn <span class="kes-val" data-kes="20">KES 20</span>';}
+    ok.innerHTML='🎉 <strong>'+UD.username+'</strong> — KES 20 credited to your Total Earnings!';
+    document.getElementById('art-card-'+i).appendChild(ok);
+    showToast('💰 KES 20 earned from article!');
+  }catch(e){btn.disabled=false;btn.textContent='📖 Read Article & Earn KES 20';}
 }
-
 </script>
-</body></html>
+</body>
+</html>

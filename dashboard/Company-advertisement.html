@@ -1,41 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Company Advertisement — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:220px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
-.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
-.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
-.sb-nav::-webkit-scrollbar{width:3px;}
-.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
-.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
-.sub-nav{display:none;background:rgba(0,0,0,.3);}
-.sub-nav.open{display:block;}
+.sub-nav{display:none;background:rgba(0,0,0,.3);}.sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
 .topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.3);}
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
-.overlay.show{display:block;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}.overlay.show{display:block;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
 .card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
 .card p{font-size:13px;color:#fff;line-height:1.7;}
@@ -43,62 +37,27 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
 .card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,140,.4);}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
 .fg{margin-bottom:14px;}
 label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
 input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
 input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
+input::placeholder,textarea::placeholder{color:#fff;opacity:.5;}
 select option{background:var(--bg3);}
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto;}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.comp-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.comp-row:last-child{border:none;}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150px);z-index:9999;background:#3d0050;border:2px solid #6a0080;color:#fff;border-radius:16px;padding:16px 18px;width:92%;max-width:420px;box-shadow:0 8px 30px rgba(0,0,0,.5);display:flex;align-items:flex-start;gap:12px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);font-size:14px;line-height:1.6;font-weight:600;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;}
 </style>
 </head>
 <body>
+<div class="toast" id="toast"><div id="toast-msg" style="flex:1;"></div><button class="toast-close" onclick="document.getElementById('toast').classList.remove('show')">✕</button></div>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
 <div class="layout">
 <nav class="sidebar" id="sb">
@@ -149,33 +108,68 @@ select option{background:var(--bg3);}
 <div class="topbar">
 <button class="menu-btn" onclick="openSB()">☰</button>
 <div class="tb-title">Company Advertisement</div>
-<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div>
+<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;" id="un">User</span></div>
 </div>
 <div class="content">
 
-<div class="card-pink"><h3>📢 Company Advertisement</h3><p>Get 5 companies to advertise per week. Earn KES 200 per company. Total KES 1,000 per week goes to your total earnings!</p></div>
-<div class="card">
-  <h3>📊 This Week's Companies</h3>
-  <div id="companies-list"><p style="color:#fff;">Loading this week's companies...</p></div>
+<div class="card-pink">
+  <h3>📢 Company Advertisement</h3>
+  <p>Advertise companies every Sunday. Earn KES 200 per company — up to 5 companies per week. All earnings go directly to your <strong>Total Earnings</strong>!</p>
 </div>
+
 <div class="card">
-  <h3>✅ Submit Advertisement</h3>
-  <p style="margin-bottom:14px;">Select a company, advertise them on your social media, then submit proof below.</p>
-  <div class="fg"><label>Select Company</label>
+  <h3>💡 How Company Advertising Works</h3>
+  <p>1️⃣ Pick any company from the list below.<br>
+  2️⃣ Post their advertisement on your social media (WhatsApp, Facebook, Instagram, etc.).<br>
+  3️⃣ Take a screenshot of the post.<br>
+  4️⃣ Describe where you posted it and click <strong>Submit</strong>.<br>
+  5️⃣ KES 200 is credited to your <strong>Total Earnings</strong> immediately after submission!</p>
+</div>
+
+<div class="card">
+  <h3>📊 This Week's Companies (Sunday Task)</h3>
+  <div id="companies-list">
+    <div class="comp-row"><span style="font-weight:700;">🏢 Safaricom Ltd</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>
+    <div class="comp-row"><span style="font-weight:700;">🏢 Equity Bank Kenya</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>
+    <div class="comp-row"><span style="font-weight:700;">🏢 KCB Group</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>
+    <div class="comp-row"><span style="font-weight:700;">🏢 Jumia Kenya</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>
+    <div class="comp-row"><span style="font-weight:700;">🏢 Airtel Kenya</span><span style="color:var(--gold);font-weight:800;">KES 200</span></div>
+    <div style="margin-top:12px;padding:10px;background:var(--bg3);border-radius:10px;font-size:12px;">
+      📅 <strong>Available:</strong> Every Sunday &nbsp;|&nbsp; 💰 <strong>Total per week: KES 1,000</strong>
+    </div>
+  </div>
+</div>
+
+<div id="day-lock-msg" class="card" style="display:none;">
+  <div style="text-align:center;padding:10px;">
+    <div style="font-size:40px;margin-bottom:10px;">🔒</div>
+    <h3 style="color:var(--red);margin-bottom:8px;">Locked Until Sunday</h3>
+    <p>Company Advertisement is only available on <strong>Sundays</strong>. Come back on Sunday to earn KES 200 per company!</p>
+  </div>
+</div>
+
+<div id="submit-section" class="card">
+  <h3>✅ Submit Your Advertisement</h3>
+  <p style="margin-bottom:14px;">Select a company, advertise them online, then submit proof. KES 200 goes to your Total Earnings!</p>
+  <div class="fg">
+    <label>Select Company</label>
     <select id="comp-select">
       <option value="">-- Select Company --</option>
-      <option value="company1">Company 1 — KES 200</option>
-      <option value="company2">Company 2 — KES 200</option>
-      <option value="company3">Company 3 — KES 200</option>
-      <option value="company4">Company 4 — KES 200</option>
-      <option value="company5">Company 5 — KES 200</option>
+      <option value="Safaricom Ltd">Safaricom Ltd — KES 200</option>
+      <option value="Equity Bank Kenya">Equity Bank Kenya — KES 200</option>
+      <option value="KCB Group">KCB Group — KES 200</option>
+      <option value="Jumia Kenya">Jumia Kenya — KES 200</option>
+      <option value="Airtel Kenya">Airtel Kenya — KES 200</option>
     </select>
   </div>
-  <div class="fg"><label>Proof (Screenshot description)</label><textarea id="comp-proof" placeholder="Describe where you posted the advert..." rows="3"></textarea></div>
+  <div class="fg">
+    <label>Where did you post it?</label>
+    <textarea id="comp-proof" placeholder="e.g. I posted on my WhatsApp Status and Facebook timeline..." rows="3"></textarea>
+  </div>
   <div class="ok" id="comp-ok"></div>
   <div class="err" id="comp-err"></div>
-  <button class="btn" id="comp-btn" onclick="submitAdvert()">📢 Submit Advertisement</button>
-  <div class="reward">💰 KES 200 per company · Goes to Total Earnings</div>
+  <button class="btn" id="comp-btn" onclick="submitAdvert()">📢 Submit Advertisement → Earn KES 200</button>
+  <div class="reward">💰 KES 200 per company · Goes directly to Total Earnings</div>
 </div>
 
 </div>
@@ -184,50 +178,65 @@ select option{background:var(--bg3);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"573857099635",appId:"1:573857099635:web:c2fd5938e1a1f97a8c3a5f"};
+import { getFirestore, doc, getDoc, updateDoc, increment, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
 const app=initializeApp(FB);
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login.html");return;}
+  if(!u){window.location.replace("/login");return;}
   U=u;
   const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate.html");return;}
+  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
   UD=snap.data();UD.uid=u.uid;
   document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
   document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+  window._db=db;window._U=U;window._UD=UD;
+  // Check if today is Sunday (0=Sunday)
+  const today=new Date();
+  const isSunday=today.getDay()===0;
+  if(!isSunday){
+    document.getElementById('submit-section').style.display='none';
+    document.getElementById('day-lock-msg').style.display='block';
+  }
 });
 window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
 window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
-window.doLogout=async()=>{await signOut(auth);window.location.replace("/login.html");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
+window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
+window.showToast=function(msg){const t=document.getElementById('toast');document.getElementById('toast-msg').innerHTML=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);};
 
-async function pageReady(db,U,UD,F){
-  window._db=db;window._U=U;window._UD=UD;window._F=F;
-  document.getElementById('companies-list').innerHTML=
-    ['Company 1','Company 2','Company 3','Company 4','Company 5'].map((c,i)=>
-      '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);"><span style="color:#fff;font-weight:600;">'+c+'</span><span style="color:var(--gold);">KES 200</span></div>'
-    ).join('')+'<div style="margin-top:10px;font-size:12px;color:#fff;">Total this week: <strong style="color:var(--gold);">KES 1,000</strong></div>';
-}
 window.submitAdvert=async function(){
   const comp=document.getElementById('comp-select').value;
   const proof=document.getElementById('comp-proof').value.trim();
   const ok=document.getElementById('comp-ok'),err=document.getElementById('comp-err'),btn=document.getElementById('comp-btn');
   ok.style.display='none';err.style.display='none';
-  if(!comp||!proof){err.textContent='⚠️ Select a company and provide proof.';err.style.display='block';return;}
+  if(!comp){err.textContent='⚠️ Please select a company.';err.style.display='block';return;}
+  if(!proof){err.textContent='⚠️ Please describe where you posted the advertisement.';err.style.display='block';return;}
+  // Check not already submitted this company this week
+  const weekKey='cadvert_'+U.uid+'_'+getWeekKey();
+  const done=JSON.parse(localStorage.getItem(weekKey)||'[]');
+  if(done.includes(comp)){err.textContent='⚠️ You already submitted an advertisement for '+comp+' this week!';err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
   try{
-    const {collection,addDoc,serverTimestamp,updateDoc,doc,increment}=_F;
-    await addDoc(collection(_db,'advertSubmissions'),{uid:_U.uid,username:_UD.username,company:comp,proof:proof,amount:200,status:'pending',createdAt:serverTimestamp()});
-    await updateDoc(doc(_db,'users',_U.uid),{totalEarnings:increment(200)});
-    ok.textContent='✅ Advertisement submitted! KES 200 added to your Total Earnings!';
-    ok.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';
-  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📢 Submit Advertisement';}
+    await addDoc(collection(db,'advertSubmissions'),{uid:U.uid,username:UD.username,company:comp,proof,amount:200,status:'approved',createdAt:serverTimestamp()});
+    await updateDoc(doc(db,'users',U.uid),{totalEarnings:increment(200)});
+    done.push(comp);localStorage.setItem(weekKey,JSON.stringify(done));
+    ok.textContent='✅ Advertisement for '+comp+' submitted! KES 200 added to your Total Earnings!';
+    ok.style.display='block';
+    document.getElementById('comp-select').value='';
+    document.getElementById('comp-proof').value='';
+    showToast('💰 KES 200 earned from '+comp+' advertisement!');
+  }catch(e){err.textContent='❌ '+e.message;err.style.display='block';}
+  btn.disabled=false;btn.textContent='📢 Submit Advertisement → Earn KES 200';
 };
 
+function getWeekKey(){
+  const d=new Date();
+  const jan1=new Date(d.getFullYear(),0,1);
+  const week=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);
+  return d.getFullYear()+'W'+week;
+}
 </script>
 </body>
-  </html>
+</html>

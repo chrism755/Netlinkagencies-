@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Get Help — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:260px;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
-.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
-.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
-.sb-nav::-webkit-scrollbar{width:3px;}
-.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
-.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
-.sub-nav{display:none;background:rgba(0,0,0,.3);}
-.sub-nav.open{display:block;}
+.sub-nav{display:none;background:rgba(0,0,0,.3);}.sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
 .topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
@@ -34,67 +28,25 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
 .avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
-.overlay.show{display:block;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}.overlay.show{display:block;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
 .card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
 .card p{font-size:13px;color:#fff;line-height:1.7;}
 .card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
 .card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
 .card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
-.reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
-select option{background:var(--bg3);}
-.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
-.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+.help-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;display:flex;align-items:center;gap:16px;}
+.help-logo{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.help-logo.wa{background:#25D366;}
+.help-logo.fb{background:#1877F2;}
+.help-logo.tt{background:#000;}
+.help-logo.ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);}
+.help-info{flex:1;}
+.help-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:3px;}
+.help-handle{font-size:11px;color:rgba(255,255,255,.6);}
+.help-btn{padding:10px 16px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:#fff;white-space:nowrap;flex-shrink:0;}
+.help-btn.wa-btn{background:#25D366;}
+.help-btn.follow-btn{background:#1877F2;}
 </style>
 </head>
 <body>
@@ -145,60 +97,90 @@ select option{background:var(--bg3);}
 <a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
-<div class="topbar">
-<button class="menu-btn" onclick="openSB()">☰</button>
-<div class="tb-title">Get Help</div>
-<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div>
-</div>
+<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Get Help</div><div class="avatar" id="av">U</div></div>
 <div class="content">
+<div class="card-pink"><h3>🆘 Get Help</h3><p>Need support? Follow us on social media or chat with us directly on WhatsApp. We are here to help you every day!</p></div>
+<div class="card"><h3>📞 Contact & Support</h3><p>Choose your preferred way to reach us. You can follow us on social media for daily tips and updates, or chat with us directly on WhatsApp for instant support!</p></div>
 
-<div class="card-pink"><h3>🆘 Get Help</h3><p>Our support team is available 24/7. Contact us on WhatsApp or Telegram for any issues!</p></div>
-<div class="card" style="text-align:center;">
-  <div style="font-size:40px;margin-bottom:12px;">💬</div>
-  <h3 style="margin-bottom:8px;">WhatsApp Support</h3>
-  <p style="margin-bottom:14px;">+254103470585</p>
-  <button class="btn btn-wa" onclick="window.open('https://wa.me/254706494401','_blank')">💬 Chat on WhatsApp</button>
-</div>
-<div class="card" style="text-align:center;">
-  <div style="font-size:40px;margin-bottom:12px;">✈️</div>
-  <h3 style="margin-bottom:8px;">Telegram Channel</h3>
-  <p style="margin-bottom:14px;">@Mentorfai</p>
-  <button class="btn btn-tg" onclick="window.open('https://t.me/Mentorfai','_blank')">✈️ Join Telegram</button>
-</div>
-<div class="card">
-  <h3>❓ Common Questions</h3>
-  <div style="border-bottom:1px solid var(--border);padding:12px 0;"><div style="font-weight:700;color:#fff;margin-bottom:4px;">When will my deposit be approved?</div><div style="font-size:13px;color:#fff;">Deposits are approved within 2-5 minutes. Contact admin if not approved after 10 minutes.</div></div>
-  <div style="border-bottom:1px solid var(--border);padding:12px 0;"><div style="font-weight:700;color:#fff;margin-bottom:4px;">How long does withdrawal take?</div><div style="font-size:13px;color:#fff;">Withdrawals are processed within 2-5 Minutes. Contact admin if you haven't received your withdraw.</div></div>
-  <div style="padding:12px 0;"><div style="font-weight:700;color:#fff;margin-bottom:4px;">My account is not activated?</div><div style="font-size:13px;color:#fff;">Send your M-PESA transaction ID to admin on WhatsApp for instant activation.</div></div>
+<!-- WhatsApp -->
+<div class="help-card">
+  <div class="help-logo wa">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.849L.057 24l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.655-.498-5.188-1.37l-.371-.22-3.844 1.008 1.026-3.742-.242-.388A9.959 9.959 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+  </div>
+  <div class="help-info">
+    <div class="help-title">WhatsApp Support</div>
+    <div class="help-handle">NETLINK AGENCIES — 24/7 Support</div>
+  </div>
+  <a href="#" id="wa-link"><button class="help-btn wa-btn">Chat with us on WhatsApp</button></a>
 </div>
 
+<!-- Facebook -->
+<div class="help-card">
+  <div class="help-logo fb">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+  </div>
+  <div class="help-info">
+    <div class="help-title">Facebook Page</div>
+    <div class="help-handle">@NETLINK AGENCIES</div>
+  </div>
+  <a href="#" id="fb-link"><button class="help-btn follow-btn">+ Follow</button></a>
+</div>
+
+<!-- TikTok -->
+<div class="help-card">
+  <div class="help-logo tt">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+  </div>
+  <div class="help-info">
+    <div class="help-title">TikTok Page</div>
+    <div class="help-handle">@netlinkagencies</div>
+  </div>
+  <a href="#" id="tt-link"><button class="help-btn follow-btn">+ Follow</button></a>
+</div>
+
+<!-- Instagram -->
+<div class="help-card">
+  <div class="help-logo ig">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </div>
+  <div class="help-info">
+    <div class="help-title">Instagram Page</div>
+    <div class="help-handle">@netlinkagencies</div>
+  </div>
+  <a href="#" id="ig-link"><button class="help-btn follow-btn">+ Follow</button></a>
+</div>
+
+<div class="card"><h3>💡 Note</h3><p>Links for social media will be updated by admin. For urgent support, use the <strong>WhatsApp Chat</strong> button above. Our team responds within a few minutes!</p></div>
 </div>
 </div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
-const app=initializeApp(FB);
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
-let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login");return;}
-  U=u;
-  const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
-  UD=snap.data();UD.uid=u.uid;
-  document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
-  document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
+  if(!u){window.location.replace('/login');return;}
+  const snap=await getDoc(doc(db,'users',u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
+  document.getElementById('av').textContent=snap.data().username.charAt(0).toUpperCase();
+  // Load social links from settings doc if available
+  try{
+    const set=await getDoc(doc(db,'settings','socialLinks'));
+    if(set.exists()){
+      const d=set.data();
+      if(d.whatsapp){document.getElementById('wa-link').href=d.whatsapp;}
+      if(d.facebook){document.getElementById('fb-link').href=d.facebook;}
+      if(d.tiktok){document.getElementById('tt-link').href=d.tiktok;}
+      if(d.instagram){document.getElementById('ig-link').href=d.instagram;}
+    }
+  }catch(e){}
 });
-window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
-window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
-window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
-
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
 </script>
 </body>
 </html>

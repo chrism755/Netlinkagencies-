@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Time Table — NETLINK AGENCIES</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--text:#fff;--text2:#ffffff;--gold:#FFD700;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:260px;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pk3:#FF80CE;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--gold:#FFD700;--green:#00E676;--red:#FF5252;--sw:260px;}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:10px;}
-.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(255,255,255,.3);}
-.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
-.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0;}
-.sb-nav::-webkit-scrollbar{width:3px;}
-.sb-nav::-webkit-scrollbar-thumb{background:var(--border);}
 .ni{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;cursor:pointer;}
-.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
-.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);opacity:.7;letter-spacing:2px;text-transform:uppercase;}
+.ns{padding:12px 16px 4px;font-size:9px;font-weight:800;color:var(--pk3);letter-spacing:2px;text-transform:uppercase;}
 .arr{margin-left:auto;font-size:10px;}
-.sub-nav{display:none;background:rgba(0,0,0,.3);}
-.sub-nav.open{display:block;}
+.sub-nav{display:none;background:rgba(0,0,0,.3);}.sub-nav.open{display:block;}
 .sub-ni{padding-left:44px!important;font-size:12px;}
 .main{flex:1;}
 .topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
@@ -34,67 +28,31 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
 .avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.4);}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
-.overlay.show{display:block;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}.overlay.show{display:block;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;}
 .card h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:10px;}
 .card p{font-size:13px;color:#fff;line-height:1.7;}
 .card-pink{background:linear-gradient(135deg,var(--pkd),var(--pk));border:none;border-radius:16px;padding:18px;margin-bottom:14px;color:#fff;}
 .card-pink h3{font-size:15px;font-weight:800;margin-bottom:8px;}
 .card-pink p{font-size:13px;opacity:.9;line-height:1.6;}
-.reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:8px;box-shadow:0 4px 15px rgba(233,30,140,.3);}
-.btn:disabled{opacity:.5;cursor:not-allowed;}
-.btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
-.btn-wa{background:#25D366!important;box-shadow:none!important;}
-.btn-tg{background:#2CA5E0!important;box-shadow:none!important;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
-input,textarea,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,textarea:focus,select:focus{border-color:var(--pk);}
-input::placeholder,textarea::placeholder{color:#fff;opacity:.6;}
-select option{background:var(--bg3);}
-.ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
-.err{background:rgba(255,82,82,.1);border:1.5px solid var(--red);color:#FF8A80;border-radius:12px;padding:12px;font-size:13px;margin:10px 0;display:none;}
-.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px;}
-.qq{font-size:14px;font-weight:700;color:#fff;margin-bottom:14px;}
-.qopts{display:grid;gap:8px;}
-.qo{background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;transition:.2s;}
-.qo:hover{border-color:var(--pk);color:#fff;}
-.qo.correct{border-color:var(--green);background:rgba(0,230,118,.1);color:#69F0AE;}
-.qo.wrong{border-color:var(--red);background:rgba(255,82,82,.1);color:#FF8A80;}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.vi h4{font-size:13px;font-weight:800;color:#fff;}
-.vi p{font-size:11px;color:#fff;margin-top:2px;}
-.wb{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:12px;font-weight:700;cursor:pointer;}
-.wb.done{background:linear-gradient(135deg,#00897B,#00E676);}
-.du{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.sa{background:rgba(0,230,118,.15);color:var(--green);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.si{background:rgba(255,82,82,.15);color:var(--red);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:800;}
-.wa-sm{background:#25D366;color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700;}
-.tt{width:100%;border-collapse:collapse;}
-.tt th{background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;padding:10px 12px;text-align:left;font-size:11px;font-weight:800;}
-.tt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;color:#fff;}
-.tt tr:nth-child(even) td{background:rgba(233,30,140,.05);}
-.day{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--pk3);}
-.pav{width:76px;height:76px;background:linear-gradient(135deg,var(--pkd),var(--pk2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);}
-.prow{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;margin-bottom:8px;}
-.pl{font-size:11px;color:#fff;font-weight:700;}
-.pv{font-size:13px;color:#fff;font-weight:700;}
-.badge{display:inline-flex;background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:var(--pk3);margin-left:7px;}
-.progress-bar{background:var(--bg3);border-radius:6px;height:10px;overflow:hidden;margin-top:8px;}
-.progress-fill{background:linear-gradient(90deg,var(--pkd),var(--pk2));height:100%;border-radius:6px;}
-.amt-w{position:relative;}
-.amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--pk3);font-weight:800;font-size:13px;}
-.amt-i{padding-left:52px!important;}
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
-.stat-row:last-child{border:none;}
-.stat-label{font-size:12px;color:#fff;font-weight:600;}
-.stat-value{font-size:14px;font-weight:800;color:#fff;}
-.upload-box{border:2px dashed var(--border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:.2s;margin:12px 0;background:var(--bg3);}
-.upload-box:hover{border-color:var(--pk);background:rgba(233,30,140,.05);}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
-@keyframes spin{to{transform:rotate(360deg);}}
+.day-row{border-radius:14px;padding:16px;margin-bottom:10px;border:2px solid transparent;}
+.day-row.today{border-color:var(--pk);background:rgba(233,30,140,.12);}
+.day-row.locked{background:var(--bg3);border-color:var(--border);opacity:.7;}
+.day-row.unlocked{background:var(--bg3);border-color:var(--green);}
+.day-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.day-name{font-size:15px;font-weight:800;color:#fff;}
+.day-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.day-status.today-badge{background:var(--pk);color:#fff;}
+.day-status.locked-badge{background:rgba(255,82,82,.2);border:1px solid var(--red);color:var(--red);}
+.day-status.unlocked-badge{background:rgba(0,230,118,.15);border:1px solid var(--green);color:var(--green);}
+.task-list{display:grid;gap:6px;}
+.task-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;}
+.task-item.open{background:rgba(233,30,140,.15);border:1px solid rgba(233,30,140,.3);}
+.task-item.locked{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.1);cursor:not-allowed;}
+.task-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+.task-name{font-size:13px;font-weight:700;color:#fff;flex:1;}
+.task-lock{font-size:12px;color:var(--red);}
+.task-earn{font-size:11px;font-weight:800;color:var(--gold);}
 </style>
 </head>
 <body>
@@ -145,87 +103,69 @@ select option{background:var(--bg3);}
 <a class="ni" style="color:var(--red);" onclick="doLogout()"><span class="ni-icon">🚪</span>Log Out</a>
 </div></nav>
 <div class="main">
-<div class="topbar">
-<button class="menu-btn" onclick="openSB()">☰</button>
-<div class="tb-title">Time Table</div>
-<div style="display:flex;align-items:center;gap:8px;"><div class="avatar" id="av">U</div><span style="font-size:12px;font-weight:700;color:#fff;" id="un">User</span></div>
-</div>
+<div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Time Table</div><div class="avatar" id="av">U</div></div>
 <div class="content">
-
-<div class="card-pink"><h3>🗓️ Weekly Task Schedule</h3><p>Follow this schedule every day to maximize your NETLINK earnings!</p></div>
-<div style="overflow-x:auto;"><table class="tt">
-  <tr><th>Day</th><th>Main Task</th><th>Reward</th></tr>
-  <tr><td><span class="day">Monday</span></td><td>TikTok Videos ×3 + Trivia Quiz ×6</td><td style="color:var(--gold);"><span class="kes-val" data-kes="345">KES 345</span>+'</td></tr>
-  <tr><td><span class="day">Tuesday</span></td><td>Instagram Videos ×3 + Math Quiz ×6</td><td style="color:var(--gold);"><span class="kes-val" data-kes="360">KES 360</span>+'</td></tr>
-  <tr><td><span class="day">Wednesday</span></td><td>YouTube Videos ×3 + Daily Survey ×3</td><td style="color:var(--gold);"><span class="kes-val" data-kes="225">KES 225</span>+'</td></tr>
-  <tr><td><span class="day">Thursday</span></td><td>Articles ×3 + View Ads ×5</td><td style="color:var(--gold);"><span class="kes-val" data-kes="85">KES 85</span>+'</td></tr>
-  <tr><td><span class="day">Friday</span></td><td>All Videos ×9 + Company Adverts</td><td style="color:var(--gold);"><span class="kes-val" data-kes="460">KES 460</span>+'</td></tr>
-  <tr><td><span class="day">Saturday</span></td><td>WhatsApp Advert + Number Game ×5</td><td style="color:var(--gold);"><span class="kes-val" data-kes="100">KES 100</span>+</td></tr>
-  <tr><td><span class="day">Sunday</span></td><td>Forex Trading + Share Referral Link</td><td style="color:var(--gold);">Varies</td></tr>
-</table></div>
-<div class="card" style="margin-top:14px;">
-  <h3>💡 Daily Must-Do</h3>
-  <p>• Share referral link on WhatsApp and Facebook<br>• Watch all 9 videos (TikTok + Instagram + YouTube)<br>• Answer all quiz questions<br>• Read 3 articles<br>• Watch 5 ads<br>• Post weekly WhatsApp advert</p>
-</div>
-<div class="card">
-  <h3>💰 Maximum Daily Earnings</h3>
-  <div class="stat-row"><div class="stat-label">Videos (9 × avg KES 20)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="180">KES 180</span>+'</div></div>
-  <div class="stat-row"><div class="stat-label">Quiz (6 × KES 50)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="300">KES 300</span>+'</div></div>
-  <div class="stat-row"><div class="stat-label">Articles (3 × KES 20)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="60">KES 60</span>+'</div></div>
-  <div class="stat-row"><div class="stat-label">View Ads (5 × KES 5)</div><div class="stat-value" style="color:var(--gold);"><span class="kes-val" data-kes="25">KES 25</span>+'</div></div>
-  <div class="stat-row"><div class="stat-label" style="color:#fff;font-weight:800;">Total per day</div><div class="stat-value" style="color:var(--pk3);font-size:18px;"><span class="kes-val" data-kes="565">KES 565</span>+</div></div>
-</div>
-
+<div class="card-pink"><h3>🗓️ Weekly Task Time Table</h3><p>Every task has a specific day. You can only do each task on its assigned day. Complete your tasks every week to maximize your earnings!</p></div>
+<div class="card"><h3>📋 How It Works</h3><p>✅ Tasks are <strong>locked</strong> until their day arrives.<br>🔓 On the right day, tasks unlock automatically.<br>🔄 New content every week — questions, videos and articles rotate weekly.<br>💰 All earnings go to your <strong>Total Earnings</strong>.</p></div>
+<div id="today-banner"></div>
+<div id="schedule"></div>
 </div>
 </div>
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const FB={apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"};
-const app=initializeApp(FB);
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
-let U=null,UD=null;
-onAuthStateChanged(auth,async u=>{
-  if(!u){window.location.replace("/login");return;}
-  U=u;
-  const snap=await getDoc(doc(db,"users",u.uid));
-  if(!snap.exists()||!snap.data().activated){window.location.replace("/activate");return;}
-  UD=snap.data();UD.uid=u.uid;
-  // Currency based on user country
-  const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
-  const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
-  window._CUR=_currencyMap[UD.country]||'KES';
-  window._FEE=_feeMap[UD.country]||150;
-  // Update KES value spans with correct currency
-  const _rates={'KES':1,'UGX':26,'TZS':46.67,'RWF':9,'NGN':24.67,'GHS':0.073,'ZAR':0.13,'USD':0.0077,'GBP':0.006};
-  const _rate=_rates[window._CUR]||1;
-  document.querySelectorAll('.kes-val').forEach(el=>{
-    const base=parseInt(el.getAttribute('data-kes'));
-    const converted=Math.round(base*_rate);
-    el.textContent=(window._CUR||'KES')+' '+converted.toLocaleString();
-  });
-  // Fix all static KES text in HTML
-  document.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0 && el.textContent.includes((window._CUR||'KES')+' ')){
-      el.textContent=el.textContent.replace(/KES /g,(window._CUR||'KES')+' ');
-    }
-  });
-  // Update static currency labels
-  document.querySelectorAll('.cur-lbl, #cur-prefix').forEach(el=>el.textContent=window._CUR||'KES');
-  const mw=document.getElementById('min-withdraw');
-  if(mw) mw.textContent=(window._CUR||'KES')+' '+(window._FEE||150);
-  document.getElementById("av").textContent=UD.username.charAt(0).toUpperCase();
-  document.getElementById("un").textContent=UD.username;
-  if(typeof pageReady==="function") pageReady(db,U,UD,{doc,getDoc,updateDoc,increment,collection,getDocs,addDoc,serverTimestamp,query,where,orderBy});
-});
-window.openSB=()=>{document.getElementById("sb").classList.add("open");document.getElementById("ov").classList.add("show");};
-window.closeSB=()=>{document.getElementById("sb").classList.remove("open");document.getElementById("ov").classList.remove("show");};
-window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle("open");el.querySelector(".arr").textContent=c.classList.contains("open")?"▴":"▾";};
-window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
-window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
 
+// Schedule: dayIndex (0=Sun,1=Mon,...,6=Sat)
+const SCHEDULE=[
+  {dayIndex:1,name:'Monday',emoji:'🎵',tasks:[{icon:'🎵',name:'TikTok Videos',link:'/dashboard/tiktok',earn:'KES 15 × 3 videos'}]},
+  {dayIndex:2,name:'Tuesday',emoji:'▶️',tasks:[{icon:'▶️',name:'YouTube Videos',link:'/dashboard/youtube',earn:'KES 25 × 3 videos'}]},
+  {dayIndex:3,name:'Wednesday',emoji:'📸',tasks:[{icon:'📸',name:'Instagram Videos',link:'/dashboard/instagram',earn:'KES 20 × 3 videos'},{icon:'🎲',name:'Number Game',link:'/dashboard/numgame',earn:'Up to KES 500'}]},
+  {dayIndex:4,name:'Thursday',emoji:'📲',tasks:[{icon:'📲',name:'WhatsApp Adverts',link:'/dashboard/wadvert',earn:'Per advert'},{icon:'🧠',name:'Trivia Quiz',link:'/dashboard/trivia',earn:'KES 50 × 6 answers'},{icon:'📋',name:'Daily Survey',link:'/dashboard/survey',earn:'KES 50 × 6 answers'}]},
+  {dayIndex:5,name:'Friday',emoji:'🔢',tasks:[{icon:'🔢',name:'Math Quiz',link:'/dashboard/mathquiz',earn:'KES 50 × 6 answers'},{icon:'📈',name:'Forex Trading',link:'/dashboard/forex',earn:'Varies'}]},
+  {dayIndex:6,name:'Saturday',emoji:'📰',tasks:[{icon:'📰',name:'Articles',link:'/dashboard/article',earn:'KES 20 × 3 articles'},{icon:'⚽',name:'Betting Prediction',link:'/dashboard/betting',earn:'Access predictions'}]},
+  {dayIndex:0,name:'Sunday',emoji:'👁️',tasks:[{icon:'👁️',name:'View Ads',link:'/dashboard/viewads',earn:'KES 5 × 5 ads'},{icon:'📢',name:'Company Advertisement',link:'/dashboard/Company-advertisement',earn:'KES 200 × 5 companies'}]},
+];
+
+onAuthStateChanged(auth,async u=>{
+  if(!u){window.location.replace('/login');return;}
+  const snap=await getDoc(doc(db,'users',u.uid));
+  if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
+  document.getElementById('av').textContent=snap.data().username.charAt(0).toUpperCase();
+  const today=new Date().getDay();
+  const todayDay=SCHEDULE.find(d=>d.dayIndex===today);
+  if(todayDay){
+    document.getElementById('today-banner').innerHTML=`
+      <div style="background:linear-gradient(135deg,#003d1a,#00E676);border:2px solid var(--green);border-radius:14px;padding:16px;margin-bottom:14px;text-align:center;">
+        <div style="font-size:28px;margin-bottom:6px;">${todayDay.emoji}</div>
+        <div style="font-weight:900;font-size:16px;color:#fff;">Today is ${todayDay.name}!</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.8);margin-top:4px;">Your tasks are unlocked — go earn now! 🚀</div>
+      </div>`;
+  }
+  document.getElementById('schedule').innerHTML=SCHEDULE.map(d=>{
+    const isToday=d.dayIndex===today;
+    const isPast=false; // all days available to view, just locked
+    const rowClass=isToday?'today':'locked';
+    const statusEl=isToday?
+      '<span class="day-status today-badge">✅ TODAY — UNLOCKED</span>':
+      '<span class="day-status locked-badge">🔒 Locked</span>';
+    const taskHtml=d.tasks.map(t=>isToday?
+      `<a class="task-item open" href="${t.link}"><div class="task-icon">${t.icon}</div><div class="task-name">${t.name}</div><div class="task-earn">${t.earn}</div></a>`:
+      `<div class="task-item locked"><div class="task-icon">${t.icon}</div><div class="task-name">${t.name}</div><div class="task-lock">🔒 ${d.name} only</div></div>`
+    ).join('');
+    return `<div class="day-row ${rowClass}">
+      <div class="day-header"><div class="day-name">${d.emoji} ${d.name}</div>${statusEl}</div>
+      <div class="task-list">${taskHtml}</div>
+    </div>`;
+  }).join('');
+});
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
+window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
 </script>
 </body>
 </html>
