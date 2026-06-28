@@ -25,17 +25,51 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
 .tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
 .avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
-.content{padding:16px 14px;max-width:500px;}
+.content{padding:16px 14px;max-width:560px;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
 .sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
-.sc h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:14px;}
+.sc h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .fg{margin-bottom:12px;}
 label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
 input:focus{border-color:var(--primary);}
-.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;}
+input::placeholder{color:var(--text2);opacity:.5;}
+.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;transition:.2s;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-red{background:linear-gradient(135deg,#C62828,var(--red))!important;}
 .ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ADMIN CARDS */
+.admin-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.admin-card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.admin-avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff;flex-shrink:0;}
+.admin-name{font-size:14px;font-weight:800;color:var(--white);}
+.admin-email{font-size:11px;color:var(--text2);margin-top:2px;}
+.admin-badge{display:inline-flex;background:rgba(0,87,255,.2);border:1px solid var(--primary);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;color:var(--accent);margin-top:4px;}
+
+/* PERMISSIONS */
+.perms-title{font-size:11px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.perm-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.perm-row:last-child{border-bottom:none;}
+.perm-info{flex:1;}
+.perm-name{font-size:13px;font-weight:700;color:var(--text);}
+.perm-desc{font-size:11px;color:var(--text2);margin-top:2px;}
+
+/* TOGGLE SWITCH */
+.toggle{position:relative;width:48px;height:26px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:#1E3560;border-radius:26px;transition:.3s;}
+.toggle-slider:before{position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:var(--green);}
+.toggle input:checked+.toggle-slider:before{transform:translateX(22px);}
+
+.delete-btn{background:rgba(255,59,59,.15);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:12px;width:100%;}
+.delete-btn:hover{background:rgba(255,59,59,.3);}
+.no-admins{text-align:center;padding:30px;color:var(--text2);font-size:13px;}
 </style>
 </head>
 <body>
@@ -51,57 +85,166 @@ input:focus{border-color:var(--primary);}
       <a class="ni" href="/admin/deposits.html"><span class="ni-icon">💰</span>Deposits</a>
       <a class="ni" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
       <a class="ni active" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
-      <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
+      <a class="ni" style="color:#FF3B3B;font-weight:800;" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
     </div>
   </nav>
+
   <div class="main">
     <div class="topbar">
       <button class="menu-btn" onclick="openSB()">☰</button>
       <div class="tb-title">Settings</div>
-      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Admin</span></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Master Admin</span></div>
     </div>
+
     <div class="content">
+
+      <!-- ADD CO-ADMIN -->
       <div class="sc">
-        <h3>⚙️ Activation Settings</h3>
-        <div class="fg"><label>Activation Amount (KES)</label><input id="amt" value="150" type="number"/></div>
-        <div class="fg"><label>M-PESA Number</label><input id="mpesa-no" value="+254706494401"/></div>
-        <div class="fg"><label>M-PESA Name</label><input id="mpesa-name" value="MARY MPURUNGA"/></div>
-        <div class="fg"><label>PayPal Email</label><input id="paypal" value="marympurunga@gmail.com"/></div>
-        <div class="ok" id="ok1">✅ Settings saved!</div>
-        <button class="btn" onclick="save('ok1')">💾 Save Settings</button>
+        <h3>🔑 Add Co-Admin Account</h3>
+        <div class="fg"><label>Username</label><input id="new-user" placeholder="e.g. john_admin"/></div>
+        <div class="fg"><label>Email</label><input id="new-email" type="email" placeholder="admin@email.com"/></div>
+        <div class="fg"><label>Password</label><input id="new-pw" type="password" placeholder="Strong password"/></div>
+        <div class="ok" id="add-ok"></div>
+        <div class="err" id="add-err"></div>
+        <button class="btn" id="add-btn" onclick="addAdmin()">➕ Add Co-Admin</button>
       </div>
+
+      <!-- CO-ADMINS LIST -->
       <div class="sc">
-        <h3>🔑 Add Admin Account</h3>
-        <div class="fg"><label>Username</label><input id="new-user" placeholder="New admin username"/></div>
-        <div class="fg"><label>Password</label><input id="new-pw" type="password" placeholder="Password"/></div>
-        <div class="ok" id="ok2">✅ Admin account noted!</div>
-        <button class="btn" onclick="save('ok2')">➕ Add Admin</button>
+        <h3>👥 Co-Admins & Permissions</h3>
+        <div id="admins-list"><div class="no-admins">Loading co-admins...</div></div>
       </div>
-      <div class="sc">
-        <h3>✈️ Telegram Channel</h3>
-        <div class="fg"><label>Link</label><input id="tg" value="https://t.me/Mentorfai"/></div>
-        <div class="ok" id="ok3">✅ Saved!</div>
-        <button class="btn" onclick="save('ok3')">💾 Save</button>
-      </div>
-      <div class="sc">
-        <h3>💬 WhatsApp Group</h3>
-        <div class="fg"><label>Group Link</label><input id="wa" placeholder="https://chat.whatsapp.com/..."/></div>
-        <div class="ok" id="ok4">✅ Saved!</div>
-        <button class="btn" onclick="save('ok4')">💾 Save</button>
-      </div>
+
     </div>
   </div>
 </div>
-<script>
-if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
-window.save=function(okId){document.getElementById(okId).style.display='block';setTimeout(()=>document.getElementById(okId).style.display='none',2000);};
 
-window.showMsg=function(msg,type){
-  let area=document.getElementById('msg-area');
-  if(!area){area=document.createElement('div');area.id='msg-area';document.querySelector('.content').prepend(area);}
-  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;">'+msg+'</div>';
-  setTimeout(()=>{if(area)area.innerHTML='';},5000);
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const db=getFirestore(app);
+const auth=getAuth(app);
+
+if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
+
+const PERMISSIONS=[
+  {key:'manageUsers',    label:'Manage Users',           desc:'View, edit and manage all user accounts'},
+  {key:'approveActivation', label:'Approve Activation',  desc:'Approve or reject user activation requests'},
+  {key:'approveWithdraw',label:'Approve Withdrawals',    desc:'Approve or reject withdrawal requests'},
+  {key:'accessSettings', label:'Access Settings',        desc:'Access settings and add new co-admins'},
+  {key:'postCommunity',  label:'Post to Community',      desc:'Post WhatsApp & Telegram group links'},
+  {key:'viewPayments',   label:'View Payment Notifications', desc:'View deposit and payment notifications'},
+];
+
+// Load all co-admins
+async function loadAdmins(){
+  try{
+    const q=query(collection(db,'coAdmins'),orderBy('createdAt','desc'));
+    const snap=await getDocs(q);
+    const list=document.getElementById('admins-list');
+    if(snap.empty){list.innerHTML='<div class="no-admins">No co-admins added yet.</div>';return;}
+    list.innerHTML=snap.docs.map(d=>{
+      const a=d.data();
+      const perms=a.permissions||{};
+      return `
+      <div class="admin-card" id="acard-${d.id}">
+        <div class="admin-card-head">
+          <div class="admin-avatar">${(a.username||'A').charAt(0).toUpperCase()}</div>
+          <div>
+            <div class="admin-name">${a.username}</div>
+            <div class="admin-email">${a.email}</div>
+            <div class="admin-badge">Co-Admin</div>
+          </div>
+        </div>
+        <div class="perms-title">🔐 Permissions</div>
+        ${PERMISSIONS.map(p=>`
+          <div class="perm-row">
+            <div class="perm-info">
+              <div class="perm-name">${a.username} to ${p.label}</div>
+              <div class="perm-desc">${p.desc}</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" ${perms[p.key]?'checked':''} onchange="togglePerm('${d.id}','${p.key}',this.checked,'${a.username}')"/>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>`).join('')}
+        <button class="delete-btn" onclick="deleteAdmin('${d.id}','${a.username}')">🗑️ Remove ${a.username}</button>
+      </div>`;
+    }).join('');
+  }catch(e){document.getElementById('admins-list').innerHTML='<div class="no-admins">Error loading co-admins.</div>';}
+}
+
+// Add new co-admin
+window.addAdmin=async function(){
+  const username=document.getElementById('new-user').value.trim();
+  const email=document.getElementById('new-email').value.trim();
+  const pw=document.getElementById('new-pw').value;
+  const ok=document.getElementById('add-ok');
+  const err=document.getElementById('add-err');
+  const btn=document.getElementById('add-btn');
+  ok.style.display='none';err.style.display='none';
+  if(!username){err.textContent='⚠️ Please enter a username.';err.style.display='block';return;}
+  if(!email||!email.includes('@')){err.textContent='⚠️ Please enter a valid email.';err.style.display='block';return;}
+  if(!pw||pw.length<6){err.textContent='⚠️ Password must be at least 6 characters.';err.style.display='block';return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Creating...';
+  try{
+    // Create Firebase Auth account
+    await createUserWithEmailAndPassword(auth,email,pw);
+    // Save to Firestore with all permissions OFF by default
+    const defaultPerms={};
+    PERMISSIONS.forEach(p=>defaultPerms[p.key]=false);
+    await addDoc(collection(db,'coAdmins'),{
+      username,email,
+      permissions:defaultPerms,
+      createdAt:serverTimestamp()
+    });
+    ok.textContent='✅ Co-admin '+username+' created successfully! All permissions are OFF by default — toggle them on below.';
+    ok.style.display='block';
+    document.getElementById('new-user').value='';
+    document.getElementById('new-email').value='';
+    document.getElementById('new-pw').value='';
+    loadAdmins();
+  }catch(e){
+    err.textContent='❌ '+(e.code==='auth/email-already-in-use'?'This email is already in use.':e.message);
+    err.style.display='block';
+  }
+  btn.disabled=false;btn.textContent='➕ Add Co-Admin';
 };
+
+// Toggle permission on/off
+window.togglePerm=async function(adminId,permKey,value,username){
+  try{
+    await updateDoc(doc(db,'coAdmins',adminId),{['permissions.'+permKey]:value});
+    // Show small confirmation
+    const label=PERMISSIONS.find(p=>p.key===permKey)?.label||permKey;
+    showMsg((value?'✅ '+username+' can now '+label:'🔒 '+username+' is restricted from '+label),(value?'ok':'err'));
+  }catch(e){showMsg('❌ Error updating permission: '+e.message,'err');}
+};
+
+// Delete co-admin
+window.deleteAdmin=async function(adminId,username){
+  if(!confirm('Remove '+username+' as co-admin? This cannot be undone.')){return;}
+  try{
+    await deleteDoc(doc(db,'coAdmins',adminId));
+    document.getElementById('acard-'+adminId)?.remove();
+    showMsg('✅ '+username+' has been removed as co-admin.','ok');
+    const list=document.getElementById('admins-list');
+    if(!list.querySelector('.admin-card')){list.innerHTML='<div class="no-admins">No co-admins added yet.</div>';}
+  }catch(e){showMsg('❌ Error: '+e.message,'err');}
+};
+
+function showMsg(msg,type){
+  let area=document.getElementById('msg-area');
+  if(!area){area=document.createElement('div');area.id='msg-area';area.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);z-index:9999;min-width:300px;max-width:90vw;';document.body.appendChild(area);}
+  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,200,83,.15)':'rgba(255,59,59,.15)')+';border:1.5px solid '+(type==='ok'?'#00C853':'#FF3B3B')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px 18px;font-size:13px;font-weight:700;font-family:Nunito,sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.4);">'+msg+'</div>';
+  setTimeout(()=>{if(area)area.innerHTML='';},4000);
+}
+
+loadAdmins();
+
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
