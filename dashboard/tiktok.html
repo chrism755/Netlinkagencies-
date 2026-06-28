@@ -42,8 +42,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .ok{background:rgba(0,230,118,.1);border:1.5px solid var(--green);color:#69F0AE;border-radius:12px;padding:14px;font-size:13px;line-height:1.7;margin:10px 0;display:none;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150px);z-index:9999;background:#3d0050;border:2px solid #6a0080;color:#fff;border-radius:16px;padding:16px 18px;width:92%;max-width:420px;box-shadow:0 8px 30px rgba(0,0,0,.5);display:flex;align-items:flex-start;gap:12px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);font-size:14px;line-height:1.6;font-weight:600;}
-.toast.show{transform:translateX(-50%) translateY(0);}
+.toast{position:fixed;bottom:0;left:0;right:0;transform:translateY(150px);z-index:9999;background:#3d0050;border:2px solid #6a0080;color:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 8px 30px rgba(0,0,0,.5);display:flex;align-items:flex-start;gap:12px;transition:transform .4s cubic-bezier(.175,.885,.32,1.275);font-size:14px;line-height:1.6;font-weight:600;}
+.toast.show{transform:translateY(0);}
 .toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;}
 .day-lock{background:rgba(255,82,82,.1);border:2px solid var(--red);border-radius:14px;padding:20px;text-align:center;margin-bottom:14px;}
 .week-badge{background:rgba(233,30,140,.2);border:1px solid var(--pk);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:800;color:var(--pk3);display:inline-block;margin-bottom:10px;}
