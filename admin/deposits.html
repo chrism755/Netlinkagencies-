@@ -110,9 +110,15 @@ async function guardPage(permKey){
   if(!raw){window.location.href='/admin/index.html';return;}
   const adminData=JSON.parse(raw);
   if(adminData.role==='master')return;
+  // Always fetch FRESH permissions from Firestore
   try{
     const snap=await getDocs(query(collection(db,'coAdmins'),where('email','==',adminData.email)));
-    if(snap.empty||!(snap.docs[0].data().permissions||{})[permKey]){showRestricted();return;}
+    if(snap.empty){showRestricted();return;}
+    const freshPerms=snap.docs[0].data().permissions||{};
+    // Update localStorage with fresh permissions
+    adminData.permissions=freshPerms;
+    localStorage.setItem('nlAdmin',JSON.stringify(adminData));
+    if(freshPerms[permKey]!==true){showRestricted();return;}
   }catch(e){showRestricted();}
 }
 function showRestricted(){
