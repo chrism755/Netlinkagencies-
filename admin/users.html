@@ -178,7 +178,7 @@ textarea:focus{border-color:var(--pk);}
 <script type="module">
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const db=getFirestore(app);
 
@@ -193,11 +193,13 @@ async function guardPage(permKey){
     const snap=await getDocs(query(collection(db,'coAdmins'),where('email','==',adminData.email)));
     if(snap.empty){showRestricted();return;}
     const freshPerms=snap.docs[0].data().permissions||{};
-    // Update localStorage with fresh permissions
     adminData.permissions=freshPerms;
     localStorage.setItem('nlAdmin',JSON.stringify(adminData));
     if(freshPerms[permKey]!==true){showRestricted();return;}
-  }catch(e){showRestricted();}
+  }catch(e){
+    console.error('guardPage error:',e);
+    showRestricted();
+  }
 }
 function showRestricted(){
   document.body.innerHTML='<div style="min-height:100vh;background:#050D1A;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#111E35;border:1px solid #1E3560;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF3B3B;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:#8BA4CC;font-size:14px;line-height:1.7;margin-bottom:24px;">You are restricted to use this action.<br>Contact the master admin to get permission.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#0057FF,#00D4FF);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
