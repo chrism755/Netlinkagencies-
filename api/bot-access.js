@@ -230,8 +230,14 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const apiKey = req.headers['x-api-key'];
-  const keyData = await validateKey(apiKey);
+  let keyData;
+  try {
+    const apiKey = req.headers['x-api-key'];
+    keyData = await validateKey(apiKey);
+  } catch (e) {
+    console.error('validateKey crashed:', e.message);
+    return res.status(500).json({ error: 'Key validation failed: ' + e.message });
+  }
 
   if (!keyData) {
     return res.status(401).json({ error: 'Invalid or revoked API key.' });
@@ -239,7 +245,7 @@ export default async function handler(req, res) {
 
   // action determines what operation to perform
   // Pass via query param (GET) or body (POST): ?action=getUser or {action:"getUser", ...}
-  const action = req.method === 'GET' ? req.query.action : req.body.action;
+  const action = req.method === 'GET' ? req.query.action : (req.body && req.body.action);
 
   try {
     switch (action) {
