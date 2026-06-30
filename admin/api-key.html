@@ -2,59 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>API Keys — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<title>API Keys — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--primary:#0057FF;--accent:#00D4FF;--green:#00C853;--red:#FF3B3B;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--gold:#FFD700;--white:#FFFFFF;--sw:250px;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
 .sb-head{padding:16px;border-bottom:1px solid var(--border);}
 .logo{display:flex;align-items:center;gap:9px;}
-.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:var(--white);line-height:1.1;}
-.logo-sub{font-size:8px;color:var(--accent);letter-spacing:2px;font-family:'Orbitron',monospace;}
+.logo-icon{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo-text{font-weight:900;font-size:11px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
 .sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
-.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
 .main{flex:1;}
 .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
-.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
-.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
-.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
-.content{padding:16px 14px;max-width:560px;}
+.menu-btn{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
+.tb-title{font-size:14px;font-weight:800;color:#fff;flex:1;}
+.avatar{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.content{padding:16px 14px;max-width:560px;margin:0 auto;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
 .sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
-.sc h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.warn-box{background:rgba(255,59,59,.1);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:12px;color:#FF8A80;line-height:1.6;margin-bottom:14px;}
+.sc h3{font-size:14px;font-weight:800;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.warn-box{background:rgba(255,82,82,.1);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:12px;color:#FF8A80;line-height:1.6;margin-bottom:14px;}
 .fg{margin-bottom:12px;}
-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus{border-color:var(--primary);}
-input::placeholder{color:var(--text2);opacity:.5;}
-.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;transition:.2s;}
+label{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:5px;text-transform:uppercase;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
+input:focus{border-color:var(--pk);}
+input::placeholder{color:rgba(255,255,255,.4);}
+.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:4px;transition:.2s;}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
-.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
-.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.ok{background:rgba(0,230,118,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,82,82,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
 /* KEY CARD */
 .key-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
 .key-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.key-label{font-size:14px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:8px;}
-.key-badge{display:inline-flex;background:rgba(0,200,83,.15);border:1px solid var(--green);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;color:#69F0AE;}
-.key-value{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--accent);word-break:break-all;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.copy-btn{background:rgba(0,87,255,.2);border:1px solid var(--primary);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.key-meta{font-size:11px;color:var(--text2);margin-bottom:10px;}
-.revoke-btn{background:rgba(255,59,59,.15);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;}
-.revoke-btn:hover{background:rgba(255,59,59,.3);}
-.no-keys{text-align:center;padding:30px;color:var(--text2);font-size:13px;}
-.new-key-box{background:rgba(0,200,83,.08);border:1.5px solid var(--green);border-radius:12px;padding:16px;margin-bottom:14px;}
+.key-label{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;}
+.key-badge{display:inline-flex;background:rgba(0,230,118,.15);border:1px solid var(--green);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;color:#69F0AE;}
+.key-value{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--pk2);word-break:break-all;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.copy-btn{background:rgba(233,30,140,.2);border:1px solid var(--pk);color:var(--pk2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.key-meta{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.revoke-btn{background:rgba(255,82,82,.15);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;}
+.revoke-btn:hover{background:rgba(255,82,82,.3);}
+.no-keys{text-align:center;padding:30px;color:rgba(255,255,255,.6);font-size:13px;}
+.new-key-box{background:rgba(0,230,118,.08);border:1.5px solid var(--green);border-radius:12px;padding:16px;margin-bottom:14px;}
 .new-key-title{font-size:13px;font-weight:800;color:#69F0AE;margin-bottom:10px;}
 </style>
 </head>
@@ -72,8 +72,8 @@ input::placeholder{color:var(--text2);opacity:.5;}
       <a class="ni" href="/admin/client-payments.html"><span class="ni-icon">🧾</span>Client Payments</a>
       <a class="ni" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
       <a class="ni" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
-      <a class="ni active" href="/admin/api-key.html"><span class="ni-icon">🔑</span>API Keys</a>
-      <a class="ni" style="color:#FF3B3B;font-weight:800;" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
+      <a class="ni active" href="/admin/api-key.html" id="apikey-nav-link" style="display:none;"><span class="ni-icon">🔑</span>API Keys</a>
+      <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
     </div>
   </nav>
 
@@ -109,10 +109,10 @@ input::placeholder{color:var(--text2);opacity:.5;}
 
       <div class="sc">
         <h3>📖 How to Use</h3>
-        <p style="font-size:12px;color:var(--text2);line-height:1.7;">
+        <p style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.7;">
           Send this key in your bot's request header as:<br/>
-          <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--accent);display:inline-block;margin-top:6px;">x-api-key: YOUR_KEY_HERE</code><br/><br/>
-          Endpoint: <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--accent);">https://netlinkagencies.vercel.app/api/bot-access</code>
+          <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--pk2);display:inline-block;margin-top:6px;">x-api-key: YOUR_KEY_HERE</code><br/><br/>
+          Endpoint: <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--pk2);">https://netlinkagencies.vercel.app/api/bot-access</code>
         </p>
       </div>
     </div>
@@ -128,16 +128,16 @@ const db=getFirestore(app);
 
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 
-// ONLY master admin can access this page — no co-admin exceptions, ever
+// API Keys is MASTER ADMIN ONLY — no co-admin can ever access this page
 function guardMasterOnly(){
   const raw=localStorage.getItem('nlAdmin');
-  if(!raw){window.location.href='/admin/index.html';return;}
+  if(!raw){window.location.href='/admin/index.html';return false;}
   const adminData=JSON.parse(raw);
   if(adminData.role!=='master'){showRestricted();return false;}
   return true;
 }
 function showRestricted(){
-  document.body.innerHTML='<div style="min-height:100vh;background:#050D1A;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#111E35;border:1px solid #1E3560;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF3B3B;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:#8BA4CC;font-size:14px;line-height:1.7;margin-bottom:24px;">Only the Master Admin can manage API Keys.<br>Contact the master admin for access.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#0057FF,#00D4FF);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
+  document.body.innerHTML='<div style="min-height:100vh;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#2d0019;border:1px solid #6b0040;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF5252;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:rgba(255,255,255,.7);font-size:14px;line-height:1.7;margin-bottom:24px;">Only the Master Admin can manage API Keys.<br>Contact the master admin for access.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
 
 if(guardMasterOnly()){
   loadKeys();
@@ -183,7 +183,6 @@ window.generateKey=async function(){
     ok.style.display='block';
     document.getElementById('key-label').value='';
 
-    // Show the new key prominently — this is the ONLY time it's fully visible
     document.getElementById('new-key-box').innerHTML=`
       <div class="new-key-box">
         <div class="new-key-title">🎉 New Key Created — Copy It Now!</div>
@@ -191,7 +190,7 @@ window.generateKey=async function(){
           <span id="newkey-text">${newKey}</span>
           <button class="copy-btn" onclick="copyKey('${newKey}')">📋 Copy</button>
         </div>
-        <p style="font-size:11px;color:var(--text2);">Save this key now. For security, it will be partially hidden in the list below.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,.6);">Save this key now. For security, it will be partially hidden in the list below.</p>
       </div>`;
 
     loadKeys();
@@ -254,6 +253,20 @@ window.revokeKey=async function(keyId,label){
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
+
+// Show API Keys link only for master admin
+(function(){
+  try{
+    const raw=localStorage.getItem('nlAdmin');
+    if(raw){
+      const ad=JSON.parse(raw);
+      if(ad.role==='master'){
+        const link=document.getElementById('apikey-nav-link');
+        if(link) link.style.display='flex';
+      }
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
