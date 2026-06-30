@@ -188,9 +188,11 @@ window.generateKey=async function(){
         <div class="new-key-title">🎉 New Key Created — Copy It Now!</div>
         <div class="key-value">
           <span id="newkey-text">${newKey}</span>
-          <button class="copy-btn" onclick="copyKey('${newKey}')">📋 Copy</button>
+          <button class="copy-btn" data-key="${newKey}" onclick="copyKey(this.dataset.key)">📋 Copy</button>
         </div>
-        <p style="font-size:11px;color:rgba(255,255,255,.6);">Save this key now. For security, it will be partially hidden in the list below.</p>
+        <p style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px;">Save this key now. For security, it will be partially hidden in the list below.</p>
+        <button class="copy-btn" data-key="${newKey}" onclick="testKey(this.dataset.key)" style="width:100%;text-align:center;padding:8px;">🧪 Test This Key Now</button>
+        <div id="test-result" style="margin-top:10px;font-size:12px;"></div>
       </div>`;
 
     loadKeys();
@@ -207,6 +209,24 @@ window.copyKey=function(key){
   navigator.clipboard.writeText(key).then(()=>{
     alert('✅ API Key copied to clipboard!');
   });
+};
+
+window.testKey=async function(key){
+  const resultBox=document.getElementById('test-result');
+  resultBox.innerHTML='<span style="color:rgba(255,255,255,.7);">Testing...</span>';
+  try{
+    const res=await fetch('https://netlinkagencies.vercel.app/api/bot-access?action=getLinks',{
+      headers:{'x-api-key':key}
+    });
+    const data=await res.json();
+    if(data.error){
+      resultBox.innerHTML='<span style="color:#FF8A80;">❌ Test failed: '+data.error+'</span>';
+    } else {
+      resultBox.innerHTML='<span style="color:#69F0AE;">✅ Key works! API responded successfully.</span>';
+    }
+  }catch(e){
+    resultBox.innerHTML='<span style="color:#FF8A80;">❌ Network error: '+e.message+'</span>';
+  }
 };
 
 async function loadKeys(){
@@ -229,10 +249,10 @@ async function loadKeys(){
         </div>
         <div class="key-value">
           <span>${masked}</span>
-          <button class="copy-btn" onclick="copyKey('${k.key}')">📋 Copy</button>
+          <button class="copy-btn" data-key="${k.key}" onclick="copyKey(this.dataset.key)">📋 Copy</button>
         </div>
         <div class="key-meta">Created: ${createdDate} · Last used: ${lastUsedStr}</div>
-        <button class="revoke-btn" onclick="revokeKey('${d.id}','${k.label}')">🗑️ Revoke ${k.label}</button>
+        <button class="revoke-btn" data-id="${d.id}" data-label="${k.label}" onclick="revokeKey(this.dataset.id,this.dataset.label)">🗑️ Revoke ${k.label}</button>
       </div>`;
     }).join('');
   }catch(e){
