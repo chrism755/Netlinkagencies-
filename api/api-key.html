@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>API Keys — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--gold:#FFD700;--white:#FFFFFF;--sw:250px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar.open{transform:translateX(0);}
+.sb-head{padding:16px;border-bottom:1px solid var(--border);}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-icon{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo-text{font-weight:900;font-size:11px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:8px;color:rgba(255,255,255,.8);letter-spacing:2px;}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:#fff;border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:#fff;border-left-color:var(--pk);}
+.ni-icon{font-size:15px;width:20px;text-align:center;}
+.main{flex:1;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.menu-btn{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
+.tb-title{font-size:14px;font-weight:800;color:#fff;flex:1;}
+.avatar{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.content{padding:16px 14px;max-width:560px;margin:0 auto;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
+.overlay.show{display:block;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
+.sc h3{font-size:14px;font-weight:800;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.warn-box{background:rgba(255,82,82,.1);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:12px;color:#FF8A80;line-height:1.6;margin-bottom:14px;}
+.fg{margin-bottom:12px;}
+label{display:block;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:5px;text-transform:uppercase;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
+input:focus{border-color:var(--pk);}
+input::placeholder{color:rgba(255,255,255,.4);}
+.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;margin-top:4px;transition:.2s;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.ok{background:rgba(0,230,118,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,82,82,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* KEY CARD */
+.key-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.key-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.key-label{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;}
+.key-badge{display:inline-flex;background:rgba(0,230,118,.15);border:1px solid var(--green);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;color:#69F0AE;}
+.key-value{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--pk2);word-break:break-all;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.copy-btn{background:rgba(233,30,140,.2);border:1px solid var(--pk);color:var(--pk2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.key-meta{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px;}
+.revoke-btn{background:rgba(255,82,82,.15);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;}
+.revoke-btn:hover{background:rgba(255,82,82,.3);}
+.no-keys{text-align:center;padding:30px;color:rgba(255,255,255,.6);font-size:13px;}
+.new-key-box{background:rgba(0,230,118,.08);border:1.5px solid var(--green);border-radius:12px;padding:16px;margin-bottom:14px;}
+.new-key-title{font-size:13px;font-weight:800;color:#69F0AE;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="overlay" id="ov" onclick="closeSB()"></div>
+<div class="layout">
+  <nav class="sidebar" id="sb">
+    <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">ADMIN</div></div></div></div>
+    <div class="sb-nav">
+      <a class="ni" href="/admin/panel.html"><span class="ni-icon">🏠</span>Dashboard</a>
+      <a class="ni" href="/admin/users.html"><span class="ni-icon">👥</span>Manage Users</a>
+      <a class="ni" href="/admin/activation.html"><span class="ni-icon">✅</span>Activation</a>
+      <a class="ni" href="/admin/withdraw.html"><span class="ni-icon">💸</span>Withdrawals</a>
+      <a class="ni" href="/admin/deposits.html"><span class="ni-icon">💰</span>Deposits</a>
+      <a class="ni" href="/admin/client-payments.html"><span class="ni-icon">🧾</span>Client Payments</a>
+      <a class="ni" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
+      <a class="ni" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
+      <a class="ni active" href="/admin/api-key.html" id="apikey-nav-link" style="display:none;"><span class="ni-icon">🔑</span>API Keys</a>
+      <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" onclick="openSB()">☰</button>
+      <div class="tb-title">API Keys</div>
+      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Master Admin</span></div>
+    </div>
+
+    <div class="content">
+      <div class="warn-box">
+        ⚠️ <strong>Warning:</strong> Any key generated here has <strong>FULL ADMIN ACCESS</strong> to your entire website — same as the master admin. Anyone with this key can view/edit users, approve withdrawals, activate accounts, and more. Only share keys with trusted bots (WhatsApp, Telegram) that you control. Never expose a key in public code or chat.
+      </div>
+
+      <div class="sc">
+        <h3>🔑 Generate New API Key</h3>
+        <div class="fg">
+          <label>Key Label</label>
+          <input type="text" id="key-label" placeholder="e.g. WhatsApp Bot, Telegram Bot"/>
+        </div>
+        <div class="ok" id="gen-ok"></div>
+        <div class="err" id="gen-err"></div>
+        <button class="btn" id="gen-btn" onclick="generateKey()">➕ Generate API Key</button>
+      </div>
+
+      <div id="new-key-box"></div>
+
+      <div class="sc">
+        <h3>📋 Active API Keys</h3>
+        <div id="keys-list"><div class="no-keys">Loading keys...</div></div>
+      </div>
+
+      <div class="sc">
+        <h3>📖 How to Use</h3>
+        <p style="font-size:12px;color:rgba(255,255,255,.7);line-height:1.7;">
+          Send this key in your bot's request header as:<br/>
+          <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--pk2);display:inline-block;margin-top:6px;">x-api-key: YOUR_KEY_HERE</code><br/><br/>
+          Endpoint: <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--pk2);">https://netlinkagencies.vercel.app/api/bot-access</code>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const db=getFirestore(app);
+
+if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
+
+// API Keys is MASTER ADMIN ONLY — no co-admin can ever access this page
+function guardMasterOnly(){
+  const raw=localStorage.getItem('nlAdmin');
+  if(!raw){window.location.href='/admin/index.html';return false;}
+  const adminData=JSON.parse(raw);
+  if(adminData.role!=='master'){showRestricted();return false;}
+  return true;
+}
+function showRestricted(){
+  document.body.innerHTML='<div style="min-height:100vh;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#2d0019;border:1px solid #6b0040;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF5252;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:rgba(255,255,255,.7);font-size:14px;line-height:1.7;margin-bottom:24px;">Only the Master Admin can manage API Keys.<br>Contact the master admin for access.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
+
+if(guardMasterOnly()){
+  loadKeys();
+}
+
+// Generate a secure random API key
+function generateRandomKey(){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let key='nla_live_';
+  for(let i=0;i<48;i++){
+    key+=chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+  return key;
+}
+
+window.generateKey=async function(){
+  const label=document.getElementById('key-label').value.trim();
+  const ok=document.getElementById('gen-ok');
+  const err=document.getElementById('gen-err');
+  const btn=document.getElementById('gen-btn');
+  ok.style.display='none';err.style.display='none';
+
+  if(!label){
+    err.textContent='⚠️ Please enter a label for this key (e.g. WhatsApp Bot).';
+    err.style.display='block';return;
+  }
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Generating...';
+
+  try{
+    const newKey=generateRandomKey();
+    await addDoc(collection(db,'apiKeys'),{
+      label:label,
+      key:newKey,
+      role:'full_admin',
+      createdAt:serverTimestamp(),
+      lastUsed:null,
+      active:true
+    });
+
+    ok.textContent='✅ API Key generated successfully!';
+    ok.style.display='block';
+    document.getElementById('key-label').value='';
+
+    document.getElementById('new-key-box').innerHTML=`
+      <div class="new-key-box">
+        <div class="new-key-title">🎉 New Key Created — Copy It Now!</div>
+        <div class="key-value">
+          <span id="newkey-text">${newKey}</span>
+          <button class="copy-btn" onclick="copyKey('${newKey}')">📋 Copy</button>
+        </div>
+        <p style="font-size:11px;color:rgba(255,255,255,.6);">Save this key now. For security, it will be partially hidden in the list below.</p>
+      </div>`;
+
+    loadKeys();
+  }catch(e){
+    err.textContent='❌ '+e.message;
+    err.style.display='block';
+  }
+
+  btn.disabled=false;
+  btn.textContent='➕ Generate API Key';
+};
+
+window.copyKey=function(key){
+  navigator.clipboard.writeText(key).then(()=>{
+    alert('✅ API Key copied to clipboard!');
+  });
+};
+
+async function loadKeys(){
+  try{
+    const q=query(collection(db,'apiKeys'),orderBy('createdAt','desc'));
+    const snap=await getDocs(q);
+    const list=document.getElementById('keys-list');
+    if(snap.empty){list.innerHTML='<div class="no-keys">No API keys generated yet.</div>';return;}
+
+    list.innerHTML=snap.docs.map(d=>{
+      const k=d.data();
+      const masked=k.key.substring(0,12)+'••••••••••••••••••••••••••••••••'+k.key.substring(k.key.length-6);
+      const createdDate=k.createdAt?.toDate?k.createdAt.toDate().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'Unknown';
+      const lastUsedStr=k.lastUsed?.toDate?k.lastUsed.toDate().toLocaleString():'Never used';
+      return `
+      <div class="key-card">
+        <div class="key-head">
+          <div class="key-label">🔑 ${k.label}</div>
+          <span class="key-badge">${k.active!==false?'ACTIVE':'REVOKED'}</span>
+        </div>
+        <div class="key-value">
+          <span>${masked}</span>
+          <button class="copy-btn" onclick="copyKey('${k.key}')">📋 Copy</button>
+        </div>
+        <div class="key-meta">Created: ${createdDate} · Last used: ${lastUsedStr}</div>
+        <button class="revoke-btn" onclick="revokeKey('${d.id}','${k.label}')">🗑️ Revoke ${k.label}</button>
+      </div>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('keys-list').innerHTML='<div class="no-keys">Error loading keys.</div>';
+  }
+}
+
+window.revokeKey=async function(keyId,label){
+  if(!confirm('Revoke API key "'+label+'"? Any bot using this key will immediately lose access. This cannot be undone.')) return;
+  try{
+    await deleteDoc(doc(db,'apiKeys',keyId));
+    loadKeys();
+  }catch(e){
+    alert('❌ Error revoking key: '+e.message);
+  }
+};
+
+window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
+window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
+window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
+
+// Show API Keys link only for master admin
+(function(){
+  try{
+    const raw=localStorage.getItem('nlAdmin');
+    if(raw){
+      const ad=JSON.parse(raw);
+      if(ad.role==='master'){
+        const link=document.getElementById('apikey-nav-link');
+        if(link) link.style.display='flex';
+      }
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
