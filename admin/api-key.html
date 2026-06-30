@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>API Keys — NETLINK ADMIN</title>
+<title>API Keys — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--primary:#0057FF;--accent:#00D4FF;--gold:#FFD700;--green:#00C853;--red:#FF3B3B;--yellow:#FFB300;--purple:#7C3AED;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
+:root{--primary:#0057FF;--accent:#00D4FF;--green:#00C853;--red:#FF3B3B;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
@@ -17,7 +17,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:var(--white);line-height:1.1;}
 .logo-sub{font-size:8px;color:var(--accent);letter-spacing:2px;font-family:'Orbitron',monospace;}
 .sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
 .ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
 .main{flex:1;}
@@ -25,107 +25,41 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
 .tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
 .avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
-.content{padding:16px 14px;max-width:780px;margin:0 auto;}
+.content{padding:16px 14px;max-width:560px;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
-.loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
-.loader.show{display:flex;}
-.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
+.sc h3{font-size:14px;font-weight:800;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.warn-box{background:rgba(255,59,59,.1);border:1.5px solid var(--red);border-radius:10px;padding:12px 14px;font-size:12px;color:#FF8A80;line-height:1.6;margin-bottom:14px;}
+.fg{margin-bottom:12px;}
+label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;}
+input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
+input:focus{border-color:var(--primary);}
+input::placeholder{color:var(--text2);opacity:.5;}
+.btn{width:100%;padding:12px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;margin-top:4px;transition:.2s;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.ok{background:rgba(0,200,83,.12);border:1.5px solid var(--green);color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.err{background:rgba(255,59,59,.12);border:1.5px solid var(--red);color:#FF8A80;border-radius:9px;padding:11px;font-size:13px;margin:10px 0;display:none;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* Page specific */
-.section-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:14px;letter-spacing:1px;}
-.info-box{background:rgba(0,87,255,.08);border:1.5px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;font-size:13px;color:var(--text2);line-height:1.7;}
-.info-box strong{color:var(--accent);}
-.card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.card-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text2);}
-
-/* Key display */
-.key-wrap{position:relative;display:flex;align-items:center;gap:8px;}
-.key-display{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Orbitron',monospace;font-size:11px;color:var(--gold);letter-spacing:1px;word-break:break-all;min-height:46px;display:flex;align-items:center;}
-.key-display.blur-key{filter:blur(5px);user-select:none;pointer-events:none;}
-.icon-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;font-size:15px;color:var(--text2);transition:.15s;flex-shrink:0;}
-.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:.2s;}
-.btn-primary{background:linear-gradient(90deg,var(--primary),var(--accent));color:var(--white);box-shadow:0 4px 15px rgba(0,87,255,.3);}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,87,255,.4);}
-.btn-danger{background:rgba(255,59,59,.15);border:1.5px solid var(--red);color:var(--red);}
-.btn-danger:hover{background:rgba(255,59,59,.25);}
-.btn-gold{background:rgba(255,215,0,.12);border:1.5px solid var(--gold);color:var(--gold);}
-.btn-gold:hover{background:rgba(255,215,0,.2);}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;}
-
-/* Key list */
-.key-item{background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;}
-.key-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.key-name{font-weight:800;font-size:14px;color:var(--white);}
-.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.5px;}
-.badge-active{background:rgba(0,200,83,.15);border:1px solid var(--green);color:var(--green);}
-.badge-revoked{background:rgba(255,59,59,.12);border:1px solid var(--red);color:var(--red);}
-.key-meta{font-size:11px;color:var(--text2);margin-bottom:8px;}
-.key-val{font-family:'Orbitron',monospace;font-size:10px;color:var(--gold);background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 10px;word-break:break-all;margin-bottom:8px;cursor:pointer;transition:.15s;}
-.key-val:hover{border-color:var(--gold);}
-.key-actions{display:flex;gap:8px;flex-wrap:wrap;}
-
-/* Generate modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;}
-.modal-bg.show{display:flex;}
-.modal{background:var(--bg2);border:1.5px solid var(--border);border-radius:18px;padding:24px;width:100%;max-width:440px;}
-.modal h3{font-family:'Orbitron',monospace;font-size:14px;color:var(--white);margin-bottom:16px;}
-.fg{margin-bottom:14px;}
-label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:6px;}
-input,select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.2s;}
-input:focus,select:focus{border-color:var(--primary);}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
-
-/* Toast */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:700;z-index:9999;transition:.3s;opacity:0;white-space:nowrap;}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
-.toast.success{border-color:var(--green);color:var(--green);}
-.toast.error{border-color:var(--red);color:var(--red);}
-
-/* Usage guide */
-.code-block{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:14px;font-family:'Orbitron',monospace;font-size:10px;color:var(--accent);line-height:1.8;overflow-x:auto;white-space:pre;}
+/* KEY CARD */
+.key-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;}
+.key-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.key-label{font-size:14px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:8px;}
+.key-badge{display:inline-flex;background:rgba(0,200,83,.15);border:1px solid var(--green);border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800;color:#69F0AE;}
+.key-value{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:monospace;font-size:12px;color:var(--accent);word-break:break-all;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.copy-btn{background:rgba(0,87,255,.2);border:1px solid var(--primary);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.key-meta{font-size:11px;color:var(--text2);margin-bottom:10px;}
+.revoke-btn{background:rgba(255,59,59,.15);border:1px solid var(--red);color:var(--red);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;}
+.revoke-btn:hover{background:rgba(255,59,59,.3);}
+.no-keys{text-align:center;padding:30px;color:var(--text2);font-size:13px;}
+.new-key-box{background:rgba(0,200,83,.08);border:1.5px solid var(--green);border-radius:12px;padding:16px;margin-bottom:14px;}
+.new-key-title{font-size:13px;font-weight:800;color:#69F0AE;margin-bottom:10px;}
 </style>
 </head>
 <body>
-<div class="loader" id="loader"><div class="ring"></div></div>
 <div class="overlay" id="ov" onclick="closeSB()"></div>
-
-<!-- Generate Modal -->
-<div class="modal-bg" id="genModal">
-  <div class="modal">
-    <h3>🔑 Generate New API Key</h3>
-    <div class="fg">
-      <label>Key Name / Label</label>
-      <input id="keyName" type="text" placeholder="e.g. Telegram Bot, My Script"/>
-    </div>
-    <div class="fg">
-      <label>Access Level</label>
-      <select id="keyAccess">
-        <option value="full">Full Access (read + write everything)</option>
-        <option value="read">Read Only</option>
-      </select>
-    </div>
-    <div class="fg">
-      <label>Expiry</label>
-      <select id="keyExpiry">
-        <option value="never">Never expires</option>
-        <option value="30">30 days</option>
-        <option value="90">90 days</option>
-        <option value="365">1 year</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" id="genBtn" onclick="generateKey()">⚡ Generate</button>
-    </div>
-  </div>
-</div>
-
 <div class="layout">
   <nav class="sidebar" id="sb">
     <div class="sb-head"><div class="logo"><div class="logo-icon">🔗</div><div><div class="logo-text">NETLINK</div><div class="logo-sub">ADMIN</div></div></div></div>
@@ -135,216 +69,191 @@ input:focus,select:focus{border-color:var(--primary);}
       <a class="ni" href="/admin/activation.html"><span class="ni-icon">✅</span>Activation</a>
       <a class="ni" href="/admin/withdraw.html"><span class="ni-icon">💸</span>Withdrawals</a>
       <a class="ni" href="/admin/deposits.html"><span class="ni-icon">💰</span>Deposits</a>
+      <a class="ni" href="/admin/client-payments.html"><span class="ni-icon">🧾</span>Client Payments</a>
       <a class="ni" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
-      <a class="ni active" href="/admin/api-key.html"><span class="ni-icon">🔑</span>API Keys</a>
       <a class="ni" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
-      <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
+      <a class="ni active" href="/admin/api-key.html"><span class="ni-icon">🔑</span>API Keys</a>
+      <a class="ni" style="color:#FF3B3B;font-weight:800;" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
     </div>
   </nav>
 
   <div class="main">
     <div class="topbar">
       <button class="menu-btn" onclick="openSB()">☰</button>
-      <div class="tb-title">API Key Manager</div>
-      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Admin</span></div>
+      <div class="tb-title">API Keys</div>
+      <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Master Admin</span></div>
     </div>
 
     <div class="content">
-
-      <div class="info-box">
-        🤖 API keys give <strong>external services</strong> (like your Telegram bot) full access to the NETLINK admin panel.<br/>
-        Each request must include the header: <strong>X-NETLINK-KEY: your-api-key</strong><br/>
-        Keep keys <strong>secret</strong> — anyone with a key has full admin access.
+      <div class="warn-box">
+        ⚠️ <strong>Warning:</strong> Any key generated here has <strong>FULL ADMIN ACCESS</strong> to your entire website — same as the master admin. Anyone with this key can view/edit users, approve withdrawals, activate accounts, and more. Only share keys with trusted bots (WhatsApp, Telegram) that you control. Never expose a key in public code or chat.
       </div>
 
-      <!-- Generate button -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <div class="section-title">🔑 YOUR API KEYS</div>
-        <button class="btn btn-primary" onclick="openModal()">+ Generate New Key</button>
-      </div>
-
-      <!-- Keys list -->
-      <div id="keysList"><div style="text-align:center;padding:30px;color:var(--text2);">Loading keys...</div></div>
-
-      <!-- Usage guide -->
-      <div class="card" style="margin-top:24px;">
-        <div class="section-title">📡 HOW TO USE WITH TELEGRAM BOT</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">Send this header with every request from your bot:</p>
-        <div class="code-block">// Node.js / Telegram Bot example
-fetch('https://netlinkagencies.linkpc.net/api/admin-user.js', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-NETLINK-KEY': 'YOUR_API_KEY_HERE'
-  },
-  body: JSON.stringify({ action: 'getUsers' })
-});</div>
-
-        <p style="font-size:12px;color:var(--text2);margin:12px 0 8px;">Available actions your bot can perform:</p>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">getUsers</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">getPendingWithdrawals</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">approveWithdrawal</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">rejectWithdrawal</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">getPendingDeposits</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">approveDeposit</span>
-          <span style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--accent);">getStats</span>
+      <div class="sc">
+        <h3>🔑 Generate New API Key</h3>
+        <div class="fg">
+          <label>Key Label</label>
+          <input type="text" id="key-label" placeholder="e.g. WhatsApp Bot, Telegram Bot"/>
         </div>
+        <div class="ok" id="gen-ok"></div>
+        <div class="err" id="gen-err"></div>
+        <button class="btn" id="gen-btn" onclick="generateKey()">➕ Generate API Key</button>
       </div>
 
+      <div id="new-key-box"></div>
+
+      <div class="sc">
+        <h3>📋 Active API Keys</h3>
+        <div id="keys-list"><div class="no-keys">Loading keys...</div></div>
+      </div>
+
+      <div class="sc">
+        <h3>📖 How to Use</h3>
+        <p style="font-size:12px;color:var(--text2);line-height:1.7;">
+          Send this key in your bot's request header as:<br/>
+          <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--accent);display:inline-block;margin-top:6px;">x-api-key: YOUR_KEY_HERE</code><br/><br/>
+          Endpoint: <code style="background:var(--bg);padding:4px 8px;border-radius:6px;color:var(--accent);">https://netlinkagencies.vercel.app/api/bot-access</code>
+        </p>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+const db=getFirestore(app);
+
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// ONLY master admin can access this page — no co-admin exceptions, ever
+function guardMasterOnly(){
+  const raw=localStorage.getItem('nlAdmin');
+  if(!raw){window.location.href='/admin/index.html';return;}
+  const adminData=JSON.parse(raw);
+  if(adminData.role!=='master'){showRestricted();return false;}
+  return true;
+}
+function showRestricted(){
+  document.body.innerHTML='<div style="min-height:100vh;background:#050D1A;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#111E35;border:1px solid #1E3560;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF3B3B;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:#8BA4CC;font-size:14px;line-height:1.7;margin-bottom:24px;">Only the Master Admin can manage API Keys.<br>Contact the master admin for access.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#0057FF,#00D4FF);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
 
-const app = initializeApp({
-  apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",
-  authDomain:"netlink-agencies-6399e.firebaseapp.com",
-  projectId:"netlink-agencies-6399e",
-  storageBucket:"netlink-agencies-6399e.firebasestorage.app",
-  messagingSenderId:"546397751362",
-  appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"
-});
-const db = getFirestore(app);
+if(guardMasterOnly()){
+  loadKeys();
+}
 
-// ─── Helpers ───────────────────────────────────────────────
-function genKey(){
+// Generate a secure random API key
+function generateRandomKey(){
   const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let key='NL-';
-  for(let i=0;i<48;i++) key+=chars[Math.floor(Math.random()*chars.length)];
+  let key='nla_live_';
+  for(let i=0;i<48;i++){
+    key+=chars.charAt(Math.floor(Math.random()*chars.length));
+  }
   return key;
 }
 
-function showToast(msg, type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast '+type+' show';
-  setTimeout(()=>t.className='toast',2800);
-}
+window.generateKey=async function(){
+  const label=document.getElementById('key-label').value.trim();
+  const ok=document.getElementById('gen-ok');
+  const err=document.getElementById('gen-err');
+  const btn=document.getElementById('gen-btn');
+  ok.style.display='none';err.style.display='none';
 
-function fmtDate(ts){
-  if(!ts) return 'N/A';
-  const d=ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-}
-
-// ─── Load keys ─────────────────────────────────────────────
-async function loadKeys(){
-  document.getElementById('loader').classList.add('show');
-  try{
-    const snap = await getDocs(query(collection(db,'apiKeys'), orderBy('createdAt','desc')));
-    document.getElementById('loader').classList.remove('show');
-    if(snap.empty){
-      document.getElementById('keysList').innerHTML=`
-        <div style="text-align:center;padding:40px;color:var(--text2);">
-          <div style="font-size:40px;margin-bottom:12px;">🔑</div>
-          <div style="font-weight:700;">No API keys yet</div>
-          <div style="font-size:12px;margin-top:6px;">Click "Generate New Key" to create your first key</div>
-        </div>`;
-      return;
-    }
-    let html='';
-    snap.docs.forEach(d=>{
-      const k=d.data();
-      const id=d.id;
-      const active=k.status==='active';
-      const expiry=k.expiry==='never'?'Never expires':`Expires: ${k.expiryDate||'—'}`;
-      html+=`
-      <div class="key-item" id="ki-${id}">
-        <div class="key-item-head">
-          <div class="key-name">${k.name||'Unnamed Key'}</div>
-          <span class="badge ${active?'badge-active':'badge-revoked'}">${active?'ACTIVE':'REVOKED'}</span>
-        </div>
-        <div class="key-meta">🔐 ${k.access==='full'?'Full Access':'Read Only'} &nbsp;|&nbsp; 📅 Created: ${fmtDate(k.createdAt)} &nbsp;|&nbsp; ⏳ ${expiry}</div>
-        <div class="key-val" title="Click to copy" onclick="copyKey('${k.key}')">${k.key}</div>
-        <div class="key-actions">
-          <button class="btn btn-gold" style="font-size:11px;padding:7px 14px;" onclick="copyKey('${k.key}')">📋 Copy</button>
-          ${active?`<button class="btn btn-danger" style="font-size:11px;padding:7px 14px;" onclick="revokeKey('${id}')">🚫 Revoke</button>`:''}
-        </div>
-      </div>`;
-    });
-    document.getElementById('keysList').innerHTML=html;
-  }catch(e){
-    document.getElementById('loader').classList.remove('show');
-    document.getElementById('keysList').innerHTML=`<div style="color:var(--red);padding:20px;">Error loading keys: ${e.message}</div>`;
-  }
-}
-
-// ─── Generate key ──────────────────────────────────────────
-window.generateKey = async function(){
-  const name=document.getElementById('keyName').value.trim();
-  const access=document.getElementById('keyAccess').value;
-  const expiry=document.getElementById('keyExpiry').value;
-  if(!name){showToast('⚠️ Enter a key name','error');return;}
-
-  const btn=document.getElementById('genBtn');
-  btn.disabled=true;btn.textContent='Generating...';
-
-  let expiryDate=null;
-  if(expiry!=='never'){
-    const d=new Date();
-    d.setDate(d.getDate()+parseInt(expiry));
-    expiryDate=d.toLocaleDateString('en-KE',{day:'numeric',month:'short',year:'numeric'});
+  if(!label){
+    err.textContent='⚠️ Please enter a label for this key (e.g. WhatsApp Bot).';
+    err.style.display='block';return;
   }
 
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Generating...';
+
   try{
-    const newKey=genKey();
+    const newKey=generateRandomKey();
     await addDoc(collection(db,'apiKeys'),{
-      name,
-      key: newKey,
-      access,
-      expiry,
-      expiryDate,
-      status:'active',
-      createdAt: serverTimestamp(),
-      usageCount: 0
+      label:label,
+      key:newKey,
+      role:'full_admin',
+      createdAt:serverTimestamp(),
+      lastUsed:null,
+      active:true
     });
-    closeModal();
-    showToast('✅ API key generated!');
+
+    ok.textContent='✅ API Key generated successfully!';
+    ok.style.display='block';
+    document.getElementById('key-label').value='';
+
+    // Show the new key prominently — this is the ONLY time it's fully visible
+    document.getElementById('new-key-box').innerHTML=`
+      <div class="new-key-box">
+        <div class="new-key-title">🎉 New Key Created — Copy It Now!</div>
+        <div class="key-value">
+          <span id="newkey-text">${newKey}</span>
+          <button class="copy-btn" onclick="copyKey('${newKey}')">📋 Copy</button>
+        </div>
+        <p style="font-size:11px;color:var(--text2);">Save this key now. For security, it will be partially hidden in the list below.</p>
+      </div>`;
+
     loadKeys();
   }catch(e){
-    showToast('Error: '+e.message,'error');
+    err.textContent='❌ '+e.message;
+    err.style.display='block';
   }
-  btn.disabled=false;btn.textContent='⚡ Generate';
+
+  btn.disabled=false;
+  btn.textContent='➕ Generate API Key';
 };
 
-// ─── Revoke key ────────────────────────────────────────────
-window.revokeKey = async function(id){
-  if(!confirm('Revoke this API key? Any bot using it will lose access immediately.')) return;
+window.copyKey=function(key){
+  navigator.clipboard.writeText(key).then(()=>{
+    alert('✅ API Key copied to clipboard!');
+  });
+};
+
+async function loadKeys(){
   try{
-    await updateDoc(doc(db,'apiKeys',id),{status:'revoked'});
-    showToast('🚫 Key revoked');
+    const q=query(collection(db,'apiKeys'),orderBy('createdAt','desc'));
+    const snap=await getDocs(q);
+    const list=document.getElementById('keys-list');
+    if(snap.empty){list.innerHTML='<div class="no-keys">No API keys generated yet.</div>';return;}
+
+    list.innerHTML=snap.docs.map(d=>{
+      const k=d.data();
+      const masked=k.key.substring(0,12)+'••••••••••••••••••••••••••••••••'+k.key.substring(k.key.length-6);
+      const createdDate=k.createdAt?.toDate?k.createdAt.toDate().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'Unknown';
+      const lastUsedStr=k.lastUsed?.toDate?k.lastUsed.toDate().toLocaleString():'Never used';
+      return `
+      <div class="key-card">
+        <div class="key-head">
+          <div class="key-label">🔑 ${k.label}</div>
+          <span class="key-badge">${k.active!==false?'ACTIVE':'REVOKED'}</span>
+        </div>
+        <div class="key-value">
+          <span>${masked}</span>
+          <button class="copy-btn" onclick="copyKey('${k.key}')">📋 Copy</button>
+        </div>
+        <div class="key-meta">Created: ${createdDate} · Last used: ${lastUsedStr}</div>
+        <button class="revoke-btn" onclick="revokeKey('${d.id}','${k.label}')">🗑️ Revoke ${k.label}</button>
+      </div>`;
+    }).join('');
+  }catch(e){
+    document.getElementById('keys-list').innerHTML='<div class="no-keys">Error loading keys.</div>';
+  }
+}
+
+window.revokeKey=async function(keyId,label){
+  if(!confirm('Revoke API key "'+label+'"? Any bot using this key will immediately lose access. This cannot be undone.')) return;
+  try{
+    await deleteDoc(doc(db,'apiKeys',keyId));
     loadKeys();
   }catch(e){
-    showToast('Error: '+e.message,'error');
+    alert('❌ Error revoking key: '+e.message);
   }
 };
 
-// ─── Copy key ──────────────────────────────────────────────
-window.copyKey = function(key){
-  navigator.clipboard.writeText(key).then(()=>showToast('📋 Key copied to clipboard!'));
-};
-
-// ─── Modal ─────────────────────────────────────────────────
-window.openModal = ()=>{
-  document.getElementById('keyName').value='';
-  document.getElementById('genModal').classList.add('show');
-};
-window.closeModal = ()=>document.getElementById('genModal').classList.remove('show');
-
-// ─── Sidebar ───────────────────────────────────────────────
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
-
-loadKeys();
 </script>
 </body>
 </html>

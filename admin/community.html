@@ -54,8 +54,10 @@ textarea:focus{border-color:var(--primary);}
       <a class="ni" href="/admin/activation.html"><span class="ni-icon">✅</span>Activation</a>
       <a class="ni" href="/admin/withdraw.html"><span class="ni-icon">💸</span>Withdrawals</a>
       <a class="ni" href="/admin/deposits.html"><span class="ni-icon">💰</span>Deposits</a>
+      <a class="ni" href="/admin/client-payments.html"><span class="ni-icon">🧾</span>Client Payments</a>
       <a class="ni active" href="/admin/community.html"><span class="ni-icon">📝</span>Community Posts</a>
       <a class="ni" href="/admin/settings.html"><span class="ni-icon">⚙️</span>Settings</a>
+      <a class="ni" href="/admin/api-key.html" id="apikey-nav-link" style="display:none;"><span class="ni-icon">🔑</span>API Keys</a>
       <a class="ni" style="color:var(--red);" onclick="logout()"><span class="ni-icon">🚪</span>Log Out</a>
     </div>
   </nav>
@@ -142,6 +144,20 @@ window.openSB=()=>{document.getElementById('sb').classList.add('open');document.
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
 load();
+</script>
+<script>
+(function(){
+  try{
+    const raw=localStorage.getItem('nlAdmin');
+    if(raw){
+      const ad=JSON.parse(raw);
+      if(ad.role==='master'){
+        const link=document.getElementById('apikey-nav-link');
+        if(link) link.style.display='flex';
+      }
+    }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
