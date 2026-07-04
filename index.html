@@ -2,19 +2,232 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>NETLINK AGENCIES</title>
+<title>NETLINK AGENCIES — Earn Money Online in Kenya</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-body{background:#050D1A;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Nunito',sans-serif;color:#E8F0FF;flex-direction:column;gap:16px;}
-.logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#0057FF,#00D4FF);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;}
-.ring{width:40px;height:40px;border:3px solid #1E3560;border-top-color:#0057FF;border-radius:50%;animation:spin 1s linear infinite;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:100vh;overflow-x:hidden;}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;background:#1a0010;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .5s;}
+#loader.hide{opacity:0;pointer-events:none;}
+.ring{width:40px;height:40px;border:3px solid rgba(233,30,140,.2);border-top-color:#E91E8C;border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-p{color:#8BA4CC;font-size:13px;}
+
+/* ── NAVBAR ── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(26,0,16,.95);backdrop-filter:blur(10px);border-bottom:1px solid #6b0040;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.nav-logo-text{font-size:14px;font-weight:900;color:#fff;line-height:1.1;}
+.nav-logo-sub{font-size:8px;color:rgba(255,255,255,.7);letter-spacing:2px;}
+.nav-btns{display:flex;gap:8px;}
+.btn-login{background:transparent;border:1.5px solid #E91E8C;color:#FF4DB8;border-radius:8px;padding:7px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none;}
+.btn-register{background:linear-gradient(135deg,#B0156A,#FF4DB8);border:none;color:#fff;border-radius:8px;padding:7px 16px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;text-decoration:none;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 20px 60px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(233,30,140,.15) 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(233,30,140,.15);border:1px solid #6b0040;border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;color:#FF4DB8;margin-bottom:18px;}
+.hero h1{font-size:32px;font-weight:900;line-height:1.2;margin-bottom:14px;color:#fff;}
+.hero h1 span{background:linear-gradient(135deg,#E91E8C,#FF4DB8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:15px;color:rgba(255,255,255,.75);line-height:1.7;max-width:340px;margin:0 auto 28px;}
+.hero-btns{display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;}
+.btn-primary{background:linear-gradient(135deg,#B0156A,#FF4DB8);border:none;color:#fff;border-radius:12px;padding:15px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;text-decoration:none;display:block;text-align:center;box-shadow:0 8px 24px rgba(233,30,140,.4);}
+.btn-secondary{background:transparent;border:1.5px solid #E91E8C;color:#FF4DB8;border-radius:12px;padding:14px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;text-decoration:none;display:block;text-align:center;}
+.hero-stats{display:flex;gap:24px;justify-content:center;margin-top:36px;}
+.stat{text-align:center;}
+.stat-num{font-size:22px;font-weight:900;color:#FF4DB8;}
+.stat-label{font-size:10px;color:rgba(255,255,255,.6);font-weight:600;margin-top:2px;}
+
+/* ── HOW IT WORKS ── */
+.section{padding:60px 20px;}
+.section-title{font-size:22px;font-weight:900;text-align:center;margin-bottom:6px;}
+.section-sub{font-size:13px;color:rgba(255,255,255,.6);text-align:center;margin-bottom:32px;}
+.steps{display:flex;flex-direction:column;gap:16px;max-width:400px;margin:0 auto;}
+.step{background:#2d0019;border:1px solid #6b0040;border-radius:14px;padding:18px;display:flex;align-items:flex-start;gap:14px;}
+.step-num{width:38px;height:38px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0;}
+.step-title{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px;}
+.step-desc{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;}
+
+/* ── EARNINGS ── */
+.earn-section{padding:60px 20px;background:#2a0018;}
+.earn-grid{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:0 auto;}
+.earn-card{background:#2d0019;border:1px solid #6b0040;border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;}
+.earn-left{display:flex;align-items:center;gap:12px;}
+.earn-icon{font-size:24px;}
+.earn-name{font-size:13px;font-weight:800;color:#fff;}
+.earn-desc{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
+.earn-amount{font-size:14px;font-weight:900;color:#FF4DB8;}
+
+/* ── REFERRAL ── */
+.ref-section{padding:60px 20px;}
+.ref-box{background:linear-gradient(135deg,#2d0019,#3d0024);border:1px solid #6b0040;border-radius:16px;padding:24px;max-width:400px;margin:0 auto;text-align:center;}
+.ref-title{font-size:18px;font-weight:900;margin-bottom:8px;}
+.ref-desc{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:20px;line-height:1.6;}
+.ref-levels{display:flex;gap:12px;justify-content:center;margin-bottom:20px;}
+.ref-level{background:rgba(233,30,140,.1);border:1px solid #6b0040;border-radius:10px;padding:12px 16px;text-align:center;}
+.ref-level-name{font-size:10px;color:rgba(255,255,255,.6);font-weight:700;}
+.ref-level-amount{font-size:18px;font-weight:900;color:#FF4DB8;margin-top:2px;}
+
+/* ── TESTIMONIALS ── */
+.testi-section{padding:60px 20px;background:#2a0018;}
+.testi-grid{display:flex;flex-direction:column;gap:14px;max-width:400px;margin:0 auto;}
+.testi-card{background:#2d0019;border:1px solid #6b0040;border-radius:14px;padding:16px;}
+.testi-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:12px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:10px;}
+.testi-avatar{width:32px;height:32px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;}
+.testi-name{font-size:12px;font-weight:800;color:#fff;}
+.testi-loc{font-size:10px;color:rgba(255,255,255,.5);}
+
+/* ── CTA ── */
+.cta-section{padding:60px 20px;text-align:center;}
+.cta-box{background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:20px;padding:36px 24px;max-width:400px;margin:0 auto;}
+.cta-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:10px;}
+.cta-desc{font-size:13px;color:rgba(255,255,255,.9);margin-bottom:24px;line-height:1.6;}
+.btn-white{background:#fff;color:#B0156A;border:none;border-radius:12px;padding:15px 30px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;text-decoration:none;display:inline-block;}
+
+/* ── FOOTER ── */
+.footer{background:#2a0018;border-top:1px solid #6b0040;padding:24px 20px;text-align:center;}
+.footer-logo{font-size:16px;font-weight:900;color:#fff;margin-bottom:6px;}
+.footer-text{font-size:11px;color:rgba(255,255,255,.5);}
+.footer-links{display:flex;gap:16px;justify-content:center;margin:12px 0;}
+.footer-links a{font-size:11px;color:rgba(255,255,255,.6);text-decoration:none;font-weight:600;}
 </style>
 </head>
 <body>
-<div class="logo-icon">🔗</div>
-<div class="ring"></div>
-<p>Loading NETLINK AGENCIES...</p>
+
+<!-- LOADER -->
+<div id="loader">
+  <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+    <div style="position:relative;width:80px;height:80px;">
+      <!-- Spinning ring around logo -->
+      <div style="position:absolute;inset:0;border-radius:50%;border:3px solid rgba(233,30,140,.2);border-top-color:#E91E8C;border-right-color:#FF4DB8;animation:spin 1s linear infinite;"></div>
+      <!-- Logo in center -->
+      <div style="position:absolute;inset:8px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;">🔗</div>
+    </div>
+    <div style="font-size:15px;font-weight:900;color:#fff;">NETLINK AGENCIES</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:2px;">LOADING...</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">🔗</div>
+    <div><div class="nav-logo-text">NETLINK</div><div class="nav-logo-sub">AGENCIES</div></div>
+  </div>
+  <div class="nav-btns">
+    <a href="/login" class="btn-login">Log In</a>
+    <a href="/register" class="btn-register">Register</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🇰🇪 #1 Earning Platform in Kenya</div>
+  <h1>Earn Real Money<br/>Online with <span>NETLINK</span></h1>
+  <p>Join thousands of Kenyans earning daily through tasks, referrals, surveys, forex trading and more — all from your phone!</p>
+  <div class="hero-btns">
+    <a href="/register" class="btn-primary">🚀 Start Earning Today — Free!</a>
+    <a href="/login" class="btn-secondary">Already a member? Log In</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">5,000+</div><div class="stat-label">Active Members</div></div>
+    <div class="stat"><div class="stat-num">KES 150</div><div class="stat-label">One-Time Fee</div></div>
+    <div class="stat"><div class="stat-num">KES 80</div><div class="stat-label">Per Referral</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-title">How It Works</div>
+  <div class="section-sub">Get started in 3 simple steps</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><div class="step-title">Register for Free</div><div class="step-desc">Create your account in seconds. Enter your name, username, email and country.</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><div class="step-title">Activate Your Account</div><div class="step-desc">Pay a one-time activation fee (KES 150 in Kenya) via M-Pesa to unlock all earning features.</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><div class="step-title">Earn & Withdraw</div><div class="step-desc">Complete tasks, invite friends, earn daily and withdraw to M-Pesa or PayPal!</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WAYS TO EARN -->
+<section class="earn-section">
+  <div class="section-title">Ways to Earn</div>
+  <div class="section-sub">Multiple income streams every day</div>
+  <div class="earn-grid">
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">📱</div><div><div class="earn-name">WhatsApp Adverts</div><div class="earn-desc">Post our advert as status & earn per view</div></div></div><div class="earn-amount">KES 1/view</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">👥</div><div><div class="earn-name">Referrals (3 Levels)</div><div class="earn-desc">Invite friends and earn from 3 levels</div></div></div><div class="earn-amount">KES 80+</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">🧠</div><div><div class="earn-name">Trivia & Math Quiz</div><div class="earn-desc">Answer questions correctly every week</div></div></div><div class="earn-amount">KES 5/week</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">📝</div><div><div class="earn-name">Daily Surveys</div><div class="earn-desc">Complete short surveys once per day</div></div></div><div class="earn-amount">Daily</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">📈</div><div><div class="earn-name">Forex Trading</div><div class="earn-desc">Stake and earn weekly profit</div></div></div><div class="earn-amount">KES 5/week</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">⚽</div><div><div class="earn-name">Betting Predictions</div><div class="earn-desc">Predict match outcomes for free weekly</div></div></div><div class="earn-amount">KES 5/week</div></div>
+    <div class="earn-card"><div class="earn-left"><div class="earn-icon">🎁</div><div><div class="earn-name">Karibu Bonus</div><div class="earn-desc">Claim KES 100 after 20 referrals</div></div></div><div class="earn-amount">KES 100</div></div>
+  </div>
+</section>
+
+<!-- REFERRAL SYSTEM -->
+<section class="ref-section">
+  <div class="section-title">3-Level Referral System</div>
+  <div class="section-sub">Earn from your network forever</div>
+  <div class="ref-box">
+    <div class="ref-desc">Invite friends, they invite friends — you earn from 3 levels of referrals. The more you share, the more you earn!</div>
+    <div class="ref-levels">
+      <div class="ref-level"><div class="ref-level-name">LEVEL 1</div><div class="ref-level-amount">KES 80</div></div>
+      <div class="ref-level"><div class="ref-level-name">LEVEL 2</div><div class="ref-level-amount">KES 20</div></div>
+      <div class="ref-level"><div class="ref-level-name">LEVEL 3</div><div class="ref-level-amount">KES 10</div></div>
+    </div>
+    <a href="/register" class="btn-primary">Get Your Referral Link →</a>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="section-title">What Members Say</div>
+  <div class="section-sub">Real people, real earnings</div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-text">"I joined NETLINK AGENCIES 3 months ago. I've already withdrawn over KES 5,000! The referral system is amazing — my network keeps growing."</div>
+      <div class="testi-author"><div class="testi-avatar">M</div><div><div class="testi-name">Mary W.</div><div class="testi-loc">Nairobi, Kenya</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-text">"I was skeptical at first but after my first withdrawal to M-Pesa I was convinced. This is the real deal. I invite everyone I know!"</div>
+      <div class="testi-author"><div class="testi-avatar">J</div><div><div class="testi-name">John K.</div><div class="testi-loc">Mombasa, Kenya</div></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-text">"The tasks are simple and the withdrawals come fast. I love how there are so many ways to earn. Best platform I've tried!"</div>
+      <div class="testi-author"><div class="testi-avatar">F</div><div><div class="testi-name">Faith A.</div><div class="testi-loc">Kisumu, Kenya</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box">
+    <div class="cta-title">Ready to Start Earning?</div>
+    <div class="cta-desc">Join thousands of members already earning daily. Registration is free — pay only when you activate!</div>
+    <a href="/register" class="btn-white">🚀 Join Now — It's Free!</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">🔗 NETLINK AGENCIES</div>
+  <div class="footer-links">
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/resetpassword">Reset Password</a>
+  </div>
+  <div class="footer-text">© 2026 NETLINK AGENCIES. All rights reserved.</div>
+</footer>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -31,10 +244,23 @@ const app = initializeApp({
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// If admin is logged in, go to admin
-if(localStorage.getItem('nlAdmin')==='true'){
-  window.location.replace('/admin/index.html');
-}
+// Hide loader after page loads
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+  }, 300);
+});
+
+// Check if already logged in — redirect if so
+try{
+  const raw = localStorage.getItem('nlAdmin');
+  if(raw){
+    const ad = JSON.parse(raw);
+    if(ad.role === 'master' || ad.role === 'coadmin'){
+      window.location.replace('/admin/panel.html');
+    }
+  }
+}catch(e){}
 
 onAuthStateChanged(auth, async user => {
   if(user){
@@ -42,26 +268,22 @@ onAuthStateChanged(auth, async user => {
       const snap = await getDoc(doc(db,'users', user.uid));
       if(snap.exists()){
         const data = snap.data();
+        document.getElementById('loader').classList.add('hide');
         if(data.activated){
-          window.location.replace('/dashboard.html');
+          window.location.replace('/dashboard');
         } else {
-          window.location.replace('/activate.html');
+          window.location.replace('/activate');
         }
       } else {
-        window.location.replace('/login.html');
+        document.getElementById('loader').classList.add('hide');
       }
     }catch(e){
-      window.location.replace('/login.html');
+      document.getElementById('loader').classList.add('hide');
     }
   } else {
-    window.location.replace('/login.html');
+    document.getElementById('loader').classList.add('hide');
   }
 });
-
-// Fallback — if Firebase takes too long, go to login after 5 seconds
-setTimeout(()=>{
-  window.location.replace('/login.html');
-}, 5000);
 </script>
 </body>
 </html>
