@@ -1,4 +1,5 @@
 import admin from 'firebase-admin';
+import nodemailer from 'nodemailer';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -11,6 +12,44 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+
+// ═══════════════════════════════════════
+// EMAIL — used for the deactivation confirmation code (sent as "Netlink Auth")
+// Reuses the same Gmail credentials as api/send-email.js
+// ═══════════════════════════════════════
+const codeMailer = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD
+  }
+});
+
+function generateCode() {
+  // 8-digit numeric code
+  return String(Math.floor(10000000 + Math.random() * 90000000));
+}
+
+function maskEmail(email) {
+  const [name, domain] = String(email || '').split('@');
+  if (!domain) return email || '';
+  const visible = name.slice(0, 2);
+  return `${visible}${'*'.repeat(Math.max(1, name.length - 2))}@${domain}`;
+}
+
+async function sendCodeEmail(to, username, code) {
+  await codeMailer.sendMail({
+    from: `"Netlink Auth" <${process.env.GMAIL_USER}>`,
+    to,
+    subject: '🔐 Your Netlink Agencies Deactivation Code',
+    html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
+      <h2 style="margin:0 0 16px;font-size:20px;font-weight:800;">Deactivation Verification Code</h2>
+      <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">Hi ${username}, someone requested to deactivate your NETLINK AGENCIES account via the support bot. Use this code to confirm it's you:</p>
+      <p style="font-size:28px;font-weight:800;letter-spacing:4px;text-align:center;margin:20px 0;">${code}</p>
+      <p style="margin:0 0 18px;font-size:14px;color:#666;">This code expires in 10 minutes. If you didn't request this, ignore this email — your account will remain active.</p>
+    </div>`
+  });
+}
 
 // ═══════════════════════════════════════
 // CONVERSATION STATE — stored in Firestore so it survives across requests
@@ -511,6 +550,270 @@ export default async function handler(req, res) {
         });
       }
 
+      // ═══════════════════════════════════════
+      // GET ACTIVATION INFO — the real Till number/name/amount used on the
+      // activate page. The bot must call this instead of guessing payment
+      // details (this is what caused it to invent a wrong Till number).
+      // Pass a username to get that user's actual remaining balance if
+      // someone already partly paid for them (clientPaidAmount).
+      // ═══════════════════════════════════════
+      case 'getActivationInfo': {
+        const { username } = req.method === 'GET' ? req.query : req.body;
+
+        let amount = 150;
+        let paidByOther = 0;
+        let payerUsername = null;
+
+        if (username) {
+          const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+          if (!snap.empty) {
+            const user = snap.docs[0].data();
+            paidByOther = Number(user.clientPaidAmount || 0);
+            payerUsername = user.lastPayerUsername || null;
+            amount = Math.max(0, 150 - paidByOther);
+          }
+        }
+
+        return res.status(200).json({
+          success: true,
+          method: 'M-Pesa Till (Buy Goods)',
+          tillNumber: '9252910',
+          tillName: 'MARY KINAITORE MPURUNGA',
+          baseAmount: 150,
+          amountDue: amount,
+          paidByOther,
+          payerUsername,
+          activateLink: 'https://netlinkagencies.linkpc.net/activate',
+          steps: [
+            'Open M-PESA on your phone',
+            'Select "Send Money" (Buy Goods and Services / Till)',
+            'Till Number: 9252910',
+            'Name: MARY KINAITORE MPURUNGA',
+            `Amount: KES ${amount}`,
+            'Confirm with your M-Pesa PIN',
+            'Copy the Transaction ID from the M-Pesa SMS you receive'
+          ],
+          note: 'The account can also pay automatically via the STK Push button on the activate page instead of these manual steps.'
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // SEND DEACTIVATION CODE — emails an 8-digit code to the account's
+      // email on file, so the bot can confirm the requester really owns
+      // the account before deactivating it.
+      // ═══════════════════════════════════════
+      case 'sendDeactivationCode': {
+        const { username } = req.method === 'GET' ? req.query : req.body;
+        if (!username) return res.status(400).json({ error: 'username is required.' });
+
+        const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+
+        const userDoc = snap.docs[0];
+        const user = userDoc.data();
+        if (!user.email) return res.status(400).json({ error: 'This account has no email on file, so a code cannot be sent.' });
+
+        const code = generateCode();
+        const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        await db.collection('deactivationCodes').doc(userDoc.id).set({
+          code,
+          expiresAt,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+        try {
+          await sendCodeEmail(user.email, user.username, code);
+        } catch (e) {
+          console.error('sendCodeEmail failed:', e.message);
+          return res.status(500).json({ error: 'Could not send the verification email. Please try again shortly.' });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Verification code sent to the email on file.',
+          maskedEmail: maskEmail(user.email)
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // VERIFY DEACTIVATION CODE — checks the 8-digit code the user sent back.
+      // On success, the bot should then call action=deactivateUser.
+      // ═══════════════════════════════════════
+      case 'verifyDeactivationCode': {
+        const { username, code } = req.method === 'GET' ? req.query : req.body;
+        if (!username || !code) return res.status(400).json({ error: 'username and code are required.' });
+
+        const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+
+        const userDoc = snap.docs[0];
+        const codeSnap = await db.collection('deactivationCodes').doc(userDoc.id).get();
+
+        if (!codeSnap.exists) {
+          return res.status(200).json({ success: true, verified: false, reason: 'No pending code for this account. Please request a new one.' });
+        }
+
+        const codeData = codeSnap.data();
+
+        if (Date.now() > codeData.expiresAt) {
+          await db.collection('deactivationCodes').doc(userDoc.id).delete();
+          return res.status(200).json({ success: true, verified: false, reason: 'Code expired. Please request a new one.' });
+        }
+
+        if (String(code).trim() !== String(codeData.code)) {
+          return res.status(200).json({ success: true, verified: false, reason: 'Incorrect code.' });
+        }
+
+        await db.collection('deactivationCodes').doc(userDoc.id).delete();
+        return res.status(200).json({ success: true, verified: true, uid: userDoc.id, username: userDoc.data().username });
+      }
+
+      // ═══════════════════════════════════════
+      // VERIFY PAYMENT — confirms an M-Pesa payment (manual Till or STK)
+      // using PayHero's "Get Account Transactions" endpoint, which lists
+      // ALL wallet transactions (not just ones started via our own STK push).
+      // We search recent pages for a transaction whose transaction_reference
+      // matches the M-Pesa code the user gave us. This works for BOTH manual
+      // Till payments and STK payments, since both eventually land as a
+      // wallet transaction with that M-Pesa code as the reference.
+      // ═══════════════════════════════════════
+      case 'verifyPayment': {
+        const { txnId, reference, phone } = req.method === 'GET' ? req.query : req.body;
+        const code = String(txnId || reference || '').trim();
+        if (!code) return res.status(400).json({ error: 'txnId (the M-Pesa transaction code) is required.' });
+
+        if (!process.env.PAYHERO_USERNAME || !process.env.PAYHERO_PASSWORD) {
+          return res.status(500).json({ error: 'PayHero credentials are not configured on the server (missing PAYHERO_USERNAME / PAYHERO_PASSWORD).' });
+        }
+
+        try {
+          const creds = Buffer.from(`${process.env.PAYHERO_USERNAME}:${process.env.PAYHERO_PASSWORD}`).toString('base64');
+          const per = 100;
+          const maxPages = 5; // scans the ~500 most recent wallet transactions
+          let match = null;
+
+          for (let page = 1; page <= maxPages; page++) {
+            const phRes = await fetch(`https://backend.payhero.co.ke/api/v2/transactions?page=${page}&per=${per}`, {
+              headers: { Authorization: `Basic ${creds}` }
+            });
+            if (!phRes.ok) break;
+
+            const data = await phRes.json();
+            const txns = data.transactions || [];
+
+            match = txns.find(t => String(t.transaction_reference || '').toUpperCase() === code.toUpperCase());
+            if (match) break;
+
+            if (!data.pagination || !data.pagination.next_page) break;
+          }
+
+          if (!match) {
+            return res.status(200).json({ success: true, status: 'not_found', transactionId: code });
+          }
+
+          // Optional cross-check against the phone number the user gave us
+          let phoneMatches = null;
+          if (phone) {
+            const lastDigits = String(phone).replace(/\D/g, '').slice(-9);
+            phoneMatches = !!(match.description && match.description.includes(lastDigits));
+          }
+
+          return res.status(200).json({
+            success: true,
+            status: match.amount > 0 ? 'successful' : 'not_found',
+            transactionId: match.transaction_reference,
+            amount: Math.abs(match.amount),
+            description: match.description,
+            date: match.created_at,
+            phoneMatches // true/false/null(no phone given) — extra confirmation, not required
+          });
+        } catch (e) {
+          console.error('PayHero verify error:', e.message);
+          return res.status(500).json({ error: 'Could not reach PayHero right now. Please try again shortly.' });
+        }
+      }
+
+      // ═══════════════════════════════════════
+      // GET TASKS INFO — real list of earning task pages, for the bot to
+      // explain accurately instead of guessing.
+      // ═══════════════════════════════════════
+      case 'getTasksInfo': {
+        return res.status(200).json({
+          success: true,
+          tasks: [
+            { name: 'Daily Survey', link: 'https://netlinkagencies.linkpc.net/dashboard/survey', desc: 'Answer a short daily survey to earn.' },
+            { name: 'Trivia Quiz', link: 'https://netlinkagencies.linkpc.net/dashboard/trivia', desc: 'Answer trivia questions correctly to earn.' },
+            { name: 'Math Quiz', link: 'https://netlinkagencies.linkpc.net/dashboard/mathquiz', desc: 'Solve simple math questions to earn.' },
+            { name: 'Number Game', link: 'https://netlinkagencies.linkpc.net/dashboard/numgame', desc: 'Play the number game to earn.' },
+            { name: 'View Ads', link: 'https://netlinkagencies.linkpc.net/dashboard/viewads', desc: 'View adverts to earn.' },
+            { name: 'YouTube Videos', link: 'https://netlinkagencies.linkpc.net/dashboard/youtube', desc: 'Watch YouTube videos to earn.' },
+            { name: 'TikTok Videos', link: 'https://netlinkagencies.linkpc.net/dashboard/tiktok', desc: 'Watch TikTok videos to earn.' },
+            { name: 'Instagram Videos', link: 'https://netlinkagencies.linkpc.net/dashboard/instagram', desc: 'Watch Instagram videos to earn.' },
+            { name: 'WhatsApp Adverts', link: 'https://netlinkagencies.linkpc.net/dashboard/wadvert', desc: 'Complete WhatsApp advert tasks to earn.' },
+            { name: 'Company Advert', link: 'https://netlinkagencies.linkpc.net/dashboard/Company-advertisement', desc: 'Complete company advertisement tasks to earn.' },
+            { name: 'Article', link: 'https://netlinkagencies.linkpc.net/dashboard/article', desc: 'Read/complete article tasks to earn.' },
+            { name: 'E-Tournaments', link: 'https://netlinkagencies.linkpc.net/dashboard/tournaments', desc: 'Join e-tournaments to earn.' },
+            { name: 'Betting Prediction', link: 'https://netlinkagencies.linkpc.net/dashboard/betting', desc: 'Make betting predictions to earn.' },
+            { name: 'Forex Trading', link: 'https://netlinkagencies.linkpc.net/dashboard/forex', desc: 'Participate in forex trading tasks to earn.' },
+            { name: 'Karibu Bonus', link: 'https://netlinkagencies.linkpc.net/dashboard/karibu', desc: 'Claim your welcome/Karibu bonus.' },
+            { name: 'Mentorship', link: 'https://netlinkagencies.linkpc.net/dashboard/mentorship', desc: 'Join mentorship for extra earning opportunities.' }
+          ],
+          note: 'Tell the user to log in to their dashboard and open the relevant task page to complete it.'
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // GET PAY-FOR-CLIENTS INFO
+      // ═══════════════════════════════════════
+      case 'getPayClientsInfo': {
+        return res.status(200).json({
+          success: true,
+          title: 'Pay for Clients',
+          link: 'https://netlinkagencies.linkpc.net/dashboard/payclients',
+          desc: 'This lets an already-activated user pay another user\'s KES 150 activation fee on their behalf via Till payment, so that user gets activated (or has their remaining activation balance reduced).'
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // SEND PASSWORD RESET — generates a REAL Firebase password reset link
+      // for the account's actual email and emails it, instead of the bot
+      // just pointing to the reset page with no real action behind it.
+      // ═══════════════════════════════════════
+      case 'sendPasswordReset': {
+        const { username } = req.method === 'GET' ? req.query : req.body;
+        if (!username) return res.status(400).json({ error: 'username is required.' });
+
+        const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+
+        const user = snap.docs[0].data();
+        if (!user.email) return res.status(400).json({ error: 'This account has no email on file.' });
+
+        try {
+          const resetLink = await admin.auth().generatePasswordResetLink(user.email, {
+            url: 'https://netlinkagencies.linkpc.net/login'
+          });
+
+          await codeMailer.sendMail({
+            from: `"NETLINK AGENCIES" <${process.env.GMAIL_USER}>`,
+            to: user.email,
+            subject: '🔐 Reset Your NETLINK AGENCIES Password',
+            html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
+              <h2 style="margin:0 0 16px;font-size:20px;font-weight:800;">Reset Your Password</h2>
+              <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">Hi ${user.username}, we received a request (via WhatsApp support) to reset your password. Click below — this link expires in 1 hour.</p>
+              <div style="text-align:center;margin:24px 0;"><a href="${resetLink}" style="display:inline-block;background:#E91E8C;color:#fff;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;">Reset Password</a></div>
+              <p style="margin:0 0 18px;font-size:14px;color:#666;">If you didn't request this, you can safely ignore this email.</p>
+            </div>`
+          });
+
+          return res.status(200).json({ success: true, message: 'Password reset email sent.', maskedEmail: maskEmail(user.email) });
+        } catch (e) {
+          console.error('sendPasswordReset failed:', e.message);
+          return res.status(500).json({ error: 'Could not send the reset email. Please try again shortly.' });
+        }
+      }
+
       default:
         return res.status(400).json({
           error: 'Unknown action.',
@@ -519,10 +822,12 @@ export default async function handler(req, res) {
               'getUser', 'listUsers', 'getBalance', 'editUser', 'deleteUser',
               'getPendingWithdrawals', 'approveWithdrawal', 'rejectWithdrawal',
               'getPendingActivations', 'activateUser', 'deactivateUser', 'rejectActivation',
-              'updateBalance', 'postCommunity'
+              'updateBalance', 'postCommunity',
+              'sendDeactivationCode', 'verifyDeactivationCode', 'verifyPayment'
             ],
             userGuideActions: [
-              'checkStatus', 'getReferralLink', 'howItWorks', 'getLinks'
+              'checkStatus', 'getReferralLink', 'howItWorks', 'getLinks',
+              'getTasksInfo', 'getPayClientsInfo', 'getActivationInfo', 'sendPasswordReset'
             ]
           }
         });
