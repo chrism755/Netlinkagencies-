@@ -51,6 +51,22 @@ async function sendCodeEmail(to, username, code) {
   });
 }
 
+// Calls the existing api/send-email.js endpoint (same templates used by the
+// admin dashboard) so every bot-triggered action sends the same real emails
+// a human admin action would send. Never throws — email failure should
+// never block the underlying account action from completing.
+async function triggerEmail(type, payload) {
+  try {
+    await fetch('https://netlinkagencies.vercel.app/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, ...payload })
+    });
+  } catch (e) {
+    console.error(`triggerEmail(${type}) failed:`, e.message);
+  }
+}
+
 // ═══════════════════════════════════════
 // CONVERSATION STATE — stored in Firestore so it survives across requests
 // ═══════════════════════════════════════
@@ -325,7 +341,36 @@ export default async function handler(req, res) {
       case 'approveWithdrawal': {
         const { withdrawalId } = req.body;
         if (!withdrawalId) return res.status(400).json({ error: 'withdrawalId is required.' });
+
+        const wDoc = await db.collection('pendingWithdrawals').doc(withdrawalId).get();
+        if (!wDoc.exists) return res.status(404).json({ error: 'Withdrawal not found.' });
+        const w = wDoc.data();
+
         await db.collection('pendingWithdrawals').doc(withdrawalId).update({ status: 'approved' });
+
+        if (w.uid) {
+          const userSnap = await db.collection('users').doc(w.uid).get();
+          if (userSnap.exists) {
+            const user = userSnap.data();
+            const currentPending = user.pending || 0;
+            const currentWithdrawn = user.withdrawn || 0;
+            // Match admin panel logic exactly: move from pending to withdrawn (no double counting)
+            await db.collection('users').doc(w.uid).update({
+              pending: Math.max(0, currentPending - w.amount),
+              withdrawn: currentWithdrawn + w.amount
+            });
+
+            await triggerEmail('withdrawal_approved', {
+              to: user.email || '',
+              username: w.username || user.username || 'User',
+              amount: `KES ${w.amount}`,
+              receive: `KES ${w.receive || w.amount}`,
+              method: w.method || 'M-PESA',
+              date: new Date().toLocaleString()
+            });
+          }
+        }
+
         return res.status(200).json({ success: true, message: 'Withdrawal approved.' });
       }
 
@@ -340,42 +385,157 @@ export default async function handler(req, res) {
       case 'activateUser': {
         const { uid } = req.body;
         if (!uid) return res.status(400).json({ error: 'uid is required.' });
+
         await db.collection('users').doc(uid).update({ activated: true, activationMethod: 'api' });
-        return res.status(200).json({ success: true, message: 'User activated.' });
+
+        const userSnap = await db.collection('users').doc(uid).get();
+        const user = userSnap.exists ? userSnap.data() : {};
+
+        await triggerEmail('activation', {
+          to: user.email || '',
+          username: user.username || 'User',
+          country: user.country || '',
+          txnId: '',
+          date: new Date().toLocaleString()
+        });
+
+        // Pay referral commissions exactly like the admin panel does:
+        // Level 1 = KES 80, Level 2 = KES 20, Level 3 = KES 10
+        if (user.referredBy) {
+          const snap1 = await db.collection('users').where('referralCode', '==', user.referredBy).limit(1).get();
+          if (!snap1.empty) {
+            const ref1Doc = snap1.docs[0];
+            const ref1 = ref1Doc.data();
+            await ref1Doc.ref.update({
+              balance: admin.firestore.FieldValue.increment(80),
+              totalEarnings: admin.firestore.FieldValue.increment(80),
+              level1Count: admin.firestore.FieldValue.increment(1)
+            });
+            await triggerEmail('referral_level1', {
+              to: ref1.email || '', username: ref1.username || 'User',
+              amount: 'KES 80', referralUsername: user.username || '', level: '1',
+              date: new Date().toLocaleString()
+            });
+
+            if (ref1.referredBy) {
+              const snap2 = await db.collection('users').where('referralCode', '==', ref1.referredBy).limit(1).get();
+              if (!snap2.empty) {
+                const ref2Doc = snap2.docs[0];
+                const ref2 = ref2Doc.data();
+                await ref2Doc.ref.update({
+                  balance: admin.firestore.FieldValue.increment(20),
+                  totalEarnings: admin.firestore.FieldValue.increment(20),
+                  level2Count: admin.firestore.FieldValue.increment(1)
+                });
+                await triggerEmail('referral_level2', {
+                  to: ref2.email || '', username: ref2.username || 'User',
+                  amount: 'KES 20', referralUsername: user.username || '', level: '2',
+                  date: new Date().toLocaleString()
+                });
+
+                if (ref2.referredBy) {
+                  const snap3 = await db.collection('users').where('referralCode', '==', ref2.referredBy).limit(1).get();
+                  if (!snap3.empty) {
+                    const ref3Doc = snap3.docs[0];
+                    const ref3 = ref3Doc.data();
+                    await ref3Doc.ref.update({
+                      balance: admin.firestore.FieldValue.increment(10),
+                      totalEarnings: admin.firestore.FieldValue.increment(10),
+                      level3Count: admin.firestore.FieldValue.increment(1)
+                    });
+                    await triggerEmail('referral_level3', {
+                      to: ref3.email || '', username: ref3.username || 'User',
+                      amount: 'KES 10', referralUsername: user.username || '', level: '3',
+                      date: new Date().toLocaleString()
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        return res.status(200).json({ success: true, message: 'User activated, email sent, referral commissions paid.' });
       }
 
       // ── DEACTIVATE USER ACCOUNT ──
       case 'deactivateUser': {
         const { uid, reason } = req.body;
         if (!uid) return res.status(400).json({ error: 'uid is required.' });
+
+        const userSnap = await db.collection('users').doc(uid).get();
+        const user = userSnap.exists ? userSnap.data() : {};
+
         await db.collection('users').doc(uid).update({
           activated: false,
           deactivatedAt: admin.firestore.FieldValue.serverTimestamp(),
           deactivationReason: reason || 'No reason provided'
         });
-        return res.status(200).json({ success: true, message: 'User deactivated.' });
+
+        await triggerEmail('account_deactivated', {
+          to: user.email || '',
+          username: user.username || 'User',
+          reason: reason || 'No reason provided'
+        });
+
+        return res.status(200).json({ success: true, message: 'User deactivated, email sent.' });
       }
 
       // ── REJECT ACTIVATION ──
       case 'rejectActivation': {
         const { activationId, reason } = req.body;
         if (!activationId) return res.status(400).json({ error: 'activationId is required.' });
+
+        const actDoc = await db.collection('pendingActivations').doc(activationId).get();
+        const act = actDoc.exists ? actDoc.data() : {};
+
         await db.collection('pendingActivations').doc(activationId).update({
           status: 'rejected',
           rejectionReason: reason || 'No reason provided'
         });
-        return res.status(200).json({ success: true, message: 'Activation rejected.' });
+
+        await triggerEmail('activation_rejected', {
+          to: act.email || '',
+          username: act.username || 'User'
+        });
+
+        return res.status(200).json({ success: true, message: 'Activation rejected, email sent.' });
       }
 
       // ── REJECT WITHDRAWAL ──
       case 'rejectWithdrawal': {
         const { withdrawalId, reason } = req.body;
         if (!withdrawalId) return res.status(400).json({ error: 'withdrawalId is required.' });
+
+        const wDoc = await db.collection('pendingWithdrawals').doc(withdrawalId).get();
+        if (!wDoc.exists) return res.status(404).json({ error: 'Withdrawal not found.' });
+        const w = wDoc.data();
+
         await db.collection('pendingWithdrawals').doc(withdrawalId).update({
           status: 'rejected',
           rejectionReason: reason || 'No reason provided'
         });
-        return res.status(200).json({ success: true, message: 'Withdrawal rejected.' });
+
+        if (w.uid) {
+          const userSnap = await db.collection('users').doc(w.uid).get();
+          if (userSnap.exists) {
+            const user = userSnap.data();
+            const currentPending = user.pending || 0;
+            const currentBalance = user.balance || 0;
+            // Match admin panel logic: return the amount from pending to balance
+            await db.collection('users').doc(w.uid).update({
+              pending: Math.max(0, currentPending - w.amount),
+              balance: currentBalance + w.amount
+            });
+
+            await triggerEmail('withdrawal_rejected', {
+              to: user.email || '',
+              username: w.username || user.username || 'User'
+            });
+          }
+        }
+
+        return res.status(200).json({ success: true, message: 'Withdrawal rejected, amount returned to balance, email sent.' });
       }
 
       // ── EDIT USER ACCOUNT (any fields) ──
@@ -387,8 +547,20 @@ export default async function handler(req, res) {
         // Block dangerous fields from being overwritten blindly
         const blocked = ['uid', 'createdAt'];
         blocked.forEach(f => delete updates[f]);
+
         await db.collection('users').doc(uid).update(updates);
-        return res.status(200).json({ success: true, message: 'User updated.' });
+
+        const userSnap = await db.collection('users').doc(uid).get();
+        const user = userSnap.exists ? userSnap.data() : {};
+        const changes = Object.entries(updates).map(([k, v]) => [k, String(v)]);
+
+        await triggerEmail('account_updated', {
+          to: user.email || '',
+          username: user.username || 'User',
+          changes
+        });
+
+        return res.status(200).json({ success: true, message: 'User updated, email sent.' });
       }
 
       // ── DELETE USER ──
@@ -397,6 +569,9 @@ export default async function handler(req, res) {
         if (!uid) return res.status(400).json({ error: 'uid is required.' });
         await db.collection('users').doc(uid).delete();
         return res.status(200).json({ success: true, message: 'User deleted.' });
+        // NOTE: send-email.js has no "account_deleted" template. If you want
+        // users notified when their account is deleted, add that email type
+        // to api/send-email.js first, then call triggerEmail('account_deleted', ...) here.
       }
 
       // ── UPDATE USER BALANCE ──
@@ -404,10 +579,21 @@ export default async function handler(req, res) {
         const { uid, amount, field } = req.body;
         if (!uid || amount === undefined) return res.status(400).json({ error: 'uid and amount are required.' });
         const targetField = field || 'balance';
+
         await db.collection('users').doc(uid).update({
           [targetField]: admin.firestore.FieldValue.increment(amount)
         });
-        return res.status(200).json({ success: true, message: `${targetField} updated by ${amount}.` });
+
+        const userSnap = await db.collection('users').doc(uid).get();
+        const user = userSnap.exists ? userSnap.data() : {};
+
+        await triggerEmail('account_updated', {
+          to: user.email || '',
+          username: user.username || 'User',
+          changes: [[targetField, `${amount >= 0 ? '+' : ''}${amount}`]]
+        });
+
+        return res.status(200).json({ success: true, message: `${targetField} updated by ${amount}, email sent.` });
       }
 
       // ── POST TO COMMUNITY ──
@@ -439,6 +625,58 @@ export default async function handler(req, res) {
           totalEarnings: data.totalEarnings || 0,
           withdrawn: data.withdrawn || 0,
           pending: data.pending || 0
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // GET MY PENDING REQUESTS — real answer for "I submitted my withdraw/
+      // deposit/activation but haven't received it." Looks up the user's
+      // actual pendingWithdrawals, pendingDeposits and pendingActivations
+      // records instead of the bot guessing or saying "technical issue."
+      // ═══════════════════════════════════════
+      case 'getMyPendingRequests': {
+        const { username, uid: uidParam } = req.method === 'GET' ? req.query : req.body;
+        if (!username && !uidParam) return res.status(400).json({ error: 'username or uid is required.' });
+
+        let uid = uidParam;
+        if (!uid) {
+          const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+          if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+          uid = snap.docs[0].id;
+        }
+
+        const fmt = (doc) => {
+          const d = doc.data();
+          return {
+            id: doc.id,
+            status: d.status || 'pending', // pending | approved | rejected
+            amount: d.amount ?? null,
+            txnId: d.txnId || null,
+            method: d.method || null,
+            date: d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toISOString() : null
+          };
+        };
+
+        const sortRecent = (snap) => snap.docs
+          .sort((a, b) => {
+            const ta = a.data().createdAt?.toMillis ? a.data().createdAt.toMillis() : 0;
+            const tb = b.data().createdAt?.toMillis ? b.data().createdAt.toMillis() : 0;
+            return tb - ta;
+          })
+          .slice(0, 5);
+
+        const [wSnap, dSnap, aSnap] = await Promise.all([
+          db.collection('pendingWithdrawals').where('uid', '==', uid).limit(20).get(),
+          db.collection('pendingDeposits').where('uid', '==', uid).limit(20).get(),
+          db.collection('pendingActivations').where('uid', '==', uid).limit(20).get()
+        ]);
+
+        return res.status(200).json({
+          success: true,
+          withdrawals: sortRecent(wSnap).map(fmt),
+          deposits: sortRecent(dSnap).map(fmt),
+          activations: sortRecent(aSnap).map(fmt),
+          note: 'status is one of: pending (still waiting for admin), approved (completed), rejected. Use these exact records — do not guess.'
         });
       }
 
@@ -827,7 +1065,8 @@ export default async function handler(req, res) {
             ],
             userGuideActions: [
               'checkStatus', 'getReferralLink', 'howItWorks', 'getLinks',
-              'getTasksInfo', 'getPayClientsInfo', 'getActivationInfo', 'sendPasswordReset'
+              'getTasksInfo', 'getPayClientsInfo', 'getActivationInfo', 'sendPasswordReset',
+              'getMyPendingRequests'
             ]
           }
         });
