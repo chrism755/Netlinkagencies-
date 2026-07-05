@@ -67,6 +67,34 @@ async function triggerEmail(type, payload) {
   }
 }
 
+// Shared PayHero lookup used by both verifyPayment and resolveDeposit.
+// Scans the account's recent wallet transactions (Get Account Transactions)
+// for one whose transaction_reference matches the M-Pesa code given.
+// Returns the matching transaction object, or null if not found.
+async function findPayHeroTransaction(code) {
+  if (!process.env.PAYHERO_USERNAME || !process.env.PAYHERO_PASSWORD) {
+    throw new Error('PayHero credentials are not configured on the server (missing PAYHERO_USERNAME / PAYHERO_PASSWORD).');
+  }
+  const creds = Buffer.from(`${process.env.PAYHERO_USERNAME}:${process.env.PAYHERO_PASSWORD}`).toString('base64');
+  const per = 100;
+  const maxPages = 5; // scans the ~500 most recent wallet transactions
+
+  for (let page = 1; page <= maxPages; page++) {
+    const phRes = await fetch(`https://backend.payhero.co.ke/api/v2/transactions?page=${page}&per=${per}`, {
+      headers: { Authorization: `Basic ${creds}` }
+    });
+    if (!phRes.ok) break;
+
+    const data = await phRes.json();
+    const txns = data.transactions || [];
+    const match = txns.find(t => String(t.transaction_reference || '').toUpperCase() === code.toUpperCase());
+    if (match) return match;
+
+    if (!data.pagination || !data.pagination.next_page) break;
+  }
+  return null;
+}
+
 // ═══════════════════════════════════════
 // CONVERSATION STATE — stored in Firestore so it survives across requests
 // ═══════════════════════════════════════
@@ -374,6 +402,56 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true, message: 'Withdrawal approved.' });
       }
 
+      // ── GET PENDING DEPOSITS ──
+      case 'getPendingDeposits': {
+        const snap = await db.collection('pendingDeposits').where('status', '==', 'pending').get();
+        const deposits = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        return res.status(200).json({ success: true, count: deposits.length, deposits });
+      }
+
+      // ── APPROVE DEPOSIT ── (matches admin/deposits.html exactly)
+      case 'approveDeposit': {
+        const { depositId } = req.body;
+        if (!depositId) return res.status(400).json({ error: 'depositId is required.' });
+
+        const dDoc = await db.collection('pendingDeposits').doc(depositId).get();
+        if (!dDoc.exists) return res.status(404).json({ error: 'Deposit not found.' });
+        const dep = dDoc.data();
+
+        await db.collection('pendingDeposits').doc(depositId).update({ status: 'approved' });
+
+        if (dep.uid) {
+          const userSnap = await db.collection('users').doc(dep.uid).get();
+          if (userSnap.exists) {
+            const user = userSnap.data();
+            // Credited to BOTH balance and totalEarnings, same as admin panel
+            await db.collection('users').doc(dep.uid).update({
+              balance: (user.balance || 0) + dep.amount,
+              totalEarnings: (user.totalEarnings || 0) + dep.amount
+            });
+
+            await triggerEmail('deposit_approved', {
+              to: user.email || dep.email || '',
+              username: dep.username || user.username || 'User',
+              amount: `KES ${dep.amount}`,
+              date: new Date().toLocaleString()
+            });
+          }
+        }
+
+        return res.status(200).json({ success: true, message: 'Deposit approved and credited, email sent.' });
+      }
+
+      // ── REJECT DEPOSIT ── (admin panel sends no email on manual deposit
+      // rejection either — there's no "deposit_rejected" template in
+      // send-email.js. Add one there first if you want this to notify the user.)
+      case 'rejectDeposit': {
+        const { depositId } = req.body;
+        if (!depositId) return res.status(400).json({ error: 'depositId is required.' });
+        await db.collection('pendingDeposits').doc(depositId).update({ status: 'rejected' });
+        return res.status(200).json({ success: true, message: 'Deposit rejected.' });
+      }
+
       // ── GET PENDING ACTIVATIONS ──
       case 'getPendingActivations': {
         const snap = await db.collection('pendingActivations').where('status', '==', 'pending').get();
@@ -567,8 +645,19 @@ export default async function handler(req, res) {
       case 'deleteUser': {
         const { uid } = req.body;
         if (!uid) return res.status(400).json({ error: 'uid is required.' });
+
         await db.collection('users').doc(uid).delete();
-        return res.status(200).json({ success: true, message: 'User deleted.' });
+
+        // Also remove the Firebase Auth account, otherwise the email stays
+        // permanently "taken" and the person can never register again.
+        // This matches api/admin-user.js's deleteAccount logic exactly.
+        try {
+          await admin.auth().deleteUser(uid);
+        } catch (authErr) {
+          console.log('Auth delete warning:', authErr.message);
+        }
+
+        return res.status(200).json({ success: true, message: 'User deleted (Firestore + Auth).' });
         // NOTE: send-email.js has no "account_deleted" template. If you want
         // users notified when their account is deleted, add that email type
         // to api/send-email.js first, then call triggerEmail('account_deleted', ...) here.
@@ -921,30 +1010,8 @@ export default async function handler(req, res) {
         const code = String(txnId || reference || '').trim();
         if (!code) return res.status(400).json({ error: 'txnId (the M-Pesa transaction code) is required.' });
 
-        if (!process.env.PAYHERO_USERNAME || !process.env.PAYHERO_PASSWORD) {
-          return res.status(500).json({ error: 'PayHero credentials are not configured on the server (missing PAYHERO_USERNAME / PAYHERO_PASSWORD).' });
-        }
-
         try {
-          const creds = Buffer.from(`${process.env.PAYHERO_USERNAME}:${process.env.PAYHERO_PASSWORD}`).toString('base64');
-          const per = 100;
-          const maxPages = 5; // scans the ~500 most recent wallet transactions
-          let match = null;
-
-          for (let page = 1; page <= maxPages; page++) {
-            const phRes = await fetch(`https://backend.payhero.co.ke/api/v2/transactions?page=${page}&per=${per}`, {
-              headers: { Authorization: `Basic ${creds}` }
-            });
-            if (!phRes.ok) break;
-
-            const data = await phRes.json();
-            const txns = data.transactions || [];
-
-            match = txns.find(t => String(t.transaction_reference || '').toUpperCase() === code.toUpperCase());
-            if (match) break;
-
-            if (!data.pagination || !data.pagination.next_page) break;
-          }
+          const match = await findPayHeroTransaction(code);
 
           if (!match) {
             return res.status(200).json({ success: true, status: 'not_found', transactionId: code });
@@ -968,8 +1035,109 @@ export default async function handler(req, res) {
           });
         } catch (e) {
           console.error('PayHero verify error:', e.message);
+          return res.status(500).json({ error: e.message.includes('PayHero credentials') ? e.message : 'Could not reach PayHero right now. Please try again shortly.' });
+        }
+      }
+
+      // ═══════════════════════════════════════
+      // RESOLVE DEPOSIT — for "I paid but my balance wasn't credited."
+      // 1. Looks for an existing pendingDeposits record with this txnId.
+      // 2. If already approved -> tells the user it's already credited (no double-pay).
+      // 3. Otherwise verifies the M-Pesa code against real PayHero transactions.
+      // 4. If PayHero confirms it -> credits balance+totalEarnings right now,
+      //    marks/creates the deposit record as approved, sends deposit_approved email.
+      // 5. If PayHero does NOT find it -> marks/creates it rejected and tells
+      //    the user honestly instead of guessing or crediting blindly.
+      // This covers BOTH manual deposits (submitted but stuck pending) and
+      // STK deposits (payment succeeded but the app never wrote the record,
+      // e.g. connection dropped right after payment).
+      // ═══════════════════════════════════════
+      case 'resolveDeposit': {
+        const { username, txnId } = req.body;
+        if (!username || !txnId) return res.status(400).json({ error: 'username and txnId are required.' });
+        const code = String(txnId).trim();
+
+        const userSnap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (userSnap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+        const userDoc = userSnap.docs[0];
+        const user = userDoc.data();
+
+        // Has this exact M-Pesa code already been recorded (by anyone)?
+        const existingSnap = await db.collection('pendingDeposits').where('txnId', '==', code).limit(1).get();
+        const existing = existingSnap.empty ? null : existingSnap.docs[0];
+
+        if (existing && existing.data().status === 'approved') {
+          return res.status(200).json({
+            success: true,
+            status: 'already_credited',
+            message: 'This transaction was already verified and credited to the account balance earlier.',
+            amount: existing.data().amount
+          });
+        }
+
+        if (existing && existing.data().uid && existing.data().uid !== userDoc.id) {
+          // Same M-Pesa code claimed under a different account — do not credit.
+          return res.status(200).json({
+            success: true,
+            status: 'mismatch',
+            message: 'This transaction ID is already linked to a different account. Please double-check the code or contact an admin.'
+          });
+        }
+
+        let match;
+        try {
+          match = await findPayHeroTransaction(code);
+        } catch (e) {
+          console.error('resolveDeposit PayHero error:', e.message);
           return res.status(500).json({ error: 'Could not reach PayHero right now. Please try again shortly.' });
         }
+
+        if (!match || !(match.amount > 0)) {
+          if (existing) {
+            await existing.ref.update({ status: 'rejected' });
+          }
+          return res.status(200).json({
+            success: true,
+            status: 'not_found',
+            message: 'This transaction ID was not found in our payment records. Please double-check the M-Pesa code, or it may not have gone through.'
+          });
+        }
+
+        const amount = Math.abs(match.amount);
+
+        if (existing) {
+          await existing.ref.update({ status: 'approved' });
+        } else {
+          await db.collection('pendingDeposits').add({
+            uid: userDoc.id,
+            username: user.username || username,
+            email: user.email || '',
+            amount,
+            txnId: code,
+            status: 'approved',
+            source: 'bot-resolveDeposit',
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+          });
+        }
+
+        await db.collection('users').doc(userDoc.id).update({
+          balance: (user.balance || 0) + amount,
+          totalEarnings: (user.totalEarnings || 0) + amount
+        });
+
+        await triggerEmail('deposit_approved', {
+          to: user.email || '',
+          username: user.username || username,
+          amount: `KES ${amount}`,
+          date: new Date().toLocaleString()
+        });
+
+        return res.status(200).json({
+          success: true,
+          status: 'credited',
+          message: `Verified with PayHero and credited KES ${amount} to the account balance.`,
+          amount
+        });
       }
 
       // ═══════════════════════════════════════
@@ -1014,9 +1182,10 @@ export default async function handler(req, res) {
       }
 
       // ═══════════════════════════════════════
-      // SEND PASSWORD RESET — generates a REAL Firebase password reset link
-      // for the account's actual email and emails it, instead of the bot
-      // just pointing to the reset page with no real action behind it.
+      // SEND PASSWORD RESET — reuses your existing api/reset-password.js
+      // endpoint, which correctly builds a link to your own /do-reset page
+      // (not Firebase's default page). Keeps one source of truth for the
+      // reset flow instead of duplicating it here with a different link.
       // ═══════════════════════════════════════
       case 'sendPasswordReset': {
         const { username } = req.method === 'GET' ? req.query : req.body;
@@ -1029,21 +1198,13 @@ export default async function handler(req, res) {
         if (!user.email) return res.status(400).json({ error: 'This account has no email on file.' });
 
         try {
-          const resetLink = await admin.auth().generatePasswordResetLink(user.email, {
-            url: 'https://netlinkagencies.linkpc.net/login'
+          const r = await fetch('https://netlinkagencies.vercel.app/api/reset-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: user.email, username: user.username })
           });
-
-          await codeMailer.sendMail({
-            from: `"NETLINK AGENCIES" <${process.env.GMAIL_USER}>`,
-            to: user.email,
-            subject: '🔐 Reset Your NETLINK AGENCIES Password',
-            html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
-              <h2 style="margin:0 0 16px;font-size:20px;font-weight:800;">Reset Your Password</h2>
-              <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">Hi ${user.username}, we received a request (via WhatsApp support) to reset your password. Click below — this link expires in 1 hour.</p>
-              <div style="text-align:center;margin:24px 0;"><a href="${resetLink}" style="display:inline-block;background:#E91E8C;color:#fff;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;">Reset Password</a></div>
-              <p style="margin:0 0 18px;font-size:14px;color:#666;">If you didn't request this, you can safely ignore this email.</p>
-            </div>`
-          });
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || 'reset-password endpoint failed');
 
           return res.status(200).json({ success: true, message: 'Password reset email sent.', maskedEmail: maskEmail(user.email) });
         } catch (e) {
@@ -1059,9 +1220,10 @@ export default async function handler(req, res) {
             adminActions: [
               'getUser', 'listUsers', 'getBalance', 'editUser', 'deleteUser',
               'getPendingWithdrawals', 'approveWithdrawal', 'rejectWithdrawal',
+              'getPendingDeposits', 'approveDeposit', 'rejectDeposit',
               'getPendingActivations', 'activateUser', 'deactivateUser', 'rejectActivation',
               'updateBalance', 'postCommunity',
-              'sendDeactivationCode', 'verifyDeactivationCode', 'verifyPayment'
+              'sendDeactivationCode', 'verifyDeactivationCode', 'verifyPayment', 'resolveDeposit'
             ],
             userGuideActions: [
               'checkStatus', 'getReferralLink', 'howItWorks', 'getLinks',
