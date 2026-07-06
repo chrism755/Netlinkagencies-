@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // ═══════════════════════════════════════
-// EMAIL — used for the deactivation confirmation code (sent as "Netlink Auth")
+// EMAIL — used for verification codes (sent as "Netlink AI Support Verification")
 // Reuses the same Gmail credentials as api/send-email.js
 // ═══════════════════════════════════════
 const codeMailer = nodemailer.createTransport({
@@ -26,8 +26,16 @@ const codeMailer = nodemailer.createTransport({
 });
 
 function generateCode() {
-  // 8-digit numeric code
+  // 8-digit numeric code (used for deactivation)
   return String(Math.floor(10000000 + Math.random() * 90000000));
+}
+
+function generateMixedCode() {
+  // 8-character mixed letters+numbers (used for general identity verification)
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no O/0/I/1 to avoid confusion
+  let code = '';
+  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
 }
 
 function maskEmail(email) {
@@ -39,7 +47,7 @@ function maskEmail(email) {
 
 async function sendCodeEmail(to, username, code) {
   await codeMailer.sendMail({
-    from: `"Netlink Auth" <${process.env.GMAIL_USER}>`,
+    from: `"Netlink AI Support Verification" <${process.env.GMAIL_USER}>`,
     to,
     subject: '🔐 Your Netlink Agencies Deactivation Code',
     html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
@@ -461,8 +469,24 @@ export default async function handler(req, res) {
 
       // ── ACTIVATE USER ACCOUNT ──
       case 'activateUser': {
-        const { uid } = req.body;
+        const { uid, txnId } = req.body;
         if (!uid) return res.status(400).json({ error: 'uid is required.' });
+
+        // ── ONE TRANSACTION ID = ONE ACTIVATION, EVER ──
+        // Checked and recorded server-side so it can't be bypassed by the
+        // bot's conversation logic retrying or rephrasing.
+        if (txnId) {
+          const code = String(txnId).trim().toUpperCase();
+          const usedRef = db.collection('activationTxnLog').doc(code);
+          const usedDoc = await usedRef.get();
+          if (usedDoc.exists) {
+            return res.status(409).json({
+              success: false,
+              error: `This transaction ID was already used to activate the account "${usedDoc.data().username}". Please use a different transaction ID, or contact support if this is a mistake.`,
+              alreadyUsedBy: usedDoc.data().username
+            });
+          }
+        }
 
         await db.collection('users').doc(uid).update({ activated: true, activationMethod: 'api' });
 
@@ -531,6 +555,16 @@ export default async function handler(req, res) {
               }
             }
           }
+        }
+
+        // Lock this transaction ID to this account so it can never be reused
+        if (txnId) {
+          const code = String(txnId).trim().toUpperCase();
+          await db.collection('activationTxnLog').doc(code).set({
+            uid,
+            username: user.username || '',
+            usedAt: admin.firestore.FieldValue.serverTimestamp()
+          });
         }
 
         return res.status(200).json({ success: true, message: 'User activated, email sent, referral commissions paid.' });
@@ -925,6 +959,89 @@ export default async function handler(req, res) {
       }
 
       // ═══════════════════════════════════════
+      // SEND VERIFICATION CODE — general identity check. Use this before
+      // disclosing sensitive account data or doing anything account-specific
+      // (not needed for public/general questions). Emails an 8-character
+      // mixed letters+numbers code (e.g. "XG5H8KJ9") to the account's real
+      // email on file.
+      // ═══════════════════════════════════════
+      case 'sendVerificationCode': {
+        const { username } = req.method === 'GET' ? req.query : req.body;
+        if (!username) return res.status(400).json({ error: 'username is required.' });
+
+        const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+
+        const userDoc = snap.docs[0];
+        const user = userDoc.data();
+        if (!user.email) return res.status(400).json({ error: 'This account has no email on file, so a code cannot be sent.' });
+
+        const code = generateMixedCode();
+        const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        await db.collection('verificationCodes').doc(userDoc.id).set({
+          code,
+          expiresAt,
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+        try {
+          await codeMailer.sendMail({
+            from: `"Netlink AI Support Verification" <${process.env.GMAIL_USER}>`,
+            to: user.email,
+            subject: '🔐 Verify Your NETLINK AGENCIES Account',
+            html: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
+              <h2 style="margin:0 0 16px;font-size:20px;font-weight:800;">Verify It's You</h2>
+              <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">Hi ${user.username}, someone is requesting account help via our WhatsApp support bot. Use this code to confirm it's really you:</p>
+              <p style="font-size:26px;font-weight:800;letter-spacing:4px;text-align:center;margin:20px 0;font-family:monospace;">${code}</p>
+              <p style="margin:0 0 18px;font-size:14px;color:#666;">This code expires in 10 minutes. If you didn't request this, ignore this email.</p>
+            </div>`
+          });
+        } catch (e) {
+          console.error('sendVerificationCode email failed:', e.message);
+          return res.status(500).json({ error: 'Could not send the verification email. Please try again shortly.' });
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Verification code sent to the email on file.',
+          maskedEmail: maskEmail(user.email)
+        });
+      }
+
+      // ═══════════════════════════════════════
+      // VERIFY ACCOUNT CODE — checks the general identity-verification code.
+      // ═══════════════════════════════════════
+      case 'verifyAccountCode': {
+        const { username, code } = req.method === 'GET' ? req.query : req.body;
+        if (!username || !code) return res.status(400).json({ error: 'username and code are required.' });
+
+        const snap = await db.collection('users').where('username', '==', username).limit(1).get();
+        if (snap.empty) return res.status(404).json({ error: `No account found with username "${username}".` });
+
+        const userDoc = snap.docs[0];
+        const codeSnap = await db.collection('verificationCodes').doc(userDoc.id).get();
+
+        if (!codeSnap.exists) {
+          return res.status(200).json({ success: true, verified: false, reason: 'No pending code for this account. Please request a new one.' });
+        }
+
+        const codeData = codeSnap.data();
+
+        if (Date.now() > codeData.expiresAt) {
+          await db.collection('verificationCodes').doc(userDoc.id).delete();
+          return res.status(200).json({ success: true, verified: false, reason: 'Code expired. Please request a new one.' });
+        }
+
+        if (String(code).trim().toUpperCase() !== String(codeData.code).toUpperCase()) {
+          return res.status(200).json({ success: true, verified: false, reason: 'Incorrect code.' });
+        }
+
+        await db.collection('verificationCodes').doc(userDoc.id).delete();
+        return res.status(200).json({ success: true, verified: true, uid: userDoc.id, username: userDoc.data().username });
+      }
+
+      // ═══════════════════════════════════════
       // SEND DEACTIVATION CODE — emails an 8-digit code to the account's
       // email on file, so the bot can confirm the requester really owns
       // the account before deactivating it.
@@ -1228,7 +1345,7 @@ export default async function handler(req, res) {
             userGuideActions: [
               'checkStatus', 'getReferralLink', 'howItWorks', 'getLinks',
               'getTasksInfo', 'getPayClientsInfo', 'getActivationInfo', 'sendPasswordReset',
-              'getMyPendingRequests'
+              'getMyPendingRequests', 'sendVerificationCode', 'verifyAccountCode'
             ]
           }
         });
