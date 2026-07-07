@@ -124,7 +124,7 @@ input::placeholder{color:#fff;opacity:.5;}
     </div>
     <div class="polling-bar" id="scan-msg" style="display:none;align-items:center;gap:8px;background:rgba(255,77,184,.1);border:1.5px solid var(--pk2);color:#FF9DD6;border-radius:10px;padding:12px;font-size:13px;font-weight:700;margin:10px 0;"><span class="spinner"></span>Scanning your screenshot...</div>
     <div class="ok" id="scan-result"></div>
-    <div class="fg" id="confirm-fg" style="display:none;"><label>Confirm Number of Viewers</label><input id="confirm-views" type="number"/></div>
+    <div id="confirm-fg" style="display:none;"></div>
     <div class="ok" id="wa-ok"></div>
     <div class="err" id="wa-err"></div>
     <button class="btn" id="wa-btn" onclick="confirmSubmitWA()" style="display:none;">✅ Confirm & Submit</button>
@@ -341,11 +341,11 @@ window.handleScreenshot=function(input){
         return;
       }
 
-      ok.innerHTML='✅ Verified! We detected <strong>'+viewCount+' viewers</strong> in your WhatsApp status screenshot. Please confirm this number below before submitting.';
+      ok.innerHTML='✅ Verified! We detected <strong>'+viewCount+' viewers</strong>. Submitting automatically...';
       ok.style.display='block';
-      document.getElementById('confirm-views').value=viewCount;
-      confirmFg.style.display='block';
-      btn.style.display='block';
+      // Auto-submit directly — no manual confirm needed
+      window._autoViewCount = viewCount;
+      await window.confirmSubmitWA(viewCount);
 
     }catch(e){
       scanMsg.style.display='none';
@@ -356,12 +356,12 @@ window.handleScreenshot=function(input){
   r.readAsDataURL(file);
 };
 
-window.confirmSubmitWA=async function(){
+window.confirmSubmitWA=async function(finalViews){
   const ok=document.getElementById('wa-ok'),err=document.getElementById('wa-err'),btn=document.getElementById('wa-btn');
   ok.style.display='none';err.style.display='none';
 
-  const finalViews=parseInt(document.getElementById('confirm-views').value)||0;
-  if(!finalViews){err.textContent='⚠️ Please enter a valid number of viewers.';err.style.display='block';return;}
+  finalViews=parseInt(finalViews||window._autoViewCount)||0;
+  if(!finalViews){err.textContent='⚠️ Could not detect viewer count. Please upload a clearer screenshot.';err.style.display='block';return;}
 
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Submitting...';
 
