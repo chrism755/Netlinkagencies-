@@ -9,24 +9,38 @@ const transporter = nodemailer.createTransport({
 });
 
 const senderName = 'NETLINK AGENCIES';
-const replyFooter = "If you have any questions, just reply to this email.";
+const replyFooter = "Regards, NETLINK AGENCIES Team";
 
 function renderEmail(heading, bodyHtml, footer, headingColor) {
   return `
-  <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
-    <h2 style="margin:0 0 16px;font-size:${headingColor ? '24px' : '20px'};font-weight:800;color:${headingColor || '#1a1a1a'};">${heading}</h2>
-    ${bodyHtml}
-    <p style="margin:20px 0 0;font-size:12px;color:#999;">${footer}</p>
+  <div style="background-color:#121212;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+    <div style="max-width:520px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.5);">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#E91E8C,#FF4DB8);padding:28px 24px;text-align:center;">
+        <h1 style="margin:0 0 8px;color:#fff;font-size:20px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">NETLINK AGENCIES</h1>
+        <h2 style="margin:0;color:rgba(255,255,255,0.92);font-size:15px;font-weight:700;letter-spacing:0.5px;">${heading}</h2>
+      </div>
+      <!-- Body -->
+      <div style="background:#1e1e1e;padding:32px 28px;">
+        ${bodyHtml}
+      </div>
+      <!-- Footer -->
+      <div style="background:#181818;padding:20px 28px;border-top:1px solid #2a2a2a;text-align:center;">
+        <p style="margin:0 0 4px;font-size:13px;color:#aaa;font-weight:600;">${footer}</p>
+        <p style="margin:0 0 4px;font-size:12px;color:#666;">Happy Networking with NETLINK AGENCIES</p>
+        <p style="margin:0;font-size:11px;color:#555;">&copy;2026 NETLINK AGENCIES Inc</p>
+      </div>
+    </div>
   </div>`;
 }
 
 function p(text) {
-  return `<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">${text}</p>`;
+  return `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#cccccc;">${text}</p>`;
 }
 
 function receiptTable(rows) {
-  return `<table style="width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px;">
-    ${rows.map(([k, v]) => `<tr><td style="padding:6px 0;color:#888;border-bottom:1px solid #eee;">${k}</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#1a1a1a;border-bottom:1px solid #eee;">${v}</td></tr>`).join('')}
+  return `<table style="width:100%;border-collapse:collapse;margin:0 0 20px;font-size:14px;">
+    ${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#888;border-bottom:1px solid #2a2a2a;">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#ffffff;border-bottom:1px solid #2a2a2a;">${v}</td></tr>`).join('')}
   </table>`;
 }
 
@@ -41,11 +55,11 @@ export default async function handler(req, res) {
 
   const subjects = {
     activation_pending: `🚀 Hello ${username} 🎉`,
-    activation: 'Your account is now activated ✅',
+    activation: `Welcome to NETLINK AGENCIES — Your Account is now activated! 🎉`,
     activation_rejected: `Hello ${username}.`,
     stk_failed: `Hello ${username}.`,
-    withdrawal_submitted: 'Withdraw Request 💵',
-    withdrawal_approved: '🚀 Withdraw Processed 💵',
+    withdrawal_submitted: 'Withdraw Request 🚀',
+    withdrawal_approved: 'Withdraw Approved — Congratulations 🎉',
     withdrawal_rejected: 'Withdraw Request Update ❌',
     referral_level1: '🎉 you Earned a Referral Bonus 💲',
     referral_level2: '🎉 you Earned a Referral Bonus 💲',
@@ -60,8 +74,8 @@ export default async function handler(req, res) {
     account_updated: '🔧 Your Account Details Were Updated',
     password_reset_by_admin: '🔐 Your Password Has Been Reset',
     client_payment_sent: 'Paid for Client ✅',
-    client_payment_received: `Hello ${username}`,
-    password_reset: '🔐 Reset Your NETLINK AGENCIES Password'
+    client_payment_received: `NETLINK AGENCIES XCY`,
+    password_reset: 'NETLINK AGENCIES Reset Password'
   };
 
   const emails = {
@@ -72,10 +86,10 @@ export default async function handler(req, res) {
     ),
 
     activation: renderEmail(
-      'Your account is activated ✅',
-      p(`Hi ${username}, great news — your account has been reviewed and activated. You can now log in and start doing tasks. NETLINK AGENCIES 🎉`),
-      replyFooter,
-      '#00C853'
+      'Your Account is Activated 🎉',
+      p(`Hi <strong style="color:#fff;">${username}</strong>, your NETLINK AGENCIES account is ready. You can now log in to your account and start earning.`) +
+      `<div style="text-align:left;margin-top:20px;"><a href="${req.body.dashboardLink || 'https://netlinkagencies.linkpc.net'}" style="display:inline-block;background:linear-gradient(135deg,#E91E8C,#FF4DB8);color:#fff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">Open Dashboard →</a></div>`,
+      replyFooter
     ),
 
     activation_rejected: renderEmail(
@@ -244,20 +258,25 @@ export default async function handler(req, res) {
 
     password_reset: renderEmail(
       'Reset Your Password 🔐',
-      p(`Hi ${username}, we received a request to reset your NETLINK AGENCIES password.`) +
-      p(`Click the button below to reset your password. This link expires in <strong>1 hour</strong>.`) +
-      `<div style="text-align:center;margin:24px 0;">
+      p(`<em style="color:#888;">This is an automatically generated email, please do not reply.</em>`) +
+      p(`To change your password, use the link below to reset your password. This link expires after <strong style="color:#fff;">48 hours</strong>.`) +
+      `<div style="text-align:center;margin:28px 0;">
         <a href="${req.body.resetLink}" style="display:inline-block;background:linear-gradient(135deg,#E91E8C,#FF4DB8);color:#fff;padding:14px 36px;border-radius:10px;text-decoration:none;font-weight:800;font-size:15px;">Reset Password</a>
       </div>` +
-      p(`Or copy and paste this link into your browser:<br/><a href="${req.body.resetLink}" style="color:#E91E8C;word-break:break-all;">${req.body.resetLink}</a>`) +
-      p(`If you did not request a password reset, you can safely ignore this email. Your password will not change.`),
+      p(`If you did not request this change, please ignore this message.`) +
+      `<div style="margin-top:24px;padding-top:16px;border-top:1px solid #2a2a2a;">
+        <p style="margin:0 0 4px;font-size:13px;color:#aaa;">Best Regards,</p>
+        <p style="margin:0 0 4px;font-size:13px;color:#fff;font-weight:700;">NETLINK AGENCIES Team</p>
+        <p style="margin:0;font-size:12px;color:#888;">NETLINK AGENCIES Help Center: <a href="http://netlinkagencies.linkpc.net/support" style="color:#E91E8C;text-decoration:none;">netlinkagencies.linkpc.net/support</a></p>
+      </div>`,
       replyFooter,
       '#E91E8C'
     ),
 
     client_payment_received: renderEmail(
       `Hello ${username}`,
-      p(`Dear ${username}, ${payerUsername} has paid KSh ${amount} for your activation fee.`) +
+      p(`Hello <strong style="color:#fff;">${username}</strong>,`) +
+      p(`Good news, your friend <strong style="color:#fff;">${payerUsername}</strong> has paid <strong style="color:#fff;">KSh ${amount}</strong> for your account activation fee.`) +
       receiptTable([
         [`Amount Paid By ${payerUsername}`, `KSh ${amount}`],
         ['Amount You Still Need To Pay', `KSh ${remaining}`],
