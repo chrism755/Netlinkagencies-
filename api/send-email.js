@@ -13,20 +13,33 @@ const replyFooter = "If you have any questions, just reply to this email.";
 
 function renderEmail(heading, bodyHtml, footer, headingColor) {
   return `
-  <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;padding:24px;color:#1a1a1a;">
-    <h2 style="margin:0 0 16px;font-size:${headingColor ? '24px' : '20px'};font-weight:800;color:${headingColor || '#1a1a1a'};">${heading}</h2>
-    ${bodyHtml}
-    <p style="margin:20px 0 0;font-size:12px;color:#999;">${footer}</p>
+  <div style="background-color:#121212;padding:32px 0;font-family:Arial,Helvetica,sans-serif;">
+    <div style="max-width:520px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.5);">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#E91E8C,#FF4DB8);padding:28px 24px;text-align:center;">
+        <h1 style="margin:0 0 8px;color:#fff;font-size:20px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">NETLINK AGENCIES</h1>
+        <h2 style="margin:0;color:rgba(255,255,255,0.92);font-size:15px;font-weight:700;letter-spacing:0.5px;">${heading}</h2>
+      </div>
+      <!-- Body -->
+      <div style="background:#1e1e1e;padding:32px 28px;">
+        ${bodyHtml}
+      </div>
+      <!-- Footer -->
+      <div style="background:#181818;padding:16px 28px;border-top:1px solid #2a2a2a;text-align:center;">
+        <p style="margin:0;font-size:12px;color:#666;">NETLINK AGENCIES &mdash; <a href="https://netlinkagencies.linkpc.net" style="color:#E91E8C;text-decoration:none;">netlinkagencies.linkpc.net</a></p>
+        <p style="margin:6px 0 0;font-size:11px;color:#555;">${footer}</p>
+      </div>
+    </div>
   </div>`;
 }
 
 function p(text) {
-  return `<p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#333;">${text}</p>`;
+  return `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#cccccc;">${text}</p>`;
 }
 
 function receiptTable(rows) {
-  return `<table style="width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px;">
-    ${rows.map(([k, v]) => `<tr><td style="padding:6px 0;color:#888;border-bottom:1px solid #eee;">${k}</td><td style="padding:6px 0;text-align:right;font-weight:700;color:#1a1a1a;border-bottom:1px solid #eee;">${v}</td></tr>`).join('')}
+  return `<table style="width:100%;border-collapse:collapse;margin:0 0 20px;font-size:14px;">
+    ${rows.map(([k, v]) => `<tr><td style="padding:8px 0;color:#888;border-bottom:1px solid #2a2a2a;">${k}</td><td style="padding:8px 0;text-align:right;font-weight:700;color:#ffffff;border-bottom:1px solid #2a2a2a;">${v}</td></tr>`).join('')}
   </table>`;
 }
 
@@ -72,10 +85,15 @@ export default async function handler(req, res) {
     ),
 
     activation: renderEmail(
-      'Your account is activated ✅',
-      p(`Hi ${username}, great news — your account has been reviewed and activated. You can now log in and start doing tasks. NETLINK AGENCIES 🎉`),
-      replyFooter,
-      '#00C853'
+      'Your Account is Activated ✅',
+      p(`Hi <strong style="color:#fff;">${username}</strong>, great news — your account has been reviewed and activated. You can now log in and start doing tasks. 🎉`) +
+      receiptTable([
+        ['Username', username],
+        ['Country', country || 'N/A'],
+        ['Date', date]
+      ]) +
+      `<div style="text-align:left;margin-top:8px;"><a href="${req.body.dashboardLink || 'https://netlinkagencies.linkpc.net'}" style="display:inline-block;background:linear-gradient(135deg,#E91E8C,#FF4DB8);color:#fff;padding:13px 30px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">Go to Dashboard</a></div>`,
+      replyFooter
     ),
 
     activation_rejected: renderEmail(
