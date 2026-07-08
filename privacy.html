@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Privacy — NETLINK AGENCIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:100vh;}
+.navbar{background:rgba(26,0,16,.95);border-bottom:1px solid #6b0040;padding:14px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.back-btn{color:#FF4DB8;text-decoration:none;font-size:18px;}
+.nav-title{font-size:15px;font-weight:900;}
+.content{padding:24px 20px;max-width:560px;margin:0 auto;}
+h1{font-size:22px;font-weight:900;color:#FF4DB8;margin-bottom:6px;}
+.subtitle{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px;}
+.card{background:#2d0019;border:1px solid #6b0040;border-radius:14px;padding:18px;margin-bottom:14px;}
+.card h2{font-size:14px;font-weight:800;color:#FF4DB8;margin-bottom:10px;}
+.card p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:8px;}
+.card p:last-child{margin-bottom:0;}
+.card ul{padding-left:18px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.9;}
+.highlight{background:rgba(233,30,140,.1);border-left:3px solid #E91E8C;padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px;color:rgba(255,255,255,.9);line-height:1.7;margin:10px 0;}
+.btn{width:100%;padding:13px;border:1.5px solid #E91E8C;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:transparent;color:#FF4DB8;margin-top:10px;}
+.ok{background:rgba(0,230,118,.1);border:1px solid #00E676;color:#69F0AE;border-radius:9px;padding:11px;font-size:13px;margin-top:10px;display:none;text-align:center;}
+.updated{font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-top:20px;padding-bottom:30px;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="/" class="back-btn">←</a>
+  <div class="nav-title">🔏 Privacy</div>
+</nav>
+<div class="content">
+  <h1>Don't Share My Personal Information</h1>
+  <p class="subtitle">Your privacy rights at NETLINK AGENCIES</p>
+
+  <div class="highlight">🔏 You have the right to opt out of sharing your personal information with third parties for marketing or commercial purposes.</div>
+
+  <div class="card">
+    <h2>📋 What We Collect</h2>
+    <ul>
+      <li>Full name and username</li>
+      <li>Email address and phone number</li>
+      <li>Country of residence</li>
+      <li>Payment transaction records (no card details stored)</li>
+      <li>Platform activity and earnings history</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🎯 How We Use It</h2>
+    <ul>
+      <li>To manage and operate your account</li>
+      <li>To process payments and withdrawals</li>
+      <li>To send account notifications via email</li>
+      <li>To verify identity and prevent fraud</li>
+      <li>To improve our platform</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🚫 What We Never Do</h2>
+    <ul>
+      <li>We do NOT sell your data to third parties</li>
+      <li>We do NOT share your data with advertisers</li>
+      <li>We do NOT store your M-Pesa PIN or PayPal password</li>
+      <li>We do NOT use your data for unauthorized marketing</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🤝 Third-Party Services</h2>
+    <ul>
+      <li><strong>Google Firebase</strong> — Account storage & authentication</li>
+      <li><strong>PayHero</strong> — M-Pesa payment processing</li>
+      <li><strong>PayPal</strong> — International payment processing</li>
+      <li><strong>Gmail/Resend</strong> — Email notifications only</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>🗑️ Your Rights</h2>
+    <ul>
+      <li>Request a copy of your personal data</li>
+      <li>Request correction of inaccurate data</li>
+      <li>Request deletion of your account and data</li>
+      <li>Opt out of marketing communications</li>
+    </ul>
+    <p style="margin-top:10px;">Contact us: <strong style="color:#FF4DB8;">info@netlinkagencies.co.ke</strong></p>
+  </div>
+
+  <div class="card">
+    <h2>⛔ Opt Out of Data Sharing</h2>
+    <p>Click below to submit an opt-out request. We will process it within 30 days.</p>
+    <div id="ok" class="ok">✅ Opt-out request submitted. We will process it within 30 days and confirm via email.</div>
+    <button class="btn" onclick="optOut()">🚫 Opt Out of Personal Data Sharing</button>
+  </div>
+
+  <p class="updated">Last updated: July 2026 · © 2026 NETLINK AGENCIES Inc.</p>
+</div>
+<script>
+function optOut(){
+  document.getElementById('ok').style.display='block';
+  window.location.href='mailto:info@netlinkagencies.co.ke?subject=Data%20Opt-Out%20Request&body=I%20would%20like%20to%20opt%20out%20of%20personal%20data%20sharing%20on%20NETLINK%20AGENCIES.';
+}
+</script>
+</body>
+</html>
