@@ -142,7 +142,7 @@ input::placeholder{color:#fff;opacity:.4;}
     <strong>Note!</strong> Minimum of withdrawing is <strong><span id="min-withdraw"><span class="kes-val" data-kes="150">KES 150</span></span></strong> on your account balance.
     Your withdrawn amount will be disbursed to <strong id="user-phone">loading...</strong>. 
     If this is not the number to receive payment click 
-    <button class="verify-btn" onclick="window.open('https://wa.me/254706494401','_blank')">Verify Me</button>
+    <button class="verify-btn" onclick="window.open('#','_blank')" data-wa-page="wa-dyn-dbcashout">Verify Me</button>
     and send a message before withdrawing with a reason.<br><br>
     Happy networking with <strong>NETLINK AGENCIES</strong> 🎉
   </div>
@@ -431,6 +431,25 @@ window.openSB=()=>{document.getElementById('sb').classList.add('open');document.
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList.toggle('open');el.querySelector('.arr').textContent=c.classList.contains('open')?'▴':'▾';};
 window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');};
+</script>
+
+<script type="module">
+(async()=>{
+  try{
+    const {initializeApp,getApps}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const {getFirestore,doc,getDoc}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _app=getApps().length?getApps()[0]:initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+    const _db=getFirestore(_app);
+    const _snap=await getDoc(doc(_db,'settings','socialLinks'));
+    if(_snap.exists()){
+      const _link=_snap.data().waDbCashout;
+      if(_link) document.querySelectorAll('[data-wa-page="wa-dyn-dbcashout"]').forEach(el=>{
+        if(el.tagName==='A') el.href=_link;
+        else el.setAttribute('onclick',`window.open('${_link}','_blank')`);
+      });
+    }
+  }catch(_e){console.log('wa-load:',_e);}
+})();
 </script>
 </body>
 </html>

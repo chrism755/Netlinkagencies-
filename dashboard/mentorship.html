@@ -159,7 +159,7 @@ select option{background:var(--bg3);}
 <div class="card"><h3>📌 Tip 4 — Answer All Quizzes</h3><p>Trivia Quiz, Math Quiz, and Daily Surveys give you <span class="kes-val" data-kes="50">KES 50</span> per correct answer. Answer all 6 questions correctly = <span class="kes-val" data-kes="300">KES 300</span> per week per quiz type. Never skip a quiz!</p></div>
 <div class="card"><h3>📌 Tip 5 — Deposit and Grow</h3><p>The more you deposit, the more you can pay for clients and earn commissions. Use Forex Trading with your account balance to multiply your earnings!</p></div>
 <div class="card"><h3>💬 Need Personal Mentorship?</h3><p>Contact our mentor directly for personalized guidance on growing your NETLINK business.</p>
-<button class="btn btn-wa" onclick="window.open('https://wa.me/254706494401','_blank')">💬 WhatsApp Mentor</button>
+<button class="btn btn-wa" onclick="window.open('#','_blank')" data-wa-page="wa-dyn-mentorship">💬 WhatsApp Mentor</button>
 <button class="btn btn-tg" onclick="window.open('https://t.me/Mentorfai','_blank')">✈️ Telegram Channel</button>
 </div>
 
@@ -205,6 +205,25 @@ window.toggleSub=function(id,el){const c=document.getElementById(id);c.classList
 window.doLogout=async()=>{await signOut(auth);window.location.replace("/login");};
 window.answerQ=function(el,c,a){const opts=el.closest(".qopts").querySelectorAll(".qo");opts.forEach((o,i)=>{o.onclick=null;if(i===a)o.classList.add("correct");});if(c!==a)el.classList.add("wrong");};
 
+</script>
+
+<script type="module">
+(async()=>{
+  try{
+    const {initializeApp,getApps}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const {getFirestore,doc,getDoc}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _app=getApps().length?getApps()[0]:initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+    const _db=getFirestore(_app);
+    const _snap=await getDoc(doc(_db,'settings','socialLinks'));
+    if(_snap.exists()){
+      const _link=_snap.data().waMentorship;
+      if(_link) document.querySelectorAll('[data-wa-page="wa-dyn-mentorship"]').forEach(el=>{
+        if(el.tagName==='A') el.href=_link;
+        else el.setAttribute('onclick',`window.open('${_link}','_blank')`);
+      });
+    }
+  }catch(_e){console.log('wa-load:',_e);}
+})();
 </script>
 </body>
 </html>
