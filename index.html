@@ -440,7 +440,7 @@ body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:10
         </div>
         <div><div class="social-name">TikTok</div><div class="social-handle">@netlinkagencies</div></div>
       </div>
-      <a href="#" class="social-btn" style="background:#fe2c55;color:#fff;">Follow</a>
+      <a href="#" id="idx-tt" class="social-btn" style="background:#fe2c55;color:#fff;">Follow</a>
     </div>
 
     <!-- Telegram -->
@@ -451,7 +451,7 @@ body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:10
         </div>
         <div><div class="social-name">Telegram</div><div class="social-handle">NETLINK AGENCIES Channel</div></div>
       </div>
-      <a href="#" class="social-btn" style="background:rgba(255,255,255,.25);color:#fff;">Join Channel</a>
+      <a href="#" id="idx-tg" class="social-btn" style="background:rgba(255,255,255,.25);color:#fff;">Join Channel</a>
     </div>
 
     <!-- WhatsApp -->
@@ -462,7 +462,7 @@ body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:10
         </div>
         <div><div class="social-name">WhatsApp</div><div class="social-handle">Message Us on WhatsApp</div></div>
       </div>
-      <a href="https://wa.me/254706494401" class="social-btn" style="background:rgba(255,255,255,.25);color:#fff;">Message Us</a>
+      <a href="#" data-wa-page="wa-dyn-index" id="idx-wa" class="social-btn" style="background:rgba(255,255,255,.25);color:#fff;">Message Us</a>
     </div>
 
     <!-- Email -->
@@ -473,7 +473,7 @@ body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:10
         </div>
         <div><div class="social-name">Email Us</div><div class="social-handle">info@netlinkagencies.co.ke</div></div>
       </div>
-      <a href="mailto:info@netlinkagencies.co.ke" class="social-btn" style="background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;">Email Us</a>
+      <a href="mailto:info@netlinkagencies.co.ke" id="idx-email" class="social-btn" style="background:linear-gradient(135deg,#B0156A,#FF4DB8);color:#fff;">Email Us</a>
     </div>
 
   </div>
@@ -504,112 +504,25 @@ body{font-family:'Nunito',sans-serif;background:#1a0010;color:#fff;min-height:10
   <div class="footer-copy">© 2026 NETLINK AGENCIES Inc. All Rights Reserved. · <a href="/privacy" style="color:rgba(255,255,255,.4);text-decoration:none;">Don't Share My Personal Information</a></div>
 </footer>
 
+
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const app = initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// ── TESTIMONIALS — 7 days × 6 testimonials each ──
-const ALL_TESTIMONIALS = {
-  0: [ // Sunday
-    {name:"Grace N.",loc:"Nairobi, Kenya",text:"NETLINK AGENCIES changed my life! I earn daily from my phone without leaving home. Already withdrew KES 8,000 this month! 🙌"},
-    {name:"David O.",loc:"Lagos, Nigeria",text:"I was broke and desperate. A friend told me about NETLINK. Within 2 weeks of activation I made back the fee and more. God bless this platform! 💰"},
-    {name:"Lilian M.",loc:"Kampala, Uganda",text:"The WhatsApp advert task is so simple. Post on status and earn per view. I get hundreds of views daily! My MTN wallet is always growing 📱"},
-    {name:"Emmanuel K.",loc:"Accra, Ghana",text:"I referred my whole church group! Level 1 alone gave me GHS 300 this month. MTN Mobile Money payments are instant 🔥"},
-    {name:"Zawadi A.",loc:"Dar es Salaam, Tanzania",text:"As a student I needed extra income. NETLINK gives me just that. Tasks take 30 minutes a day max! Love it 🎓"},
-    {name:"Brenda W.",loc:"Kigali, Rwanda",text:"First withdrawal was so smooth via MTN. No stress, no delays. Admin is responsive and professional. 10/10 platform! ⭐"}
-  ],
-  1: [ // Monday
-    {name:"James M.",loc:"Mombasa, Kenya",text:"I earn while my kids are at school. The forex task and betting predictions keep me busy and earning every week! 💸"},
-    {name:"Amara T.",loc:"Abuja, Nigeria",text:"Bank transfer works perfectly for Nigeria. Withdrew NGN 15,000 to my account within hours. Very reliable platform! 🏦"},
-    {name:"Peter L.",loc:"Entebbe, Uganda",text:"Best decision I made in 2025 was joining NETLINK. My Airtel wallet keeps growing. Tell your friends — this is legit! 👥"},
-    {name:"Charity B.",loc:"Cape Town, South Africa",text:"I live in South Africa and bank transfer works perfectly for me. Min ZAR 20 is very fair. Loving this platform! 🇿🇦"},
-    {name:"Hassan M.",loc:"Zanzibar, Tanzania",text:"Joined 2 months ago. Already have 15 Level 1 referrals. Almost at my Karibu bonus! Cannot wait to claim KES 100 🎁"},
-    {name:"Rose K.",loc:"Kisumu, Kenya",text:"The daily surveys are quick and easy. Combined with my referral earnings I make good money every single week! 📊"}
-  ],
-  2: [ // Tuesday
-    {name:"Samuel A.",loc:"Nairobi, Kenya",text:"My M-Pesa receives money from NETLINK regularly. Joined 4 months ago and this is now my main side hustle! 💪"},
-    {name:"Fatima Y.",loc:"Kano, Nigeria",text:"PayPal withdrawal is fast and reliable. Perfect for those of us who prefer international payment. Great platform! 🌍"},
-    {name:"Oliver N.",loc:"Kampala, Uganda",text:"The trivia quiz challenges my mind AND pays me! MTN Mobile Money is instant. My friends are now all joining! 🧠"},
-    {name:"Mercy J.",loc:"Kumasi, Ghana",text:"I was skeptical but my cousin convinced me. After my first withdrawal I became a true believer! Recommending to everyone 🙏"},
-    {name:"Vincent O.",loc:"Arusha, Tanzania",text:"As a boda boda rider I earn on my breaks. Quick tasks, fast payments. NETLINK fits perfectly in my schedule! 🏍️"},
-    {name:"Diane U.",loc:"Kigali, Rwanda",text:"Joined as a student. Airtel Money payments are instant. Already paid my semester fees from NETLINK earnings! 🎓"}
-  ],
-  3: [ // Wednesday
-    {name:"Caroline N.",loc:"Nakuru, Kenya",text:"I told my WhatsApp group about NETLINK and now we all earn together! My level 2 referrals are paying me weekly! 🤝"},
-    {name:"Michael E.",loc:"Port Harcourt, Nigeria",text:"Bank transfer to my GTBank is smooth. Withdrew NGN 20,000 last week. This platform actually pays — no gimmicks! ✅"},
-    {name:"Sarah K.",loc:"Jinja, Uganda",text:"The betting predictions are so fun! Even when I guess wrong I still enjoy playing. When I win it's extra bonus! ⚽"},
-    {name:"Kweku A.",loc:"Accra, Ghana",text:"MTN Mobile Money was credited within minutes of withdrawal approval. Admin is fast and professional. Love it! ⚡"},
-    {name:"Amina H.",loc:"Mwanza, Tanzania",text:"I do all tasks every week without fail. My earning consistency is what makes me good money on this platform! 📈"},
-    {name:"Jean P.",loc:"Butare, Rwanda",text:"Referred 20 people and claimed my KES 100 Karibu bonus! Now focused on growing my level 2 network! 🎯"}
-  ],
-  4: [ // Thursday
-    {name:"John A.",loc:"Eldoret, Kenya",text:"Forex trading gives me excitement and earning at the same time. Win or lose it's thrilling. Already won 3 weeks in a row! 📊"},
-    {name:"Ngozi C.",loc:"Enugu, Nigeria",text:"I withdrew NGN 25,000 to my bank. The process was smooth and admin was helpful. This is a genuine platform! 💯"},
-    {name:"Patrick O.",loc:"Masaka, Uganda",text:"My MTN Mobile Money account has never been this active! NETLINK sends me money every time I request withdrawal 💰"},
-    {name:"Abena S.",loc:"Takoradi, Ghana",text:"Airtel Money works perfectly in Ghana. Quick verification and instant transfer. NETLINK is the best earning app I know! 🥇"},
-    {name:"Stella M.",loc:"Dodoma, Tanzania",text:"As a mama mboga I earn online between customers. NETLINK is flexible and perfect for busy people like me! 🛒"},
-    {name:"Innocent N.",loc:"Musanze, Rwanda",text:"MTN MoMo payments are always on time. I've referred 12 friends so far and earn from all their activities! 🔥"}
-  ],
-  5: [ // Friday
-    {name:"Lucy W.",loc:"Thika, Kenya",text:"Withdrew KES 12,000 to M-Pesa last month! My network of referrals keeps growing and so does my income! 🚀"},
-    {name:"Chukwudi O.",loc:"Onitsha, Nigeria",text:"PayPal is my preferred method and it works flawlessly. International payments done right! Highly recommend NETLINK 🌐"},
-    {name:"Esther N.",loc:"Gulu, Uganda",text:"I love how NETLINK has multiple tasks. Never bored, always earning. My Airtel wallet keeps growing every week! 📱"},
-    {name:"Kofi M.",loc:"Ho, Ghana",text:"The WhatsApp advert task earns me the most. I have 500+ contacts so I get many views daily! MTN Mobile Money credited fast 👀"},
-    {name:"Rehema S.",loc:"Morogoro, Tanzania",text:"Simple tasks, real money. That's NETLINK in a nutshell. My Airtel money account receives payment every time! 💸"},
-    {name:"Claudine M.",loc:"Gisenyi, Rwanda",text:"I joined NETLINK on my friend's recommendation. Best advice I ever took. Already earning more than my part-time job! 💼"}
-  ],
-  6: [ // Saturday
-    {name:"Mary W.",loc:"Nairobi, Kenya",text:"I joined 3 months ago and already withdrawn over KES 5,000! The referral system is amazing — my network keeps growing 🔥"},
-    {name:"Joseph M.",loc:"Abuja, Nigeria",text:"Withdrew NGN 30,000 this month! Bank transfer to my Zenith account was smooth. NETLINK is a lifechanger! 🙌"},
-    {name:"Harriet K.",loc:"Kampala, Uganda",text:"My MTN Mobile Money receives NETLINK payments regularly. Best side hustle in Uganda right now — tell a friend! 🇺🇬"},
-    {name:"Ama A.",loc:"Accra, Ghana",text:"From zero to hero with NETLINK! Started with MTN MoMo withdrawals, now I mentor others on how to earn more! 💪"},
-    {name:"Baraka J.",loc:"Dar es Salaam, Tanzania",text:"Tasks are simple, payments are quick. Admin responds fast. NETLINK is the most reliable earning platform I know! ⭐"},
-    {name:"Sandrine U.",loc:"Kigali, Rwanda",text:"My Karibu bonus was credited instantly! Now I'm focused on my next goal — 50 referrals by end of year! 🎯"}
-  ]
-};
-
-// Show testimonials based on today's day of week
-const today = new Date().getDay();
-const todayTestis = ALL_TESTIMONIALS[today] || ALL_TESTIMONIALS[0];
-const grid = document.getElementById('testi-grid');
-grid.innerHTML = todayTestis.map(t => `
-  <div class="testi-card">
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
-      <span style="color:#FFD700;font-size:13px;">★★★★★</span>
-      <span style="font-size:10px;color:rgba(255,255,255,.5);">Verified Member</span>
-    </div>
-    <div class="testi-text">"${t.text}"</div>
-    <div class="testi-author">
-      <div class="testi-avatar">${t.name.charAt(0)}</div>
-      <div><div class="testi-name">${t.name}</div><div class="testi-loc">📍 ${t.loc}</div></div>
-    </div>
-  </div>`).join('');
-
-// Check if admin
-try{
-  const raw = localStorage.getItem('nlAdmin');
-  if(raw){const ad=JSON.parse(raw);if(ad.role==='master'||ad.role==='coadmin'){window.location.replace('/admin/panel.html');}}
-}catch(e){}
-
-// Check if user already logged in
-window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hide');},300);});
-onAuthStateChanged(auth, async user => {
-  if(user){
-    try{
-      const snap=await getDoc(doc(db,'users',user.uid));
-      if(snap.exists()){
-        const d=snap.data();
-        if(d.activated){window.location.replace('/dashboard');}
-        else{window.location.replace('/activate');}
-      } else {document.getElementById('loader').classList.add('hide');}
-    }catch(e){document.getElementById('loader').classList.add('hide');}
-  } else {document.getElementById('loader').classList.add('hide');}
-});
+(async()=>{
+  try{
+    const {initializeApp,getApps}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const {getFirestore,doc,getDoc}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _app=getApps().length?getApps()[0]:initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+    const _db=getFirestore(_app);
+    const _snap=await getDoc(doc(_db,'settings','socialLinks'));
+    if(_snap.exists()){
+      const _link=_snap.data().waIndex;
+      if(_link) document.querySelectorAll('[data-wa-page="wa-dyn-index"]').forEach(el=>{
+        if(el.tagName==='A') el.href=_link;
+        else el.setAttribute('onclick',`window.open('${_link}','_blank')`);
+      });
+    }
+  }catch(_e){console.log('wa-load:',_e);}
+})();
 </script>
 </body>
 </html>

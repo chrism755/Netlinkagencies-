@@ -216,7 +216,7 @@ input:read-only{opacity:.6;cursor:not-allowed;}
     <div class="ok" id="manual-ok"></div>
     <div class="err" id="manual-err"></div>
     <button class="btn" id="manual-btn" onclick="submitTxn()">✅ Activate Account</button>
-    <button class="wa-btn" onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')">💬 Message Admin on WhatsApp</button>
+    <button class="wa-btn" onclick="window.open('#','_blank')" data-wa-page="wa-dyn-activate">💬 Message Admin on WhatsApp</button>
     <button class="manual-link" onclick="showAuto()" style="margin-top:8px;">⚡ Use Automatic Payment Instead</button>
   </div>
 
@@ -668,7 +668,7 @@ window.submitTxn=async function(){
     ok.innerHTML=`✅ Dear <strong>${userData?.username||'User'}</strong>, your payment request has been received.<br>
     Wait <strong>2–5 minutes</strong> for activation.<br><br>
     Not activated within 5 minutes?<br>
-    <button onclick="window.open('https://api.whatsapp.com/send?phone=+254103470585&text=Hello+I+have+paid+for+my+activation+but+still+account+not+activated+yet+please+activate+here+is+MPESA+transaction+🆔👇','_blank')" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;">💬 WhatsApp Admin</button>`;
+    <button onclick="window.open('#','_blank')" data-wa-page="wa-dyn-activate" style="background:#25D366;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;width:100%;">💬 WhatsApp Admin</button>`;
     ok.style.display='block';
     btn.disabled=true;btn.textContent='✅ Submitted — Waiting for approval';
   }catch(e){
@@ -676,6 +676,25 @@ window.submitTxn=async function(){
     btn.disabled=false;btn.textContent='✅ Activate Account';
   }
 };
+</script>
+
+<script type="module">
+(async()=>{
+  try{
+    const {initializeApp,getApps}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const {getFirestore,doc,getDoc}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const _app=getApps().length?getApps()[0]:initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
+    const _db=getFirestore(_app);
+    const _snap=await getDoc(doc(_db,'settings','socialLinks'));
+    if(_snap.exists()){
+      const _link=_snap.data().waActivate;
+      if(_link) document.querySelectorAll('[data-wa-page="wa-dyn-activate"]').forEach(el=>{
+        if(el.tagName==='A') el.href=_link;
+        else el.setAttribute('onclick',`window.open('${_link}','_blank')`);
+      });
+    }
+  }catch(_e){console.log('wa-load:',_e);}
+})();
 </script>
 </body>
 </html>
