@@ -66,6 +66,16 @@ input::placeholder{color:#fff;opacity:.4;}
 .toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.8);font-size:20px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
+/* WITHDRAWAL HISTORY */
+.wd-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);}
+.wd-item:last-child{border-bottom:none;}
+.wd-left{display:flex;flex-direction:column;gap:3px;}
+.wd-amt{font-size:14px;font-weight:800;color:#fff;}
+.wd-meta{font-size:11px;color:#fff;opacity:.6;}
+.wd-badge{font-size:10px;font-weight:800;padding:5px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+.wd-badge.pending{background:rgba(255,152,0,.15);color:#FF9800;border:1px solid #FF9800;}
+.wd-badge.completed{background:rgba(0,230,118,.15);color:var(--green);border:1px solid var(--green);}
+.wd-badge.rejected{background:rgba(255,82,82,.15);color:var(--red);border:1px solid var(--red);}
 </style>
 </head>
 <body>
@@ -178,6 +188,14 @@ input::placeholder{color:#fff;opacity:.4;}
     <button class="btn" id="pp-btn" onclick="doWithdraw('paypal')">💳 Submit PayPal Withdrawal</button>
   </div>
 
+  <!-- WITHDRAWAL HISTORY -->
+  <div class="card">
+    <h3>📜 Withdrawal History</h3>
+    <div id="wd-history">
+      <div style="text-align:center;padding:20px;color:#fff;opacity:.6;font-size:13px;">Loading...</div>
+    </div>
+  </div>
+
 </div>
 </div>
 </div>
@@ -185,7 +203,7 @@ input::placeholder{color:#fff;opacity:.4;}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
@@ -311,7 +329,58 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('user-phone').textContent=maskPhone(UD.phone||'');
   // Show balance
   document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance);
+  // Load withdrawal history
+  loadHistory();
 });
+
+function fmtDate(ts){
+  try{
+    const d = ts && ts.toDate ? ts.toDate() : new Date(ts);
+    if(isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-KE',{day:'2-digit',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-KE',{hour:'2-digit',minute:'2-digit'});
+  }catch(_e){return '—';}
+}
+
+function statusBadge(status){
+  const s=(status||'pending').toLowerCase();
+  const map={
+    pending:{cls:'pending',label:'⏳ Pending'},
+    completed:{cls:'completed',label:'✅ Completed'},
+    approved:{cls:'completed',label:'✅ Completed'},
+    rejected:{cls:'rejected',label:'❌ Rejected'},
+    declined:{cls:'rejected',label:'❌ Rejected'}
+  };
+  const m=map[s]||{cls:'pending',label:'⏳ Pending'};
+  return `<span class="wd-badge ${m.cls}">${m.label}</span>`;
+}
+
+window.loadHistory=async function(){
+  const box=document.getElementById('wd-history');
+  try{
+    const q=query(collection(db,'pendingWithdrawals'),where('uid','==',U.uid),orderBy('createdAt','desc'),limit(20));
+    const snap=await getDocs(q);
+    if(snap.empty){
+      box.innerHTML='<div style="text-align:center;padding:20px;color:#fff;opacity:.6;font-size:13px;">No withdrawals yet.</div>';
+      return;
+    }
+    let html='';
+    snap.forEach(docSnap=>{
+      const d=docSnap.data();
+      html+=`
+      <div class="wd-item">
+        <div class="wd-left">
+          <div class="wd-amt">${window._CUR||'KES'} ${fmt(d.amount)}</div>
+          <div class="wd-meta">${d.method||''} · ${fmtDate(d.createdAt)}</div>
+        </div>
+        ${statusBadge(d.status)}
+      </div>`;
+    });
+    box.innerHTML=html;
+  }catch(e){
+    console.log('history error:',e);
+    box.innerHTML='<div style="text-align:center;padding:20px;color:#FF8A80;font-size:12px;">Could not load history.</div>';
+  }
+};
 
 window.calcFee=function(type){
   const id=type==='mpesa'?'mpesa-amt':'pp-amt';
@@ -407,6 +476,9 @@ window.doWithdraw=async function(method, methodName){
     document.getElementById(amtId).value='';
     if(method==='paypal') document.getElementById('pp-email').value='';
     document.getElementById(method==='mpesa'?'mpesa-fee':'pp-fee').textContent='';
+
+    // Refresh withdrawal history
+    loadHistory();
 
     // Re-enable button
     btn.disabled=false;
