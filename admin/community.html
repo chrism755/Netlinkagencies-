@@ -5,40 +5,49 @@
 <title>Community Posts — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--primary:#0057FF;--accent:#00D4FF;--green:#00C853;--red:#FF3B3B;--bg:#050D1A;--bg2:#0A1628;--bg3:#0F1F3D;--card:#111E35;--border:#1E3560;--text:#E8F0FF;--text2:#8BA4CC;--white:#FFFFFF;--sw:250px;}
+:root{--pk:#E91E8C;--pk2:#FF4DB8;--pkd:#B0156A;--bg:#1a0010;--bg2:#2a0018;--bg3:#3d0024;--card:#2d0019;--border:#6b0040;--green:#00E676;--red:#FF5252;--yellow:#FFD740;--sw:250px;}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
 .sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
-.sb-head{padding:16px;border-bottom:1px solid var(--border);}
+.sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
 .logo{display:flex;align-items:center;gap:9px;}
-.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:var(--white);line-height:1.1;}
-.logo-sub{font-size:8px;color:var(--accent);letter-spacing:2px;font-family:'Orbitron',monospace;}
+.logo-icon{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:11px;color:#fff;line-height:1.1;}
+.logo-sub{font-size:8px;color:rgba(255,255,255,.7);letter-spacing:2px;font-family:'Orbitron',monospace;}
 .sb-nav{flex:1;overflow-y:auto;padding:8px 0;}
-.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:var(--text2);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
-.ni:hover,.ni.active{background:rgba(0,87,255,.1);color:var(--accent);border-left-color:var(--primary);}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;font-weight:600;color:rgba(255,255,255,.6);border-left:3px solid transparent;text-decoration:none;transition:.15s;}
+.ni:hover,.ni.active{background:rgba(233,30,140,.15);color:var(--pk2);border-left-color:var(--pk);}
 .ni-icon{font-size:15px;width:20px;text-align:center;}
 .main{flex:1;}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
-.menu-btn{background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;}
-.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--white);flex:1;}
-.avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
+.topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));border-bottom:1px solid var(--border);padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;}
+.menu-btn{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;}
+.tb-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#fff;flex:1;}
+.avatar{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;}
 .content{padding:16px 14px;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:none;}
 .overlay.show{display:block;}
-.pc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;}
-textarea{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:100px;margin-bottom:10px;}
-textarea:focus{border-color:var(--primary);}
-.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.sec-title{font-size:11px;font-weight:800;color:var(--pk2);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;padding-top:12px;border-top:1px solid var(--border);}
+.sec-title:first-child{margin-top:0;padding-top:0;border-top:none;}
+.sl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px;}
+.sl-field label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:5px;}
+.sl-field input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:#fff;font-family:'Nunito',sans-serif;font-size:12px;outline:none;}
+.sl-field input:focus{border-color:var(--pk);}
+.sl-field input::placeholder{color:rgba(255,255,255,.3);font-size:11px;}
+.sl-field.full{grid-column:1/-1;}
+textarea{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Nunito',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:100px;margin-bottom:10px;}
+textarea:focus{border-color:var(--pk);}
+.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk));color:#fff;margin-top:6px;}
+.btn-green{background:linear-gradient(135deg,#00897B,#00E676);margin-top:10px;}
 .post{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:9px;}
 .post-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.post-time{font-size:10px;color:var(--text2);}
+.post-time{font-size:10px;color:rgba(255,255,255,.4);}
 .del-btn{background:var(--red);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;}
-.loader{position:fixed;inset:0;background:rgba(5,13,26,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
+.loader{position:fixed;inset:0;background:rgba(26,0,16,.95);z-index:9999;display:none;align-items:center;justify-content:center;}
 .loader.show{display:flex;}
-.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;}
+.ring{width:50px;height:50px;border:4px solid var(--border);border-top-color:var(--pk);border-radius:50%;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
@@ -64,23 +73,121 @@ textarea:focus{border-color:var(--primary);}
   <div class="main">
     <div class="topbar">
       <button class="menu-btn" onclick="openSB()">☰</button>
-      <div class="tb-title">Community Posts</div>
+      <div class="tb-title">Community & Links</div>
       <div style="display:flex;align-items:center;gap:8px;"><div class="avatar">A</div><span style="font-size:12px;font-weight:700;">Admin</span></div>
     </div>
     <div class="content">
+
+      <!-- SOCIAL LINKS SECTION -->
       <div class="pc">
-        <h3 style="font-size:14px;font-weight:800;color:var(--white);margin-bottom:12px;">📝 New Post</h3>
-        <textarea id="post-content" placeholder="Write your post for community..."></textarea>
+        <div class="sec-title">🔗 Social Media & Contact Links</div>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;">Update links below — they go live across the entire website instantly.</p>
+        <div class="sl-grid">
+          <div class="sl-field">
+            <label>💬 WhatsApp (Support)</label>
+            <input id="sl-whatsapp" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field">
+            <label>📘 Facebook</label>
+            <input id="sl-facebook" placeholder="https://facebook.com/..."/>
+          </div>
+          <div class="sl-field">
+            <label>📸 Instagram</label>
+            <input id="sl-instagram" placeholder="https://instagram.com/..."/>
+          </div>
+          <div class="sl-field">
+            <label>✈️ Telegram</label>
+            <input id="sl-telegram" placeholder="https://t.me/..."/>
+          </div>
+          <div class="sl-field">
+            <label>📧 Email</label>
+            <input id="sl-email" placeholder="info@netlinkagencies.co.ke"/>
+          </div>
+          <div class="sl-field">
+            <label>🎵 TikTok</label>
+            <input id="sl-tiktok" placeholder="https://tiktok.com/@..."/>
+          </div>
+        </div>
+
+        <div class="sec-title">💬 WhatsApp Links Per Page</div>
+        <p style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:12px;">Each page has its own WhatsApp link. Update individually and save.</p>
+        <div class="sl-grid">
+          <div class="sl-field full">
+            <label>🏠 Home Page (index.html)</label>
+            <input id="wa-index" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>✅ Activation Page (activate.html)</label>
+            <input id="wa-activate" placeholder="https://api.whatsapp.com/send?phone=254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>💳 Cashout Page (cashout.html)</label>
+            <input id="wa-cashout" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>📞 Contact Page (contact.html)</label>
+            <input id="wa-contact" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>🆘 Support Page (support.html)</label>
+            <input id="wa-support" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>❓ Help Page (dashboard/help.html)</label>
+            <input id="wa-help" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>🏦 Deposit Page (dashboard/deposit.html)</label>
+            <input id="wa-deposit" placeholder="https://api.whatsapp.com/send?phone=254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>💸 Dashboard Cashout (dashboard/cashout.html)</label>
+            <input id="wa-db-cashout" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>🤝 Mentorship Page (dashboard/mentorship.html)</label>
+            <input id="wa-mentorship" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>🏠 Main Dashboard (dashboard.html)</label>
+            <input id="wa-dashboard" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>📊 Dashboard Home (dashboard/dashboard.html)</label>
+            <input id="wa-db-dashboard" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>👥 Downlines Level 1 (dashboard/downlines-1.html)</label>
+            <input id="wa-dl1" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>👥 Downlines Level 2 (dashboard/downlines-2.html)</label>
+            <input id="wa-dl2" placeholder="https://wa.me/254..."/>
+          </div>
+          <div class="sl-field full">
+            <label>👥 Downlines Level 3 (dashboard/downlines-3.html)</label>
+            <input id="wa-dl3" placeholder="https://wa.me/254..."/>
+          </div>
+        </div>
+
+        <button class="btn btn-green" onclick="saveLinks()">💾 Save All Links</button>
+      </div>
+
+      <!-- COMMUNITY POST SECTION -->
+      <div class="pc">
+        <div class="sec-title">📝 New Community Post</div>
+        <textarea id="post-content" placeholder="Write your broadcast message to all users..."></textarea>
         <button class="btn" onclick="publish()">📢 Publish to Community</button>
       </div>
-      <div id="posts-list"><div style="text-align:center;padding:30px;color:var(--text2);">Loading posts...</div></div>
+
+      <div id="posts-list"><div style="text-align:center;padding:30px;color:rgba(255,255,255,.3);">Loading posts...</div></div>
     </div>
   </div>
 </div>
 <script type="module">
 if(!localStorage.getItem('nlAdmin')){window.location.href='/admin/index.html';}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const db=getFirestore(app);
 
@@ -90,7 +197,6 @@ async function guardPage(permKey){
   if(!raw){window.location.href='/admin/index.html';return;}
   const adminData=JSON.parse(raw);
   if(adminData.role==='master')return;
-  // Always fetch FRESH permissions from Firestore
   try{
     const snap=await getDocs(query(collection(db,'coAdmins'),where('email','==',adminData.email)));
     if(snap.empty){showRestricted();return;}
@@ -98,15 +204,74 @@ async function guardPage(permKey){
     adminData.permissions=freshPerms;
     localStorage.setItem('nlAdmin',JSON.stringify(adminData));
     if(freshPerms[permKey]!==true){showRestricted();return;}
-  }catch(e){
-    console.error('guardPage error:',e);
-    showRestricted();
-  }
+  }catch(e){showRestricted();}
 }
 function showRestricted(){
-  document.body.innerHTML='<div style="min-height:100vh;background:#050D1A;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#111E35;border:1px solid #1E3560;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF3B3B;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:#8BA4CC;font-size:14px;line-height:1.7;margin-bottom:24px;">You are restricted to use this action.<br>Contact the master admin to get permission.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#0057FF,#00D4FF);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
-// ───────────────────────────────────────────────────────────
+  document.body.innerHTML='<div style="min-height:100vh;background:#1a0010;display:flex;align-items:center;justify-content:center;font-family:Nunito,sans-serif;padding:20px;"><div style="background:#2d0019;border:1px solid #6b0040;border-radius:20px;padding:40px 30px;text-align:center;max-width:400px;width:100%;"><div style="font-size:60px;margin-bottom:16px;">🔒</div><h2 style="color:#FF5252;font-size:20px;font-weight:900;margin-bottom:10px;">Access Restricted</h2><p style="color:rgba(255,255,255,.5);font-size:14px;line-height:1.7;margin-bottom:24px;">You are restricted to use this action.<br>Contact the master admin to get permission.</p><button onclick="window.location.href=\x27/admin/panel.html\x27" style="background:linear-gradient(135deg,#B0156A,#E91E8C);color:#fff;border:none;border-radius:10px;padding:13px 30px;font-size:14px;font-weight:800;cursor:pointer;font-family:Nunito,sans-serif;width:100%;">← Go Back to Panel</button></div></div>';}
 guardPage('postCommunity');
+
+// ── SOCIAL LINKS ─────────────────────────────────────────────
+async function loadLinks(){
+  try{
+    const snap=await getDoc(doc(db,'settings','socialLinks'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.whatsapp) document.getElementById('sl-whatsapp').value=d.whatsapp;
+      if(d.facebook) document.getElementById('sl-facebook').value=d.facebook;
+      if(d.instagram) document.getElementById('sl-instagram').value=d.instagram;
+      if(d.telegram) document.getElementById('sl-telegram').value=d.telegram;
+      if(d.email) document.getElementById('sl-email').value=d.email;
+      if(d.tiktok) document.getElementById('sl-tiktok').value=d.tiktok;
+      if(d.waIndex) document.getElementById('wa-index').value=d.waIndex;
+      if(d.waActivate) document.getElementById('wa-activate').value=d.waActivate;
+      if(d.waCashout) document.getElementById('wa-cashout').value=d.waCashout;
+      if(d.waContact) document.getElementById('wa-contact').value=d.waContact;
+      if(d.waSupport) document.getElementById('wa-support').value=d.waSupport;
+      if(d.waHelp) document.getElementById('wa-help').value=d.waHelp;
+      if(d.waDeposit) document.getElementById('wa-deposit').value=d.waDeposit;
+      if(d.waDbCashout) document.getElementById('wa-db-cashout').value=d.waDbCashout;
+      if(d.waMentorship) document.getElementById('wa-mentorship').value=d.waMentorship;
+      if(d.waDashboard) document.getElementById('wa-dashboard').value=d.waDashboard;
+      if(d.waDbDashboard) document.getElementById('wa-db-dashboard').value=d.waDbDashboard;
+      if(d.waDl1) document.getElementById('wa-dl1').value=d.waDl1;
+      if(d.waDl2) document.getElementById('wa-dl2').value=d.waDl2;
+      if(d.waDl3) document.getElementById('wa-dl3').value=d.waDl3;
+    }
+  }catch(e){console.error('loadLinks:',e);}
+}
+window.saveLinks=async function(){
+  const data={
+    whatsapp:document.getElementById('sl-whatsapp').value.trim(),
+    facebook:document.getElementById('sl-facebook').value.trim(),
+    instagram:document.getElementById('sl-instagram').value.trim(),
+    telegram:document.getElementById('sl-telegram').value.trim(),
+    email:document.getElementById('sl-email').value.trim(),
+    tiktok:document.getElementById('sl-tiktok').value.trim(),
+    waIndex:document.getElementById('wa-index').value.trim(),
+    waActivate:document.getElementById('wa-activate').value.trim(),
+    waCashout:document.getElementById('wa-cashout').value.trim(),
+    waContact:document.getElementById('wa-contact').value.trim(),
+    waSupport:document.getElementById('wa-support').value.trim(),
+    waHelp:document.getElementById('wa-help').value.trim(),
+    waDeposit:document.getElementById('wa-deposit').value.trim(),
+    waDbCashout:document.getElementById('wa-db-cashout').value.trim(),
+    waMentorship:document.getElementById('wa-mentorship').value.trim(),
+    waDashboard:document.getElementById('wa-dashboard').value.trim(),
+    waDbDashboard:document.getElementById('wa-db-dashboard').value.trim(),
+    waDl1:document.getElementById('wa-dl1').value.trim(),
+    waDl2:document.getElementById('wa-dl2').value.trim(),
+    waDl3:document.getElementById('wa-dl3').value.trim(),
+  };
+  document.getElementById('loader').classList.add('show');
+  try{
+    await setDoc(doc(db,'settings','socialLinks'),data);
+    showMsg('✅ All links saved and are now live across the website!','ok');
+  }catch(e){
+    showMsg('❌ Error: '+e.message,'err');
+  }
+  document.getElementById('loader').classList.remove('show');
+};
+// ────────────────────────────────────────────────────────────
 
 let posts=[];
 async function load(){
@@ -116,12 +281,12 @@ async function load(){
 }
 function render(){
   const el=document.getElementById('posts-list');
-  if(posts.length===0){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text2);">No posts yet.</div>';return;}
+  if(posts.length===0){el.innerHTML='<div style="text-align:center;padding:30px;color:rgba(255,255,255,.3);">No posts yet.</div>';return;}
   el.innerHTML=posts.map(p=>`<div class="post"><div class="post-top"><div class="post-time">📅 ${p.createdAt?new Date(p.createdAt.seconds*1000).toLocaleString():''}</div><button class="del-btn" onclick="delPost('${p.id}')">🗑 Delete</button></div><p style="font-size:13px;line-height:1.6;">${p.content}</p></div>`).join('');
 }
 window.publish=async function(){
   const c=document.getElementById('post-content').value.trim();
-  if(!c){showMsg('Write something first.','ok');return;}
+  if(!c){showMsg('Write something first.','err');return;}
   document.getElementById('loader').classList.add('show');
   await addDoc(collection(db,'communityPosts'),{content:c,createdAt:serverTimestamp()});
   document.getElementById('post-content').value='';
@@ -133,29 +298,23 @@ window.delPost=async function(id){
   await deleteDoc(doc(db,'communityPosts',id));
   posts=posts.filter(p=>p.id!==id);render();
 };
-
 window.showMsg=function(msg,type){
   let area=document.getElementById('msg-area');
   if(!area){area=document.createElement('div');area.id='msg-area';document.querySelector('.content').prepend(area);}
-  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-family:Nunito,sans-serif;font-weight:600;">'+msg+'</div>';
+  area.innerHTML='<div style="background:'+(type==='ok'?'rgba(0,230,118,.1)':'rgba(255,82,82,.1)')+';border:1.5px solid '+(type==='ok'?'#00E676':'#FF5252')+';color:'+(type==='ok'?'#69F0AE':'#FF8A80')+';border-radius:12px;padding:14px;font-size:13px;margin-bottom:14px;font-weight:600;">'+msg+'</div>';
   setTimeout(()=>{if(area)area.innerHTML='';},5000);
 };
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
 window.closeSB=()=>{document.getElementById('sb').classList.remove('open');document.getElementById('ov').classList.remove('show');};
 window.logout=()=>{localStorage.removeItem('nlAdmin');window.location.href='/admin/index.html';};
+loadLinks();
 load();
 </script>
 <script>
 (function(){
   try{
     const raw=localStorage.getItem('nlAdmin');
-    if(raw){
-      const ad=JSON.parse(raw);
-      if(ad.role==='master'){
-        const link=document.getElementById('apikey-nav-link');
-        if(link) link.style.display='flex';
-      }
-    }
+    if(raw){const ad=JSON.parse(raw);if(ad.role==='master'){const link=document.getElementById('apikey-nav-link');if(link)link.style.display='flex';}}
   }catch(e){}
 })();
 </script>
