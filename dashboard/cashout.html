@@ -378,7 +378,7 @@ window.loadHistory=async function(){
     box.innerHTML=html;
   }catch(e){
     console.log('history error:',e);
-    box.innerHTML='<div style="text-align:center;padding:20px;color:#FF8A80;font-size:12px;">Could not load history.</div>';
+    box.innerHTML='<div style="text-align:center;padding:20px;color:#FF8A80;font-size:12px;">Could not load history.<br><br><strong>Error:</strong> '+(e.code||'')+' '+(e.message||e)+'</div>';
   }
 };
 
