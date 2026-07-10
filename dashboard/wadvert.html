@@ -9,9 +9,9 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:100vh;}
 .layout{display:flex;min-height:100vh;}
-.sidebar{width:var(--sw);background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
+.sidebar{width:var(--sw);background:#1a0a2e;border-right:1px solid #2d1a4e;position:fixed;top:0;left:0;bottom:0;z-index:100;transform:translateX(-100%);transition:.3s;display:flex;flex-direction:column;}
 .sidebar.open{transform:translateX(0);}
-.sb-head{padding:16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--pkd),var(--pk));}
+.sb-head{padding:16px;border-bottom:1px solid #2d1a4e;background:linear-gradient(135deg,#E91E8C,#FF4DB8);}
 .logo{display:flex;align-items:center;gap:10px;}
 .logo-icon{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
 .logo-text{font-weight:900;font-size:14px;color:#fff;line-height:1.1;}
@@ -221,7 +221,7 @@ onAuthStateChanged(auth,async u=>{
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   window._CUR=_currencyMap[UD.country]||'KES';
   window._FEE=_feeMap[UD.country]||150;
-  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  (function(){var _el=document.getElementById('av');if(UD.photoURL){_el.innerHTML='<img src="'+UD.photoURL+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';}else{_el.textContent=UD.username.charAt(0).toUpperCase();}})();
 
   drawAdvert();
   await checkCooldown();
