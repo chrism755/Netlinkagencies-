@@ -238,6 +238,11 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
+  UD.username=UD.username||UD.name||'User';
+  UD.phone=UD.phone||'';
+  UD.balance=UD.balance||0;
+  UD.country=UD.country||'Kenya';
+  try{
   // Currency based on user country
   const _currencyMap={'Kenya':'KES','Uganda':'UGX','Tanzania':'TZS','Rwanda':'RWF','Nigeria':'NGN','Ghana':'GHS','South Africa':'ZAR','United States':'USD','United Kingdom':'GBP','Other':'USD'};
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
@@ -329,6 +334,10 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('user-phone').textContent=maskPhone(UD.phone||'');
   // Show balance
   document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance);
+  }catch(e){
+    console.log('cashout render error:',e);
+    document.getElementById('bal-display').textContent=(window._CUR||'KES')+fmt(UD.balance||0);
+  }
   // Load withdrawal history
   loadHistory();
 });
@@ -358,7 +367,8 @@ window.loadHistory=async function(){
   const box=document.getElementById('wd-history');
   try{
     const q=query(collection(db,'pendingWithdrawals'),where('uid','==',U.uid),orderBy('createdAt','desc'),limit(20));
-    const snap=await getDocs(q);
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out — check your connection.')),10000));
+    const snap=await Promise.race([getDocs(q),timeout]);
     if(snap.empty){
       box.innerHTML='<div style="text-align:center;padding:20px;color:#fff;opacity:.6;font-size:13px;">No withdrawals yet.</div>';
       return;
