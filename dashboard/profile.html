@@ -249,15 +249,16 @@ window.uploadProfilePic=async function(evt){
   status.textContent='⏳ Uploading...';status.style.color='#fff';
   try{
     const fileRef=ref(storage,'profilePictures/'+U.uid+'.jpg');
-    await uploadBytes(fileRef,file);
-    const url=await getDownloadURL(fileRef);
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out — check your connection or Storage setup.')),15000));
+    await Promise.race([uploadBytes(fileRef,file),timeout]);
+    const url=await Promise.race([getDownloadURL(fileRef),timeout]);
     await updateDoc(doc(db,'users',U.uid),{photoURL:url});
     UD.photoURL=url;
     renderAvatar(url);
-    status.textContent='✅ Profile picture updated!';status.style.color='#69F0AE';
+    status.textContent='✅ Uploaded successfully!';status.style.color='#69F0AE';
     setTimeout(()=>{status.textContent='';},3000);
   }catch(e){
-    status.textContent='❌ Upload failed: '+e.message;status.style.color='#FF8A80';
+    status.textContent='❌ Upload failed: '+(e.code||'')+' '+e.message;status.style.color='#FF8A80';
   }
 };
 window.submitRequest=async function(){
