@@ -413,6 +413,25 @@ async function loadNotifications(uid, username){
       }
     });
 
+    // Check user requests
+    const rSnap = await getDocs(query(collection(db,'userRequests'),where('uid','==',uid)));
+    rSnap.docs.forEach(d=>{
+      const data=d.data();
+      if(data.status==='approved'){
+        notifications.push({
+          type:'green',icon:'✅',
+          msg:`Dear <strong>${username}</strong>, your request "<strong>${data.subject||'your request'}</strong>" (ID: ${data.requestId||'—'}) has been approved by admin.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      } else if(data.status==='rejected'){
+        notifications.push({
+          type:'red',icon:'❌',
+          msg:`Dear <strong>${username}</strong>, your request "<strong>${data.subject||'your request'}</strong>" (ID: ${data.requestId||'—'}) has been rejected by admin.`,
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+        });
+      }
+    });
+
     // Update badge count
     document.getElementById('notif-count').textContent=notifications.length;
     document.getElementById('notif-count').style.display=notifications.length>0?'flex':'none';

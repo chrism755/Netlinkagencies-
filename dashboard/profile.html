@@ -82,6 +82,8 @@ select option{background:var(--bg3);}
 .amt-w{position:relative;}
 .amt-p{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#FF80CE;font-weight:800;font-size:13px;}
 .amt-i{padding-left:52px!important;}
+.qsub-btn{background:var(--bg3);border:1.5px solid var(--border);border-radius:20px;padding:8px 14px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;font-family:'Nunito',sans-serif;transition:.2s;}
+.qsub-btn:hover,.qsub-btn.active{border-color:var(--pk);background:rgba(233,30,140,.2);color:#FF80CE;}
 </style>
 </head>
 <body>
@@ -135,7 +137,12 @@ select option{background:var(--bg3);}
 <div class="topbar"><button class="menu-btn" onclick="openSB()">☰</button><div class="tb-title">Profile</div><div class="avatar" id="av">U</div></div>
 <div class="content">
 <div style="text-align:center;padding:20px 0 16px;">
-  <div style="width:76px;height:76px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;margin:0 auto 12px;border:3px solid rgba(255,255,255,.2);" id="pav">U</div>
+  <div style="position:relative;width:76px;margin:0 auto 12px;">
+    <div style="width:76px;height:76px;background:linear-gradient(135deg,#B0156A,#FF4DB8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;border:3px solid rgba(255,255,255,.2);overflow:hidden;" id="pav">U</div>
+    <button type="button" onclick="document.getElementById('photo-input').click()" style="position:absolute;bottom:0;right:0;width:26px;height:26px;background:var(--pk);border:2px solid var(--bg);border-radius:50%;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">📷</button>
+    <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="uploadProfilePic(event)"/>
+  </div>
+  <div id="photo-status" style="font-size:11px;color:#fff;opacity:.7;margin-bottom:8px;"></div>
   <div style="font-size:18px;font-weight:900;color:#fff;" id="pname">Loading...</div>
   <div style="display:inline-flex;background:rgba(233,30,140,.2);border:1px solid #E91E8C;border-radius:20px;padding:2px 9px;font-size:10px;font-weight:700;color:#FF80CE;margin-top:6px;">✔ Verified Member</div>
 </div>
@@ -143,6 +150,17 @@ select option{background:var(--bg3);}
 <div class="card" style="margin-top:6px;">
   <h3>📝 Submit a Request</h3>
   <p style="margin-bottom:14px;font-size:13px;">Need to change your phone number or have any other request? Send it to admin here.</p>
+  <div class="fg">
+    <label>Quick Subjects</label>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <button type="button" class="qsub-btn" onclick="pickSubject('Change Phone Number',this)">📱 Change Phone Number</button>
+      <button type="button" class="qsub-btn" onclick="pickSubject('Change WhatsApp Number',this)">💬 Change WhatsApp</button>
+      <button type="button" class="qsub-btn" onclick="pickSubject('Withdrawal Issue',this)">💸 Withdrawal Issue</button>
+      <button type="button" class="qsub-btn" onclick="pickSubject('Account/Balance Issue',this)">⚠️ Account Issue</button>
+      <button type="button" class="qsub-btn" onclick="pickSubject('Other',this)">📌 Other</button>
+    </div>
+  </div>
+  <div class="fg"><label>Subject</label><input type="text" id="req-subject" placeholder="e.g. Change Phone Number"/></div>
   <div class="fg"><label>Your Request</label><textarea id="req-text" rows="4" placeholder="Example: Admin I need to change my phone number from 0712345678 to 0798765432..."></textarea></div>
   <div class="ok" id="req-ok"></div>
   <div class="err" id="req-err"></div>
@@ -154,9 +172,10 @@ select option{background:var(--bg3);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
-const auth=getAuth(app),db=getFirestore(app);
+const auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
@@ -189,32 +208,74 @@ window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');
 
 
 async function pageReady(){
-  document.getElementById('pav').textContent=UD.username.charAt(0).toUpperCase();
+  renderAvatar(UD.photoURL);
   document.getElementById('pname').textContent=UD.username;
   const rows=[
-    ['Email',UD.email||'—'],['Phone',UD.phone||'—'],['WhatsApp',UD.whatsapp||'—'],
-    ['Country',UD.country||'—'],['Referral Code',UD.referralCode||'—'],
-    ['Account Balance',(window._CUR||'KES')+(UD.balance||0)],['Total Earnings',(window._CUR||'KES')+(UD.totalEarnings||0)],
-    ['Withdrawn',(window._CUR||'KES')+(UD.withdrawn||0)],['Pending',(window._CUR||'KES')+(UD.pending||0)],
-    ['Level 1 Referrals',(UD.level1Count||0)+' people'],
-    ['Level 2 Referrals',(UD.level2Count||0)+' people'],
-    ['Level 3 Referrals',(UD.level3Count||0)+' people'],
+    ['Username',UD.username||'—'],['Email',UD.email||'—'],['Phone',UD.phone||'—'],
+    ['WhatsApp',UD.whatsapp||'—'],['Country',UD.country||'—'],
   ];
   document.getElementById('profile-rows').innerHTML=rows.map(([l,v])=>
-    `<div class="prow"><div class="pl">${l}</div><div class="pv" style="${l.includes('Balance')||l.includes('Earnings')||l.includes('Withdrawn')||l.includes('Pending')?'color:var(--gold)':l==='Referral Code'?'color:#FF80CE':''}">${v}</div></div>`
+    `<div class="prow"><div class="pl">${l}</div><div class="pv">${v}</div></div>`
   ).join('');
 }
+window.pickSubject=function(text,el){
+  document.getElementById('req-subject').value=text;
+  document.querySelectorAll('.qsub-btn').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+};
+function genRequestId(){
+  const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id='N';
+  for(let i=0;i<12;i++) id+=chars.charAt(Math.floor(Math.random()*chars.length));
+  return id;
+}
+function renderAvatar(url){
+  const pav=document.getElementById('pav');
+  const initial=UD.username.charAt(0).toUpperCase();
+  if(url){
+    pav.innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+    document.getElementById('av').innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+  }else{
+    pav.textContent=initial;
+    document.getElementById('av').textContent=initial;
+  }
+}
+window.uploadProfilePic=async function(evt){
+  const file=evt.target.files[0];
+  const status=document.getElementById('photo-status');
+  if(!file) return;
+  if(!file.type.startsWith('image/')){status.textContent='⚠️ Please choose an image file.';status.style.color='#FF8A80';return;}
+  if(file.size>5*1024*1024){status.textContent='⚠️ Image must be under 5MB.';status.style.color='#FF8A80';return;}
+  status.textContent='⏳ Uploading...';status.style.color='#fff';
+  try{
+    const fileRef=ref(storage,'profilePictures/'+U.uid+'.jpg');
+    await uploadBytes(fileRef,file);
+    const url=await getDownloadURL(fileRef);
+    await updateDoc(doc(db,'users',U.uid),{photoURL:url});
+    UD.photoURL=url;
+    renderAvatar(url);
+    status.textContent='✅ Profile picture updated!';status.style.color='#69F0AE';
+    setTimeout(()=>{status.textContent='';},3000);
+  }catch(e){
+    status.textContent='❌ Upload failed: '+e.message;status.style.color='#FF8A80';
+  }
+};
 window.submitRequest=async function(){
+  const subject=document.getElementById('req-subject').value.trim();
   const text=document.getElementById('req-text').value.trim();
   const ok=document.getElementById('req-ok'),err=document.getElementById('req-err'),btn=document.getElementById('req-btn');
   ok.style.display='none';err.style.display='none';
+  if(!subject){err.textContent='⚠️ Please enter or select a subject before submitting.';err.style.display='block';return;}
   if(!text){err.textContent='⚠️ Please write your request.';err.style.display='block';return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Sending...';
   try{
-    await addDoc(collection(db,'userRequests'),{uid:U.uid,username:UD.username,phone:UD.phone||'',request:text,status:'pending',createdAt:serverTimestamp()});
-    ok.textContent='✅ Your request has been sent to admin successfully! Admin will respond within 24 hours.';
+    const requestId=genRequestId();
+    await addDoc(collection(db,'userRequests'),{uid:U.uid,username:UD.username,phone:UD.phone||'',subject,request:text,requestId,status:'pending',createdAt:serverTimestamp()});
+    ok.innerHTML='✅ Your request has been submitted successfully.<br><br>Here is your Request ID: <strong style="color:var(--gold);letter-spacing:1px;">'+requestId+'</strong><br><span style="opacity:.8;">Keep this ID for reference. Admin will respond within 24 hours.</span>';
     ok.style.display='block';
+    document.getElementById('req-subject').value='';
     document.getElementById('req-text').value='';
+    document.querySelectorAll('.qsub-btn').forEach(b=>b.classList.remove('active'));
     btn.disabled=false;btn.textContent='📤 Send Request to Admin';
   }catch(e){err.textContent='❌ '+e.message;err.style.display='block';btn.disabled=false;btn.textContent='📤 Send Request to Admin';}
 };
