@@ -192,7 +192,7 @@ window.approve=async function(docId,uid,amount,username){
   if(apBtn){apBtn.disabled=true;apBtn.innerHTML='<span class="spin"></span>Processing...';}
   if(rjBtn) rjBtn.disabled=true;
   try{
-    await updateDoc(doc(db,'pendingDeposits',docId),{status:'approved'});
+    await updateDoc(doc(db,'pendingDeposits',docId),{status:'approved',resolvedAt:new Date()});
     if(uid){
       const userSnap=await getDoc(doc(db,'users',uid));
       if(userSnap.exists()){
@@ -237,7 +237,7 @@ window.reject=async function(docId){
   if(rjBtn){rjBtn.disabled=true;rjBtn.innerHTML='<span class="spin"></span>Rejecting...';}
   if(apBtn) apBtn.disabled=true;
   try{
-    await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected'});
+    await updateDoc(doc(db,'pendingDeposits',docId),{status:'rejected',resolvedAt:new Date()});
     allData=allData.map(d=>d.id===docId?{...d,status:'rejected'}:d);
     showMsg('❌ Deposit rejected successfully.','err');
     updateStats();render();

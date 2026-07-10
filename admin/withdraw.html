@@ -188,7 +188,7 @@ window.approve=async function(btnEl,docId,uid,amount,username,method){
     // Get withdraw record to access receive amount
     const withdrawData=allData.find(d=>d.id===docId)||{};
     // Mark withdrawal as approved
-    await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved'});
+    await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'approved',resolvedAt:new Date()});
 
     if(uid){
       // Get current user data to calculate correct values
@@ -242,7 +242,7 @@ window.reject=async function(btnEl,docId,uid,amount,username){
   btnEl.innerHTML='<span class="spinner"></span>Rejecting...';
   try{
     // Mark as rejected
-    await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected'});
+    await updateDoc(doc(db,'pendingWithdrawals',docId),{status:'rejected',resolvedAt:new Date()});
 
     if(uid){
       // Get current user data
