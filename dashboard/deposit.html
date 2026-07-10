@@ -289,7 +289,7 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
-  if(UD.photoURL){document.getElementById('av').innerHTML=`<img src="${UD.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;}else{document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();}
+  (function(){var _el=document.getElementById('av');if(UD.photoURL){_el.innerHTML='<img src="'+UD.photoURL+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';}else{_el.textContent=UD.username.charAt(0).toUpperCase();}})();
   if(typeof pageReady==='function') pageReady();
 });
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};

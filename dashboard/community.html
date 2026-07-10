@@ -121,7 +121,7 @@ onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
-  const _ud=snap.data();if(_ud.photoURL){document.getElementById('av').innerHTML=`<img src="${_ud.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;}else{document.getElementById('av').textContent=_ud.username.charAt(0).toUpperCase();}
+  (function(){var _d=snap.data();var _el=document.getElementById('av');if(_d.photoURL){_el.innerHTML='<img src="'+_d.photoURL+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';}else{_el.textContent=_d.username.charAt(0).toUpperCase();}})();
   loadGroups();
 });
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
