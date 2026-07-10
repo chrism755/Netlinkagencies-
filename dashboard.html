@@ -273,10 +273,11 @@ body{font-family:'Nunito',sans-serif;background:#f0f2f5;color:#222;min-height:10
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4",authDomain:"netlink-agencies-6399e.firebaseapp.com",projectId:"netlink-agencies-6399e",storageBucket:"netlink-agencies-6399e.firebasestorage.app",messagingSenderId:"546397751362",appId:"1:546397751362:web:c74e057b2b0ceb6c0745db"});
 const auth=getAuth(app),db=getFirestore(app);
+let currentUid=null;
 
 // Format numbers with commas
 function fmt(n){return Number(n||0).toLocaleString('en-KE');}
@@ -286,6 +287,7 @@ onAuthStateChanged(auth,async u=>{
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate.html');return;}
   const UD=snap.data();
+  currentUid=u.uid;
 
   // Greeting
   const h=new Date().getHours();
@@ -342,7 +344,7 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('tg-share').onclick=()=>window.open('https://t.me/share/url?url='+encodeURIComponent(ref),'_blank');
 
   // Load notifications
-  loadNotifications(u.uid, UD.username);
+  loadNotifications(u.uid, UD.username, UD.notifClearedAt||0);
   // Expenses card - show activation fee by country
   const _feeMap={'Kenya':150,'Uganda':3900,'Tanzania':7000,'Rwanda':1350,'Nigeria':3700,'Ghana':11,'South Africa':20,'United States':2,'United Kingdom':2,'Other':2};
   const actFee=_feeMap[UD.country]||150;
@@ -358,7 +360,7 @@ onAuthStateChanged(auth,async u=>{
 });
 
 // NOTIFICATIONS
-async function loadNotifications(uid, username){
+async function loadNotifications(uid, username, clearedAt){
   try{
     const notifications = [];
 
@@ -370,13 +372,15 @@ async function loadNotifications(uid, username){
         notifications.push({
           type:'green',icon:'✅',
           msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> has been approved and disbursed to your account.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
           msg:`Dear <strong>${username}</strong>, your withdrawal of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> was rejected. ${window._CUR||'KES'} ${fmt(data.amount)} has been returned to your balance.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       }
     });
@@ -389,13 +393,15 @@ async function loadNotifications(uid, username){
         notifications.push({
           type:'green',icon:'💰',
           msg:`Dear <strong>${username}</strong>, your deposit of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> has been approved and added to your Account Balance.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
           msg:`Dear <strong>${username}</strong>, your deposit of <strong>${window._CUR||'KES'} ${fmt(data.amount)}</strong> (Txn: ${data.txnId}) was rejected. Please contact admin.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       }
     });
@@ -408,7 +414,8 @@ async function loadNotifications(uid, username){
         notifications.push({
           type:'blue',icon:'🎉',
           msg:`Dear <strong>${username}</strong>, your account has been activated successfully! Welcome to NETLINK AGENCIES.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       }
     });
@@ -421,26 +428,31 @@ async function loadNotifications(uid, username){
         notifications.push({
           type:'green',icon:'✅',
           msg:`Dear <strong>${username}</strong>, your request "<strong>${data.subject||'your request'}</strong>" (ID: ${data.requestId||'—'}) has been approved by admin.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       } else if(data.status==='rejected'){
         notifications.push({
           type:'red',icon:'❌',
           msg:`Dear <strong>${username}</strong>, your request "<strong>${data.subject||'your request'}</strong>" (ID: ${data.requestId||'—'}) has been rejected by admin.`,
-          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():''
+          time:data.createdAt?new Date(data.createdAt.seconds*1000).toLocaleString():'',
+          rawTime:data.createdAt?data.createdAt.seconds*1000:0
         });
       }
     });
 
+    // Filter out notifications the user already cleared
+    const visible = notifications.filter(n=>n.rawTime>(clearedAt||0));
+
     // Update badge count
-    document.getElementById('notif-count').textContent=notifications.length;
-    document.getElementById('notif-count').style.display=notifications.length>0?'flex':'none';
+    document.getElementById('notif-count').textContent=visible.length;
+    document.getElementById('notif-count').style.display=visible.length>0?'flex':'none';
 
     // Render notifications
-    if(notifications.length===0){
+    if(visible.length===0){
       document.getElementById('notif-list').innerHTML='<div class="notif-empty">No notifications yet</div>';
     } else {
-      document.getElementById('notif-list').innerHTML=notifications.map(n=>`
+      document.getElementById('notif-list').innerHTML=visible.map(n=>`
         <div class="notif-item unread">
           <div class="notif-icon ${n.type}">${n.icon}</div>
           <div>
@@ -461,11 +473,16 @@ window.toggleNotif=function(){
 window.closeNotif=function(){
   document.getElementById('notif-dropdown').classList.remove('show');
 };
-window.clearNotifs=function(){
+window.clearNotifs=async function(){
   document.getElementById('notif-list').innerHTML='<div class="notif-empty">No notifications yet</div>';
   document.getElementById('notif-count').textContent='0';
+  document.getElementById('notif-count').style.display='none';
   document.getElementById('notif-dropdown').classList.remove('show');
   document.getElementById('ov').classList.remove('show');
+  if(currentUid){
+    try{ await updateDoc(doc(db,'users',currentUid),{notifClearedAt:Date.now()}); }
+    catch(e){ console.log('clearNotifs save error:',e); }
+  }
 };
 window.copyRef=()=>{
   const t=document.getElementById('reflink').textContent;
