@@ -29,7 +29,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .topbar{background:linear-gradient(135deg,var(--pkd),var(--pk));padding:13px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 2px 20px rgba(233,30,140,.4);}
 .menu-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;}
 .tb-title{font-size:15px;font-weight:800;color:#fff;flex:1;}
-.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.3);}
+.avatar{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;border:2px solid rgba(255,255,255,.3);overflow:hidden;flex-shrink:0;}
 .content{padding:16px 14px;max-width:760px;margin:0 auto;}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99;display:none;}
 .overlay.show{display:block;}
@@ -40,7 +40,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:#fff;min-height:
 .card-pink h3{font-size:15px;font-weight:800;color:#fff;margin-bottom:8px;}
 .card-pink p{font-size:13px;color:#fff;opacity:.9;line-height:1.6;}
 .reward{display:inline-flex;background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:800;color:var(--gold);margin-top:8px;}
-.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;box-shadow:0 4px 15px rgba(233,30,140,.3);transition:.2s;}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--pkd),var(--pk2));color:#fff;transition:.2s;box-shadow:0 4px 15px rgba(233,30,140,.3);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,30,140,.4);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
 .btn-green{background:linear-gradient(135deg,#00897B,#00E676)!important;box-shadow:0 4px 15px rgba(0,230,118,.3)!important;}
 .btn-wa{background:#25D366!important;box-shadow:none!important;}
@@ -150,16 +151,28 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"123029073482","appId":"1:123029073482:web:61bccfbd2c5c8e0ad9b8d4"});
+const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.appspot.com","messagingSenderId":"900707269097","appId":"1:900707269097:web:b0bfec5cc3c60f94aede57"});
 const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
+
+// Render avatar with profile picture or initial
+function renderAvatar(url, username){
+  const av=document.getElementById('av');
+  const initial=username.charAt(0).toUpperCase();
+  if(url){
+    av.innerHTML=`<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;
+  }else{
+    av.textContent=initial;
+  }
+}
+
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
   U=u;
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
   UD=snap.data();UD.uid=u.uid;
-  document.getElementById('av').textContent=UD.username.charAt(0).toUpperCase();
+  renderAvatar(UD.photoURL, UD.username);
   if(typeof pageReady==='function') pageReady();
 });
 window.openSB=()=>{document.getElementById('sb').classList.add('open');document.getElementById('ov').classList.add('show');};
@@ -169,9 +182,9 @@ window.doLogout=async()=>{await signOut(auth);window.location.replace('/login');
 
 
 const ARTICLES=[
-  {t:'How to Make Money Online in Kenya 2024',body:'Kenya has seen a massive rise in online income opportunities. From content creation to digital marketing, there are many ways to earn from home. NETLINK has made it easy for Kenyans to monetize their skills online.'},
-  {t:'Top 5 Ways to Grow Your Referral Network Fast',body:'Building a strong referral network is the key to earning big on NETLINK. Start by sharing your referral link on all social media platforms. Encourage friends and family to join today.'},
-  {t:'Understanding M-PESA and Safe Transactions',body:'M-PESA is Kenya most trusted mobile money platform. When making transactions always verify the recipient name before confirming. Keep your PIN private and never share it with anyone.'}
+  {t:'How to Make Money Online in Kenya 2024',body:'Kenya has seen a massive rise in online income opportunities. From content creation to digital marketing, there are many ways to earn from home. NETLINK AGENCIES provides a platform where you can grow your network and multiply your income through multiple streams.'},
+  {t:'Top 5 Ways to Grow Your Referral Network Fast',body:'Building a strong referral network is the key to earning big on NETLINK. Start by sharing your referral link on all social media platforms. Join community groups and forums related to online earning. Be consistent and help your downlines succeed. Use WhatsApp, Telegram, and Facebook groups to reach more people. Remember — your downlines\' success is your success!'},
+  {t:'Understanding M-PESA and Safe Transactions',body:'M-PESA is Kenya most trusted mobile money platform. When making transactions always verify the recipient name before confirming. Keep your PIN confidential. Report any suspicious activity to customer care immediately. Never share your payment details with anyone. NETLINK AGENCIES processes all withdrawals securely through verified M-PESA accounts.'}
 ];
 async function pageReady(){
   const today=new Date().toDateString();
