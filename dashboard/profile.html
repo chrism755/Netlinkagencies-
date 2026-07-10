@@ -172,10 +172,9 @@ select option{background:var(--bg3);}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, updateDoc, increment, collection, getDocs, addDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const app=initializeApp({"apiKey":"AIzaSyCCFExYKkXxauIXVv2HzNHbNnizL6MF_p4","authDomain":"netlink-agencies-6399e.firebaseapp.com","projectId":"netlink-agencies-6399e","storageBucket":"netlink-agencies-6399e.firebasestorage.app","messagingSenderId":"546397751362","appId":"1:546397751362:web:c74e057b2b0ceb6c0745db"});
-const auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
+const auth=getAuth(app),db=getFirestore(app);
 let U=null,UD=null;
 onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
@@ -248,17 +247,26 @@ window.uploadProfilePic=async function(evt){
   if(file.size>5*1024*1024){status.textContent='⚠️ Image must be under 5MB.';status.style.color='#FF8A80';return;}
   status.textContent='⏳ Uploading...';status.style.color='#fff';
   try{
-    const fileRef=ref(storage,'profilePictures/'+U.uid+'.jpg');
-    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out — check your connection or Storage setup.')),15000));
-    await Promise.race([uploadBytes(fileRef,file),timeout]);
-    const url=await Promise.race([getDownloadURL(fileRef),timeout]);
+    const CLOUD_NAME='fgmsoha0';
+    const UPLOAD_PRESET='netlink_profile';
+    const formData=new FormData();
+    formData.append('file',file);
+    formData.append('upload_preset',UPLOAD_PRESET);
+    const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out — check your connection.')),15000));
+    const res=await Promise.race([
+      fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:'POST',body:formData}),
+      timeout
+    ]);
+    const data=await res.json();
+    if(!res.ok||!data.secure_url){throw new Error(data.error?.message||'Upload failed.');}
+    const url=data.secure_url;
     await updateDoc(doc(db,'users',U.uid),{photoURL:url});
     UD.photoURL=url;
     renderAvatar(url);
     status.textContent='✅ Uploaded successfully!';status.style.color='#69F0AE';
     setTimeout(()=>{status.textContent='';},3000);
   }catch(e){
-    status.textContent='❌ Upload failed: '+(e.code||'')+' '+e.message;status.style.color='#FF8A80';
+    status.textContent='❌ Upload failed: '+e.message;status.style.color='#FF8A80';
   }
 };
 window.submitRequest=async function(){
