@@ -164,7 +164,7 @@ onAuthStateChanged(auth,async u=>{
   if(!u){window.location.replace('/login');return;}
   const snap=await getDoc(doc(db,'users',u.uid));
   if(!snap.exists()||!snap.data().activated){window.location.replace('/activate');return;}
-  if(snap.data().photoURL){document.getElementById('av').innerHTML=`<img src="${snap.data().photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;}else{document.getElementById('av').textContent=snap.data().username.charAt(0).toUpperCase();}
+  const _ud=snap.data();if(_ud.photoURL){document.getElementById('av').innerHTML=`<img src="${_ud.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>`;}else{document.getElementById('av').textContent=_ud.username.charAt(0).toUpperCase();}
   // Load social links from settings doc if available
   try{
     const set=await getDoc(doc(db,'settings','socialLinks'));
