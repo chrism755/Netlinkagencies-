@@ -327,7 +327,7 @@ window.confirmPay=async function(){
     document.getElementById('bal-display').textContent='KSh '+newBalance;
     ok.innerHTML='✅ Payment of KSh '+amount+' to '+bData.username+' completed! '+
       (fullyPaid?bData.username+"'s account has been activated automatically. ":'')+
-      '<br><a href="/receipt.html?id='+payDoc.id+'" target="_blank" style="color:#69F0AE;text-decoration:underline;">📄 View &amp; download receipt</a>';
+      '<br><a href="/receipt?id='+payDoc.id+'" target="_blank" style="color:#69F0AE;text-decoration:underline;">📄 View &amp; download receipt</a>';
     ok.style.display='block';
     document.getElementById('c-name').value='';
     document.getElementById('c-amount').value='';
@@ -337,7 +337,7 @@ window.confirmPay=async function(){
     btn.disabled=false;btn.textContent='💸 Pay for Client';
 
     // 5. Send emails (non-blocking)
-    const receiptUrl='https://netlinkagencies.linkpc.net/receipt.html?id='+payDoc.id;
+    const receiptUrl='https://netlinkagencies.linkpc.net/receipt?id='+payDoc.id;
     sendUserEmail('client_payment_sent',{
       to:UD.email||U.email, username:UD.username, clientUsername:bData.username,
       amount, date:dateStr, time:timeStr, balance:newBalance, receiptUrl
