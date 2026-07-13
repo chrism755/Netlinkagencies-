@@ -313,6 +313,71 @@ window.confirmPay=async function(){
     }
     await updateDoc(doc(db,'users',foundClient.id),bUpdate);
 
+    // 2b. Pay referral commissions to the new member's upline (same logic as self-activation)
+    if(fullyPaid){
+      const referredBy = bData?.referredBy || '';
+      const newMemberUsername = bData?.username || 'User';
+      if(referredBy){
+        const q1=query(collection(db,'users'),where('referralCode','==',referredBy));
+        const snap1=await getDocs(q1);
+        if(!snap1.empty){
+          const ref1Doc=snap1.docs[0];
+          const ref1Data=ref1Doc.data();
+          await updateDoc(doc(db,'users',ref1Doc.id),{
+            balance:increment(80),
+            totalEarnings:increment(80),
+            level1Count:increment(1)
+          });
+          try{
+            await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+              method:'POST',headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({type:'referral_level1',to:ref1Data.email||'',username:ref1Data.username||'User',amount:'KES 80',referralUsername:newMemberUsername,level:'1',date:new Date().toLocaleString()})
+            });
+          }catch(emailErr){console.log('Email error:',emailErr);}
+
+          if(ref1Data.referredBy){
+            const q2=query(collection(db,'users'),where('referralCode','==',ref1Data.referredBy));
+            const snap2=await getDocs(q2);
+            if(!snap2.empty){
+              const ref2Doc=snap2.docs[0];
+              const ref2Data=ref2Doc.data();
+              await updateDoc(doc(db,'users',ref2Doc.id),{
+                balance:increment(20),
+                totalEarnings:increment(20),
+                level2Count:increment(1)
+              });
+              try{
+                await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                  method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({type:'referral_level2',to:ref2Data.email||'',username:ref2Data.username||'User',amount:'KES 20',referralUsername:newMemberUsername,level:'2',date:new Date().toLocaleString()})
+                });
+              }catch(emailErr){console.log('Email error:',emailErr);}
+
+              if(ref2Data.referredBy){
+                const q3=query(collection(db,'users'),where('referralCode','==',ref2Data.referredBy));
+                const snap3=await getDocs(q3);
+                if(!snap3.empty){
+                  const ref3Doc=snap3.docs[0];
+                  const ref3Data=ref3Doc.data();
+                  await updateDoc(doc(db,'users',ref3Doc.id),{
+                    balance:increment(10),
+                    totalEarnings:increment(10),
+                    level3Count:increment(1)
+                  });
+                  try{
+                    await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+                      method:'POST',headers:{'Content-Type':'application/json'},
+                      body:JSON.stringify({type:'referral_level3',to:ref3Data.email||'',username:ref3Data.username||'User',amount:'KES 10',referralUsername:newMemberUsername,level:'3',date:new Date().toLocaleString()})
+                    });
+                  }catch(emailErr){console.log('Email error:',emailErr);}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     // 3. Log the payment for the admin notifications page + receipt
     const payDoc=await addDoc(collection(db,'clientPayments'),{
       payerUid:U.uid,payerUsername:UD.username,payerEmail:UD.email||U.email,
@@ -349,6 +414,9 @@ window.confirmPay=async function(){
     if(fullyPaid){
       sendUserEmail('activation',{
         to:bData.email, username:bData.username, country:bData.country||'', date:dateStr
+      });
+      sendUserEmail('full_guidance',{
+        to:bData.email, username:bData.username
       });
     }
   }catch(e){
