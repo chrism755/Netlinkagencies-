@@ -187,6 +187,15 @@ window.approve=async function(docId,uid,referredBy,newMemberUsername){
           date: new Date().toLocaleString()
         })
       });
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'full_guidance',
+          to: userData.email||'',
+          username: userData.username||'User'
+        })
+      });
     } catch(emailErr){
       console.log('Email error:',emailErr);
     }
