@@ -337,8 +337,8 @@ window.confirmDeactivate=async function(){
   errEl.style.display='none';
   const u=allUsers.find(x=>x.id===deactivateUid);
   setLoader(true,'Deactivating account...');
-  await updateDoc(doc(db,'users',deactivateUid),{activated:false,deactivationReason:reason});
-  allUsers=allUsers.map(x=>x.id===deactivateUid?{...x,activated:false,deactivationReason:reason}:x);
+  await updateDoc(doc(db,'users',deactivateUid),{activated:false,deactivationReason:reason,clientPaidAmount:0,lastPayerUsername:'',activationMethod:''});
+  allUsers=allUsers.map(x=>x.id===deactivateUid?{...x,activated:false,deactivationReason:reason,clientPaidAmount:0}:x);
   setLoader(false);
   closeDeacModal();
   render();
