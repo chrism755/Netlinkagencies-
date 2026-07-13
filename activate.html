@@ -531,6 +531,22 @@ async function activateUser(txnId){
       console.log('Activation email error:',emailErr);
     }
 
+    // EMAIL 3: Full NETLINK AGENCIES guidance email
+    try{
+      await fetch('https://netlinkagencies.vercel.app/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          type:'full_guidance',
+          to: currentUser.email,
+          username: freshData.username||userData?.username||'User'
+        })
+      });
+      console.log('Full guidance email sent');
+    } catch(emailErr){
+      console.log('Guidance email error:',emailErr);
+    }
+
     // Pay referral commissions (same logic as manual admin approval)
     const referredBy = userData?.referredBy || '';
     const newMemberUsername = userData?.username || 'User';
